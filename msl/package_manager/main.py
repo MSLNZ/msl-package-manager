@@ -29,7 +29,7 @@ def main(**kwargs):
         parser.add_argument('names', help='the name(s) of the MSL package(s)', nargs='*')
         parser.add_argument('-a', '--author', nargs='+', help='the name of the author [create]')
         parser.add_argument('-e', '--email', help='the email address for the author [create]')
-        parser.add_argument('-y', '--yes', action='store_true', help="Don't ask for confirmation of uninstall deletions")
+        parser.add_argument('-y', '--yes', action='store_true', help="Don't ask for confirmation to (un)install")
         args = parser.parse_args()
         command = args.command
         names = args.names
@@ -41,11 +41,10 @@ def main(**kwargs):
         names = kwargs.get('names', [])
         author = kwargs.get('author', None)
         email = kwargs.get('email', None)
-        yes = kwargs.get('yes', True)
-
+        yes = kwargs.get('yes', False)
 
     if command == 'install':
-        install(names)
+        install(names, yes)
     elif command == 'uninstall':
         uninstall(names, yes)
     elif command == 'create':
@@ -75,14 +74,15 @@ def main(**kwargs):
         raise ValueError('Invalid command "{}"'.format(command))
 
 
-def install(names=[]):
+def install(names=[], yes=False):
     """
     Use pip to install MSL packages from GitHub.
 
     Args:
         names (list[str]): A list of GitHub repository names. If an empty list then install all MSL packages.
+        yes (bool): Don't ask for confirmation to install
     """
-    for pkg in _get_packages('install', names):
+    for pkg in _get_packages('install', names, yes):
         if pkg:
             subprocess.call('pip install https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg))
 
@@ -93,6 +93,7 @@ def uninstall(names=[], yes=False):
 
     Args:
         names (list[str]): A list of installed MSL packages. If an empty list then uninstall all MSL packages.
+        yes (bool): Don't ask for confirmation to uninstall
     """
     for pkg in _get_packages('uninstall', names, yes):
         subprocess.call('pip uninstall -y ' + pkg)

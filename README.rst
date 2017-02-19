@@ -19,9 +19,13 @@ by using the command line interface.
 Usage:install
 =============
 
-To install all MSL packages that are available at https://github.com/MSLNZ/, run::
+To ask before installing all MSL packages that are available at https://github.com/MSLNZ/, run::
 
    $ msl install
+
+To install all MSL packages without asking for confirmation::
+
+   $ msl install -y
 
 To install a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*, run::
 
@@ -34,9 +38,13 @@ To install multiple MSL packages, run::
 Usage:uninstall
 ===============
 
-To uninstall all MSL packages (except for the **msl-package-manager**), run::
+To ask before uninstalling all MSL packages (except for the **msl-package-manager**), run::
 
    $ msl uninstall
+
+To uninstall all MSL packages without asking for confirmation (except for the **msl-package-manager**)::
+
+   $ msl uninstall -y
 
 To uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*, run::
 
@@ -162,8 +170,8 @@ API
 
 In cases where using the command-line interface is not desired, the following public functions are available:
 
-* ``install(names)`` -- to install MSL packages, names: list[str] or [] to install all packages
-* ``uninstall(names)`` -- to uninstall MSL packages, names: list[str] or [] to uninstall all packages
+* ``install(names, yes=False)`` -- to install MSL packages, names: list[str] or [] to install all packages
+* ``uninstall(names, yes=False)`` -- to uninstall MSL packages, names: list[str] or [] to uninstall all packages
 * ``create(names, author=None, email=None)`` -- to create new MSL package(s), names: str or list[str]
 * ``get_github()`` -- returns a dictionary of MSL repositories that are available
 * ``get_installed()`` -- returns a dictionary of MSL packages that are installed
