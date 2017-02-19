@@ -16,7 +16,7 @@ elif sys.version_info.major == 3:
 else:
     raise NotImplementedError('Python major version is not 2 or 3')
 
-__all__ = ['main', 'get_github', 'get_installed', 'get_author', 'get_email']
+__all__ = ['main', 'install', 'uninstall', 'create', 'get_github', 'get_installed', 'get_author', 'get_email']
 
 
 def main(**kwargs):
@@ -41,11 +41,11 @@ def main(**kwargs):
         email = kwargs.get('email', None)
 
     if command == 'install':
-        _install(command, names)
+        install(names)
     elif command == 'uninstall':
-        _uninstall(command, names)
+        uninstall(names)
     elif command == 'create':
-        _create(names, author, email)
+        create(names, author, email)
     elif command == 'list':
         if len(names) >= 1 and (names[0] != 'github'):
             print('Invalid request. Must use "msl list" or "msl list github"')
@@ -71,19 +71,25 @@ def main(**kwargs):
         raise ValueError('Invalid command "{}"'.format(command))
 
 
-def _install(_command, _names):
+def install(names=[]):
     """
-    Use pip to install MSL packages.
+    Use pip to install MSL packages from GitHub.
+
+    Args:
+        names (list[str]): A list of GitHub repository names. If an empty list then install all MSL packages.
     """
-    for pkg in _get_packages(_command, _names):
+    for pkg in _get_packages('install', names):
         subprocess.call('pip install https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg))
 
 
-def _uninstall(_command, _names):
+def uninstall(names=[]):
     """
-    Use pip to uninstall MSL packages.
+    Use pip to uninstall MSL packages from GitHub.
+
+    Args:
+        names (list[str]): A list of installed MSL packages. If an empty list then uninstall all MSL packages.
     """
-    for pkg in _get_packages(_command, _names):
+    for pkg in _get_packages('uninstall', names):
         subprocess.call('pip uninstall -y ' + pkg)
 
 
@@ -92,8 +98,7 @@ def get_github():
     Get the MSL repositories that are available on GitHub.
 
     Returns:
-        A :py:class:`dict` with the repository name as keys and the value is [version, description]
-        or :py:data:`None`
+        A :py:class:`dict` with the repository name as key and the value is [version, description]
     """
     pkgs = {}
     try:
@@ -118,7 +123,7 @@ def get_installed():
     Get the MSL packages that are installed.
 
     Returns:
-        A :py:class:`dict` with the repository name as keys and the value is [version, description]
+        A :py:class:`dict` with the repository name as key and the value is [version, description]
     """
     pkgs = {}
     for pkg in pip.get_installed_distributions():
@@ -203,17 +208,24 @@ To include the name of the author and an email address, use:
 $ msl create MyPackage -a Firstname Lastname -e my.email@address.com
 
 If you specify "MyPackage" then all the text in the documentation will be
-displayed as "MSL-MyPackage", however, to import the package you would use:
+displayed as "MSL-MyPackage"; however, to import the package you would use:
 
 >>> from msl import mypackage
 """
 
 
-def _create(_names, _author, _email):
+def create(names, author=None, email=None):
     """
-    Create a new MSL package folder structure.
+    Create a new MSL package folder structure in the current working directory.
+
+    Args:
+        names (str, list[str]): The name(s) of the MSL packages to create
+        author (str, optional): If :py:data:`None` then the program attempts to read
+            the author's name from the users git account.
+        email (str, optional): If :py:data:`None` then the program attempts to read
+            the email address from the users git account.
     """
-    args = _parse_create_args(_names, _author, _email)
+    args = _parse_create_args(names, author, email)
     if args is None:
         return
 

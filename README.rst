@@ -1,14 +1,14 @@
 MSL Package Manager
 ===================
 
-The MSL package manager allows you to install, uninstall, list and create MSL packages.
+The MSL Package Manager allows you to install, uninstall, list and create MSL packages.
 
 Install
 =======
 
 To install the MSL Package Manager run::
 
-   $ pip install https://github.com/mslnz/msl-package-manager/archive/master.zip
+   $ pip install https://github.com/MSLNZ/msl-package-manager/archive/master.zip
 
 Usage
 =====
@@ -19,7 +19,7 @@ by using the command line interface.
 Usage:install
 =============
 
-To install all MSL packages that are available at https://github.com/mslnz/, run::
+To install all MSL packages that are available at https://github.com/MSLNZ/, run::
 
    $ msl install
 
@@ -44,7 +44,7 @@ To uninstall a specific MSL package, for example **msl-loadlib** *(you can ignor
 
 To uninstall multiple MSL packages, run::
 
-   $ msl uninstall loadlib acquire
+   $ msl uninstall loadlib instr
 
 Usage:list
 ==========
@@ -53,7 +53,7 @@ To list all MSL packages that are installed, run::
 
    $ msl list
 
-To list all MSL repositories that are available at https://github.com/mslnz/, run::
+To list all MSL repositories that are available at https://github.com/MSLNZ/, run::
 
    $ msl list github
 
@@ -66,8 +66,8 @@ To create a new MSL package called **MyPackage**, run::
    $ msl create MyPackage
 
 This will create a new folder (in the current working directory) called **msl-mypackage**. The name of the package
-will be displayed as **MSL-MyPackage** in the documentation, however, the package name will be
-converted to lower case in order to import it. For example, to import the package you would use::
+will be displayed as **MSL-MyPackage** in the documentation; however, when you want to import the package you would
+use all lower-case letters, for example::
 
    >>> from msl import mypackage
 
@@ -155,6 +155,26 @@ Show the conda envs that include **py** in the env name then exit::
 Show the conda envs that include **py** in the env name *and* exclude those with **py33** in the name and then exit::
 
    $ python test_envs.py --show -i py -e py33
+
+
+API
+===
+
+In cases where using the command-line interface is not desired, the following public functions are available:
+* ``install`` -- to install MSL packages
+* ``uninstall`` -- to uninstall MSL packages
+* ``create`` -- to create new MSL packges
+* ``get_github`` -- to get a dictionary of MSL repositories that are available
+* ``get_installed`` -- to get a dictionary of MSL packages that are installed
+* ``get_author`` -- to get the user's username (from their git account).
+* ``get_email`` -- to get the user's email address (from their git account).
+
+For example, to get a list of all MSL packages that are installed::
+
+   $ >>> import msl.package_manager as pm
+   $ >>> pm.get_installed()
+
+
 
 .. _pytest: http://doc.pytest.org/en/latest/
 .. _sphinx: http://www.sphinx-doc.org/en/latest/#
