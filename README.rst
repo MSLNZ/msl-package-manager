@@ -123,8 +123,8 @@ To display the help message::
 
    $ python setup.py --help
 
-test_envs.py command
-++++++++++++++++++++
+test_envs.py commands
++++++++++++++++++++++
 
 Additionally, there is a **test_envs.py** file that is created from running **msl create**. tox_ and conda_ currently
 do not "play nice" together, see
@@ -161,6 +161,7 @@ API
 ===
 
 In cases where using the command-line interface is not desired, the following public functions are available:
+
 * ``install`` -- to install MSL packages
 * ``uninstall`` -- to uninstall MSL packages
 * ``create`` -- to create new MSL packges
