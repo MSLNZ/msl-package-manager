@@ -167,14 +167,13 @@ In cases where using the command-line interface is not desired, the following pu
 * ``create`` -- to create new MSL packges
 * ``get_github`` -- to get a dictionary of MSL repositories that are available
 * ``get_installed`` -- to get a dictionary of MSL packages that are installed
-* ``get_author`` -- to get the user's username (from their git account).
-* ``get_email`` -- to get the user's email address (from their git account).
+* ``get_author`` -- attempts to get the user's username (from their git_ account).
+* ``get_email`` -- attempts to get the user's email address (from their git_ account).
 
 For example, to get a list of all MSL packages that are installed::
 
    $ >>> import msl.package_manager as pm
    $ >>> pm.get_installed()
-
 
 
 .. _pytest: http://doc.pytest.org/en/latest/
