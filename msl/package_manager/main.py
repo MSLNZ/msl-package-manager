@@ -29,21 +29,25 @@ def main(**kwargs):
         parser.add_argument('names', help='the name(s) of the MSL package(s)', nargs='*')
         parser.add_argument('-a', '--author', nargs='+', help='the name of the author [create]')
         parser.add_argument('-e', '--email', help='the email address for the author [create]')
+        parser.add_argument('-y', '--yes', action='store_true', help="Don't ask for confirmation of uninstall deletions")
         args = parser.parse_args()
         command = args.command
         names = args.names
         author = args.author
         email = args.email
+        yes = args.yes
     else:
         command = kwargs['command']
         names = kwargs.get('names', [])
         author = kwargs.get('author', None)
         email = kwargs.get('email', None)
+        yes = kwargs.get('yes', True)
+
 
     if command == 'install':
         install(names)
     elif command == 'uninstall':
-        uninstall(names)
+        uninstall(names, yes)
     elif command == 'create':
         create(names, author, email)
     elif command == 'list':
@@ -83,14 +87,14 @@ def install(names=[]):
             subprocess.call('pip install https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg))
 
 
-def uninstall(names=[]):
+def uninstall(names=[], yes=False):
     """
     Use pip to uninstall MSL packages from GitHub.
 
     Args:
         names (list[str]): A list of installed MSL packages. If an empty list then uninstall all MSL packages.
     """
-    for pkg in _get_packages('uninstall', names):
+    for pkg in _get_packages('uninstall', names, yes):
         subprocess.call('pip uninstall -y ' + pkg)
 
 
@@ -138,7 +142,7 @@ def get_installed():
     return pkgs
 
 
-def _get_packages(_command, _names):
+def _get_packages(_command, _names, yes=False):
     """
     Gets the list of MSL packages, from either pip or GitHub.
 
@@ -186,9 +190,10 @@ def _get_packages(_command, _names):
         msg += '\n  '.join(pkg for pkg in pkgs)
         msg += '\nContinue (y/[n])? '
 
-        res = get_input(msg).lower()
-        if res != 'y':
-            return {}
+        if not yes:
+            res = get_input(msg).lower()
+            if res != 'y':
+                return {}
     else:
         print('No MSL packages to ' + _command)
 
