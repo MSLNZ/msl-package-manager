@@ -359,7 +359,7 @@ def get_email():
         p2 = subprocess.Popen(['git', 'config', 'user.email'], stdout=subprocess.PIPE)
         return p2.communicate()[0].decode().strip()
     except:
-        return 'your.email@address.com'
+        return 'unknown@email.com'
 
 
 def get_input(msg):

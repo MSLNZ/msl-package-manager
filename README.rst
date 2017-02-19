@@ -165,16 +165,19 @@ In cases where using the command-line interface is not desired, the following pu
 * ``install`` -- to install MSL packages
 * ``uninstall`` -- to uninstall MSL packages
 * ``create`` -- to create new MSL packges
-* ``get_github`` -- to get a dictionary of MSL repositories that are available
-* ``get_installed`` -- to get a dictionary of MSL packages that are installed
+* ``get_github`` -- returns a dictionary of MSL repositories that are available
+* ``get_installed`` -- returns a dictionary of MSL packages that are installed
 * ``get_author`` -- attempts to get the user's username (from their git_ account).
 * ``get_email`` -- attempts to get the user's email address (from their git_ account).
 
 For example, to get a list of all MSL packages that are installed::
 
-   $ >>> import msl.package_manager as pm
-   $ >>> pm.get_installed()
-
+   >>> import msl.package_manager as pm
+   >>> for pkg, info in pm.get_installed().items():
+   ...     print(pkg, info)
+   ...
+   msl-package-manager ['(v0.1.0)', 'MSL Package Manager to install, uninstall, list and create MSL packages']
+   msl-loadlib ['(v0.1.0)', 'Load a shared library']
 
 .. _pytest: http://doc.pytest.org/en/latest/
 .. _sphinx: http://www.sphinx-doc.org/en/latest/#
