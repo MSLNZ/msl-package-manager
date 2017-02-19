@@ -65,7 +65,7 @@ def main(**kwargs):
 
         print(' '.join(header[i].ljust(widths[i]) for i in range(len(header))))
         print(' '.join('-'*w for w in widths))
-        for p in pkgs:
+        for p in sorted(pkgs):
             print(p.ljust(widths[0]) + ' ' + pkgs[p][0].ljust(widths[1]) + ' ' + pkgs[p][1].ljust(widths[2]))
     else:
         raise ValueError('Invalid command "{}"'.format(command))
@@ -79,7 +79,7 @@ def install(names=[]):
         names (list[str]): A list of GitHub repository names. If an empty list then install all MSL packages.
     """
     for pkg in _get_packages('install', names):
-        if pkg is not None:
+        if pkg:
             subprocess.call('pip install https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg))
 
 
@@ -106,7 +106,7 @@ def get_github():
         repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode())
     except:
         # possible to get a "API rate limit exceeded for ..." if you call this too ofter
-        return {None: ['unknown', 'cannot connect to GitHub right now...']}
+        return {'': ['unknown', 'cannot connect to GitHub right now...']}
 
     for repo in repos:
         if repo['name'].startswith('msl-'):
@@ -215,7 +215,7 @@ displayed as "MSL-MyPackage"; however, to import the package you would use:
 """
 
 
-def create(names, author=None, email=None):
+def create(names=[], author=None, email=None):
     """
     Create a new MSL package folder structure in the current working directory.
 
@@ -226,6 +226,9 @@ def create(names, author=None, email=None):
         email (str, optional): If :py:data:`None` then the program attempts to read
             the email address from the users git account.
     """
+    if isinstance(names, str):
+        names = [names]
+
     args = _parse_create_args(names, author, email)
     if args is None:
         return
