@@ -2,5 +2,9 @@
 #
 # The following ensures that this package is included in the 'msl' namespace.
 #
-from pkgutil import extend_path
-__path__ = extend_path(__path__, __name__)
+import pkgutil
+import pkg_resources
+
+__path__ = pkgutil.extend_path(__path__, __name__)
+
+pkg_resources.declare_namespace(__name__)
