@@ -2,6 +2,5 @@
 #
 # The following ensures that this package is included in the 'msl' namespace.
 #
-# see: https://setuptools.readthedocs.io/en/latest/setuptools.html#namespace-packages
-#
-__import__('pkg_resources').declare_namespace(__name__)
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)

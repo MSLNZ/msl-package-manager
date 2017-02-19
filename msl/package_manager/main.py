@@ -79,7 +79,8 @@ def install(names=[]):
         names (list[str]): A list of GitHub repository names. If an empty list then install all MSL packages.
     """
     for pkg in _get_packages('install', names):
-        subprocess.call('pip install https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg))
+        if pkg is not None:
+            subprocess.call('pip install https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg))
 
 
 def uninstall(names=[]):
@@ -105,7 +106,7 @@ def get_github():
         repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode())
     except:
         # possible to get a "API rate limit exceeded for ..." if you call this too ofter
-        return {'None': ['unknown', 'cannot connect to GitHub right now...']}
+        return {None: ['unknown', 'cannot connect to GitHub right now...']}
 
     for repo in repos:
         if repo['name'].startswith('msl-'):

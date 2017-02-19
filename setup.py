@@ -1,5 +1,5 @@
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 from msl import package_manager
 
 
@@ -42,7 +42,7 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest'] if testing else [],
     namespace_packages=['msl'],
-    packages=['msl', 'msl.package_manager', 'template'],
+    packages=find_packages(include=('msl*',)) + ['template'],
     install_requires=read('requirements.txt').split(),
     entry_points={
         'console_scripts': [
