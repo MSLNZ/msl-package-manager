@@ -57,10 +57,10 @@ for include in args.include:
             envs.append(env)
 
 # perform the exclude filter
-temp_envs = envs[:]
+copy_envs = envs[:]
 for exclude in args.exclude:
     compiled = re.compile(exclude)
-    for env in temp_envs:
+    for env in copy_envs:
         if compiled.search(os.path.basename(env)) is not None:
             envs.remove(env)
 
@@ -74,10 +74,16 @@ if args.show:
 for env in envs:
     print('testing with ' + env)
     p = subprocess.Popen(os.path.join(env, 'python') + ' setup.py test', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = p.communicate()[0].decode()
+    comm = p.communicate()
+    output = comm[0].decode()
+    error = comm[1].decode()
+    if not output:
+        print('The following error occurred: ')
+        print(error)
+        sys.exit()
     if 'FAILURES' in output:
         print(output)
-        sys.exit(0)
+        sys.exit()
     else:
         show = False
         for line in output.split('\n'):

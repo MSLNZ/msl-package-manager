@@ -84,7 +84,7 @@ setup(
     platforms='any',
     classifiers=[],  # list the classifiers, see: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     setup_requires=sphinx + pytest_runner,
-    tests_require=['pytest-cov', 'pytest'] if testing else [],
+    tests_require=['pytest-cov', 'pytest'],
     install_requires=read('requirements.txt').split(),
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     namespace_packages=['msl'],
