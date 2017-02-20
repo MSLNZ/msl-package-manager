@@ -1,3 +1,6 @@
+"""
+Allows you to install, uninstall, list and create MSL packages.
+"""
 import sys
 import time
 from collections import namedtuple

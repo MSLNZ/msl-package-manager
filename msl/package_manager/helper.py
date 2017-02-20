@@ -1,5 +1,5 @@
 """
-Helper functions.
+Helper functions for the MSL Package Manager.
 """
 import pip
 import json

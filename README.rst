@@ -17,7 +17,7 @@ Once the MSL Package Manager has been installed you will be able to install, uni
 by using the command line interface.
 
 Usage:install
-=============
+-------------
 
 To ask before installing all MSL packages that are available at https://github.com/MSLNZ/, run::
 
@@ -36,7 +36,7 @@ To install multiple MSL packages, run::
    $ msl install loadlib instr
 
 Usage:uninstall
-===============
+---------------
 
 To ask before uninstalling all MSL packages (except for the **msl-package-manager**), run::
 
@@ -55,7 +55,7 @@ To uninstall multiple MSL packages, run::
    $ msl uninstall loadlib instr
 
 Usage:list
-==========
+----------
 
 To list all MSL packages that are installed, run::
 
@@ -66,7 +66,7 @@ To list all MSL repositories that are available at https://github.com/MSLNZ/, ru
    $ msl list github
 
 Usage:create
-============
+------------
 
 To create a new MSL package called **MyPackage**, run::
 
@@ -163,29 +163,6 @@ Show the conda envs that include **py** in the env name then exit::
 Show the conda envs that include **py** in the env name *and* exclude those with **py33** in the name and then exit::
 
    $ python test_envs.py --show -i py -e py33
-
-
-API
-===
-
-In cases where using the command-line interface is not desired, the following public functions are available:
-
-* ``install(names, yes=False)`` -- to install MSL packages, names: list[str] or [] to install all packages
-* ``uninstall(names, yes=False)`` -- to uninstall MSL packages, names: list[str] or [] to uninstall all packages
-* ``create(names, author=None, email=None)`` -- to create new MSL package(s), names: str or list[str]
-* ``get_github()`` -- returns a dictionary of MSL repositories that are available
-* ``get_installed()`` -- returns a dictionary of MSL packages that are installed
-* ``get_author()`` -- attempts to get the user's username (from their git_ account).
-* ``get_email()`` -- attempts to get the user's email address (from their git_ account).
-
-For example, to get a list of all MSL packages that are installed::
-
-   >>> import msl.package_manager as pm
-   >>> for pkg, info in pm.get_installed().items():
-   ...     print(pkg, info)
-   ...
-   msl-package-manager ['(v0.1.0)', 'MSL Package Manager to install, uninstall, list and create MSL packages']
-   msl-loadlib ['(v0.1.0)', 'Load a shared library']
 
 .. _pytest: http://doc.pytest.org/en/latest/
 .. _sphinx: http://www.sphinx-doc.org/en/latest/#
