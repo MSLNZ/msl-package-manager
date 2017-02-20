@@ -5,8 +5,8 @@ import pip
 import json
 import getpass
 import logging
-from colorama import Fore
 import subprocess
+from colorama import Fore
 
 from msl.package_manager import IS_PYTHON2, IS_PYTHON3, PKG_NAME
 

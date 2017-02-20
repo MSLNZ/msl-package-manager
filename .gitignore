@@ -21,9 +21,20 @@ wheels/
 *.egg-info/
 .installed.cfg
 
+# Sphinx documentation
+docs/_build/
+docs/_autosummary/
+
 # Project settings
 .ropeproject/
 .project/
 .pydevproject/
 .settings/
 .idea/
+
+# pytest and coverage
+.cache/
+htmlcov/
+.coverage
+junit.xml
+coverage.xml

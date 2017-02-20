@@ -3,21 +3,6 @@ from setuptools import setup, find_packages
 from distutils.cmd import Command
 
 
-testing = {'test', 'tests', 'pytest'}.intersection(sys.argv)
-pytest_runner = ['pytest-runner'] if testing else []
-
-needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs', 'build_sphinx'}.intersection(sys.argv)
-sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
-
-if not testing:
-    from msl import package_manager
-    name = package_manager.PKG_NAME
-    author = package_manager.__author__
-    version = package_manager.__version__
-else:
-    name = author = version = 'test'
-
-
 class ApiDocs(Command):
     """
     A custom command that calls sphinx-apidoc
@@ -72,6 +57,13 @@ class BuildDocs(Command):
         sys.exit(0)
 
 
+testing = {'test', 'tests', 'pytest'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if testing else []
+
+needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs', 'build_sphinx'}.intersection(sys.argv)
+sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
+
+
 def read(filename):
     with open(filename) as fp:
         text = fp.read()
@@ -79,11 +71,11 @@ def read(filename):
 
 
 setup(
-    name=name,
-    author=author,
+    name=package_manager.PKG_NAME,
+    author=package_manager.__author__,
     author_email='joseph.borbely@callaghaninnovation.govt.nz',
     url='https://github.com/MSLNZ/msl-package-manager',
-    version=version,
+    version=package_manager.__version__,
     description='MSL Package Manager to install, uninstall, list and create MSL packages',
     long_description=read('README.rst'),
     platforms='any',
