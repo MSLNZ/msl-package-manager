@@ -2,6 +2,8 @@ import sys
 from setuptools import setup, find_packages
 from distutils.cmd import Command
 
+from msl import package_manager
+
 
 class ApiDocs(Command):
     """
