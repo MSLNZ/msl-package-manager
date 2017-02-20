@@ -1,69 +1,9 @@
+import re
 import sys
 from setuptools import setup, find_packages
-from distutils.cmd import Command
 
-from msl import package_manager
-
-
-class ApiDocs(Command):
-    """
-    A custom command that calls sphinx-apidoc
-    see: http://www.sphinx-doc.org/en/latest/man/sphinx-apidoc.html
-    """
-    description = "builds the api documentation using sphinx-apidoc"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from sphinx.apidoc import main
-        main([
-            'sphinx-apidoc',
-            '--force',  # Overwrite existing files
-            '--module-first',  # Put module documentation before submodule documentation
-            '--separate',  # Put documentation for each module on its own page
-            '-o', './docs/_autosummary',
-            'msl',
-        ])
-        sys.exit(0)
-
-
-class BuildDocs(Command):
-    """
-    A custom command that calls sphinx-build
-    see: http://www.sphinx-doc.org/en/latest/man/sphinx-build.html
-    """
-    description = "builds the documentation using sphinx-build"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from sphinx import build_main
-        build_main([
-            'sphinx-build',
-            '-b', 'html',  # builder to use
-            '-a',  # generate output for all files
-            '-E',  # ignore cached files, forces to re-read all source files from disk
-            'docs',  # source directory
-            './docs/_build/html', # output directory
-        ])
-        sys.exit(0)
-
-
-testing = {'test', 'tests', 'pytest'}.intersection(sys.argv)
-pytest_runner = ['pytest-runner'] if testing else []
-
-needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs', 'build_sphinx'}.intersection(sys.argv)
-sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
+sys.path.append('./docs')
+import build_commands
 
 
 def read(filename):
@@ -72,12 +12,24 @@ def read(filename):
     return text
 
 
+def fetch_init(key):
+    # open the __init__.py file to determine the value instead of importing the package to get the values
+    init_text = read('msl/package_manager/__init__.py')
+    return re.compile(r'{}\s+=\s+(.*)'.format(key)).search(init_text).group(1)[1:-1]
+
+
+testing = {'test', 'tests', 'pytest'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if testing else []
+
+needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs', 'build_sphinx'}.intersection(sys.argv)
+sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
+
 setup(
-    name=package_manager.PKG_NAME,
-    author=package_manager.__author__,
+    name=fetch_init('PKG_NAME'),
+    author=fetch_init('__author__'),
     author_email='joseph.borbely@callaghaninnovation.govt.nz',
-    url='https://github.com/MSLNZ/msl-package-manager',
-    version=package_manager.__version__,
+    url='https://github.com/MSLNZ/'+fetch_init('PKG_NAME'),
+    version=fetch_init('__version__'),
     description='MSL Package Manager to install, uninstall, list and create MSL packages',
     long_description=read('README.rst'),
     platforms='any',
@@ -98,7 +50,10 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest', 'colorama'],
     install_requires=read('requirements.txt').split(),
-    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
+    cmdclass={
+        'docs': build_commands.BuildDocs,
+        'apidocs': build_commands.ApiDocs,
+    },
     namespace_packages=['msl'],
     packages=find_packages(include=('msl*',)) + ['template'],
     include_package_data=True,

@@ -6,7 +6,7 @@ import json
 import getpass
 import logging
 import subprocess
-from colorama import Fore
+from colorama import Fore, Style
 
 from msl.package_manager import IS_PYTHON2, IS_PYTHON3, PKG_NAME
 
@@ -166,9 +166,9 @@ def _get_packages(_command, _names, _yes):
 
         for name in names:
             if name in pkgs_installed:
-                print(Fore.YELLOW + 'The {0} package is already installed'.format(name))
+                print(Style.BOLD + Fore.YELLOW + 'The {0} package is already installed'.format(name))
             elif name not in pkgs_github:
-                print(Fore.RED + 'Cannot install {0} -- package not found'.format(name))
+                print(Style.BOLD + Fore.RED + 'Cannot install {0} -- package not found'.format(name))
             else:
                 pkgs[name] = pkgs_github[name]
 
@@ -178,9 +178,9 @@ def _get_packages(_command, _names, _yes):
 
         for name in names:
             if name == PKG_NAME:
-                print(Fore.RED + 'Cannot uninstall {0} using itself. Use "pip uninstall {0}"'.format(PKG_NAME))
+                print(Style.BOLD + Fore.RED + 'Cannot uninstall {0} using itself. Use "pip uninstall {0}"'.format(PKG_NAME))
             elif name not in pkgs_installed:
-                print(Fore.RED + 'Cannot uninstall {0} -- package not found'.format(name))
+                print(Style.BOLD + Fore.RED + 'Cannot uninstall {0} -- package not found'.format(name))
             else:
                 pkgs[name] = pkgs_installed[name]
 
