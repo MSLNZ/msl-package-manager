@@ -1,5 +1,5 @@
 """
-Shows the list of MSL packages that are available.
+Show the list of MSL packages that are available.
 """
 from .helper import github
 from .helper import installed
@@ -7,7 +7,7 @@ from .helper import installed
 
 def show(from_github=False, github_release_info=False):
     """
-    Shows the list of MSL packages that are available.
+    Show the list of MSL packages that are available.
 
     Args:
         from_github (bool, optional): Whether to show the MSL packages that are available as
