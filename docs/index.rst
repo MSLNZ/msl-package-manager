@@ -1,4 +1,9 @@
-.. include:: ../README.rst
+MSL Package Manager
+===================
+
+*a work in progress...*
+
+The MSL Package Manager allows you to install, uninstall, list and create MSL packages.
 
 Contents
 ========
@@ -6,7 +11,9 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   Install <install>
    API Documentation <api>
+   CLI Usage <cli_usage>
    API Examples <examples>
    License <license>
    Authors <authors>
