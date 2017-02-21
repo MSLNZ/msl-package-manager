@@ -1,8 +1,9 @@
+import os
 import re
 import sys
 from setuptools import setup, find_packages
 
-sys.path.append('./docs')
+sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), 'docs'))
 import docs_commands
 
 
