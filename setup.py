@@ -3,7 +3,7 @@ import sys
 from setuptools import setup, find_packages
 
 sys.path.append('./docs')
-import build_commands
+import docs_commands
 
 
 def read(filename):
@@ -13,7 +13,7 @@ def read(filename):
 
 
 def fetch_init(key):
-    # open the __init__.py file to determine the value instead of importing the package to get the values
+    # open the __init__.py file to determine the value instead of importing the package to get the value
     init_text = read('msl/package_manager/__init__.py')
     return re.compile(r'{}\s+=\s+(.*)'.format(key)).search(init_text).group(1)[1:-1]
 
@@ -51,16 +51,15 @@ setup(
     tests_require=['pytest-cov', 'pytest', 'colorama'],
     install_requires=read('requirements.txt').split(),
     cmdclass={
-        'docs': build_commands.BuildDocs,
-        'apidocs': build_commands.ApiDocs,
+        'docs': docs_commands.BuildDocs,
+        'apidocs': docs_commands.ApiDocs,
     },
-    namespace_packages=['msl'],
-    packages=find_packages(include=('msl*',)) + ['template'],
-    include_package_data=True,
     entry_points={
         'console_scripts': [
             'msl = msl.package_manager.cli:main',
         ],
     },
+    packages=find_packages(include=('msl*',)) + ['template'],
+    include_package_data=True,
     zip_safe=False,
 )
