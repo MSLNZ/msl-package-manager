@@ -1,62 +1,9 @@
+import re
 import sys
 from setuptools import setup, find_packages
-from distutils.cmd import Command
 
-from msl import ${msl-package-lower}
-
-
-class ApiDocs(Command):
-    """
-    A custom command that calls sphinx-apidoc
-    see: http://www.sphinx-doc.org/en/latest/man/sphinx-apidoc.html
-    """
-    description = "builds the api documentation using sphinx-apidoc"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from sphinx.apidoc import main
-        main([
-            'sphinx-apidoc',
-            '--force',  # Overwrite existing files
-            '--module-first',  # Put module documentation before submodule documentation
-            '--separate',  # Put documentation for each module on its own page
-            '-o', './docs/_autosummary',
-            'msl',
-        ])
-        sys.exit(0)
-
-
-class BuildDocs(Command):
-    """
-    A custom command that calls sphinx-build
-    see: http://www.sphinx-doc.org/en/latest/man/sphinx-build.html
-    """
-    description = "builds the documentation using sphinx-build"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from sphinx import build_main
-        build_main([
-            'sphinx-build',
-            '-b', 'html',  # builder to use
-            '-a',  # generate output for all files
-            '-E',  # ignore cached files, forces to re-read all source files from disk
-            'docs',  # source directory
-            './docs/_build/html', # output directory
-        ])
-        sys.exit(0)
+sys.path.append('./docs')
+import docs_commands
 
 
 def read(filename):
@@ -65,17 +12,22 @@ def read(filename):
     return text
 
 
+def fetch_init(key):
+    # open the __init__.py file to determine the value instead of importing the package to get the value
+    init_text = read('msl/${msl-package-lower}/__init__.py')
+    return re.compile(r'{}\s+=\s+(.*)'.format(key)).search(init_text).group(1)[1:-1]
+
+
 testing = {'test', 'tests', 'pytest'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs', 'build_sphinx'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
-
 setup(
     name='msl-${msl-package-lower}',
-    version=${msl-package-lower}.__version__,
-    author=${msl-package-lower}.__author__,
+    version=fetch_init('__version__'),
+    author=fetch_init('__author__'),
     author_email='${email}',
     url='https://github.com/MSLNZ/msl-${msl-package-lower}',
     description='Write a short description about msl-${msl-package-lower} here',
@@ -86,8 +38,10 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest'],
     install_requires=read('requirements.txt').split(),
-    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
-    namespace_packages=['msl'],
+    cmdclass={
+        'docs': docs_commands.BuildDocs,
+        'apidocs': docs_commands.ApiDocs,
+    },
     packages=find_packages(include=('msl*',)),
     include_package_data=True,
 )
