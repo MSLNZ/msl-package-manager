@@ -5,7 +5,7 @@ from .helper import github
 from .helper import installed
 
 
-def show(from_github=False):
+def show(from_github=False, github_release_info=False):
     """
     Shows the list of MSL packages that are available.
 
@@ -14,10 +14,16 @@ def show(from_github=False):
             GitHub_ repositories, :py:data:`True`, or the MSL packages that are installed,
             :py:data:`False`. Default is to show the MSL packages that are installed.
 
+        github_release_info (bool, optional): Whether to fetch the release information from the
+            GitHub_ repositories. Getting the release information takes longer to execute the
+            request. This argument is only used if ``from_github`` is :py:data:`True`. The
+            release information is always included for installed packages. Default is to ignore
+            the release information from GitHub_.
+
     .. _GitHub: https://github.com/MSLNZ
     """
     if from_github:
-        typ, pkgs = 'Repositories', github()
+        typ, pkgs = 'Repositories', github(github_release_info)
     else:
         typ, pkgs = 'Packages', installed()
 

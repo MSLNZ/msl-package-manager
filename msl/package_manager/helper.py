@@ -82,14 +82,15 @@ def get_input(msg):
         raise NotImplementedError('Python major version is not 2 or 3')
 
 
-def github(get_release_version=True):
+def github(get_release_version=False):
     """
     Get the list of MSL repositories that are available on GitHub.
 
     Args:
         get_release_version (bool, optional): Get the latest release version information.
-            Getting the release version will make this function take longer to finish.
-            Default is :py:data:`True`.
+            Getting the release version will make this function take longer to finish and
+            also the repository might not have published a release tag so there is no
+            release information available. Default is :py:data:`True`.
 
     Returns:
         A :py:class:`dict` with the repository name for the keys and the values are a list of
@@ -106,7 +107,7 @@ def github(get_release_version=True):
     pkgs = {}
     for repo in repos:
         if repo['name'].startswith('msl-'):
-            version = 'unknown'
+            version = ''
             if get_release_version:
                 url = 'https://api.github.com/repos/MSLNZ/{}/releases/latest'.format(repo['name'])
                 try:
@@ -166,9 +167,9 @@ def _get_packages(_command, _names, _yes):
 
         for name in names:
             if name in pkgs_installed:
-                print(Style.BOLD + Fore.YELLOW + 'The {0} package is already installed'.format(name))
+                print(Style.BRIGHT + Fore.YELLOW + 'The {0} package is already installed'.format(name))
             elif name not in pkgs_github:
-                print(Style.BOLD + Fore.RED + 'Cannot install {0} -- package not found'.format(name))
+                print(Style.BRIGHT + Fore.RED + 'Cannot install {0} -- package not found'.format(name))
             else:
                 pkgs[name] = pkgs_github[name]
 
@@ -178,9 +179,9 @@ def _get_packages(_command, _names, _yes):
 
         for name in names:
             if name == PKG_NAME:
-                print(Style.BOLD + Fore.RED + 'Cannot uninstall {0} using itself. Use "pip uninstall {0}"'.format(PKG_NAME))
+                print(Style.BRIGHT + Fore.RED + 'Cannot uninstall {0} using itself. Use "pip uninstall {0}"'.format(PKG_NAME))
             elif name not in pkgs_installed:
-                print(Style.BOLD + Fore.RED + 'Cannot uninstall {0} -- package not found'.format(name))
+                print(Style.BRIGHT + Fore.RED + 'Cannot uninstall {0} -- package not found'.format(name))
             else:
                 pkgs[name] = pkgs_installed[name]
 

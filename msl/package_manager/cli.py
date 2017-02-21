@@ -2,6 +2,7 @@
 Main entry point to either install, uninstall, list or create MSL packages
 using the command-line interface.
 """
+import sys
 import argparse
 
 from .install import install
@@ -16,11 +17,25 @@ def main():
     using the command-line interface.
     """
     parser = argparse.ArgumentParser(description='Manage MSL packages')
-    parser.add_argument('command', help='the command to run [install, uninstall, create, list]')
-    parser.add_argument('names', help='the name(s) of the MSL package(s)', nargs='*')
-    parser.add_argument('-a', '--author', nargs='+', help='the name of the author [create]')
-    parser.add_argument('-e', '--email', help='the email address for the author [create]')
-    parser.add_argument('-y', '--yes', action='store_true', help="Don't ask for confirmation to (un)install")
+
+    parser.add_argument('command',
+                        help='the command to run [install, uninstall, create, list]')
+
+    parser.add_argument('names',
+                        help='the name(s) of the MSL package(s)', nargs='*')
+
+    parser.add_argument('-a', '--author', nargs='+',
+                        help="the name of the author [used by 'create']")
+
+    parser.add_argument('-e', '--email',
+                        help="the email address for the author [used by 'create']")
+
+    parser.add_argument('-y', '--yes', action='store_true',
+                        help="don't ask for confirmation to (un)install")
+
+    parser.add_argument('-r', '--release', action='store_true',
+                        help="include the release info from GitHub [used by 'list', takes longer to execute]")
+
     args = parser.parse_args()
 
     args.command = args.command.lower()
@@ -38,6 +53,8 @@ def main():
         if (len(args.names) >= 1) and (args.names[0] != 'github'):
             print('Invalid request. Must use "msl list" or "msl list github"')
         else:
-            show(len(args.names) == 1)
+            show(len(args.names) == 1, args.release)
     else:
-        raise ValueError('Invalid command "{}"'.format(args.command))
+        print('Invalid command "{}"'.format(args.command))
+
+    sys.exit(0)

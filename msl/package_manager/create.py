@@ -61,13 +61,13 @@ def create(names, author=None, email=None):
     roots, pkg_names = [], []
     for name in _names:
         if name[0].isdigit():
-            print(Style.BOLD + Fore.YELLOW + 'A package name cannot start with a number -- ignored ' + name)
+            print(Style.BRIGHT + Fore.YELLOW + 'A package name cannot start with a number -- ignored ' + name)
             continue
 
         keep = True
         for c in name:
             if not (c.isalnum() or c != '_'):
-                print(Style.BOLD + Fore.CYAN + 'A package name can only contain letters, numbers and underscores -- ignored ' + name)
+                print(Style.BRIGHT + Fore.CYAN + 'A package name can only contain letters, numbers and underscores -- ignored ' + name)
                 keep = False
                 break
 
@@ -75,7 +75,7 @@ def create(names, author=None, email=None):
             msl_name = 'msl-' + name.lower()
             root = os.path.join(os.getcwd(), msl_name)
             if os.path.isdir(root):
-                print(Style.BOLD + Fore.MAGENTA + 'A {0} folder already exists. Will not overwrite'.format(msl_name))
+                print(Style.BRIGHT + Fore.MAGENTA + 'A {0} folder already exists. Will not overwrite'.format(msl_name))
             else:
                 roots.append(root)
                 pkg_names.append(name)
@@ -98,7 +98,7 @@ def create(names, author=None, email=None):
             if new_name:
                 author_name = new_name
         except KeyboardInterrupt:
-            print(Style.BOLD + Fore.RED + 'Aborted --  did not create MSL package.')
+            print(Style.BRIGHT + Fore.RED + 'Aborted --  did not create MSL package.')
             return
 
     # determine the author's email address
@@ -114,7 +114,7 @@ def create(names, author=None, email=None):
             if new_email:
                 email_address = new_email
         except KeyboardInterrupt:
-            print(Style.BOLD + Fore.RED + 'Aborted --  did not create MSL package.')
+            print(Style.BRIGHT + Fore.RED + 'Aborted --  did not create MSL package.')
             return
 
     # create the new package
@@ -147,4 +147,4 @@ def create(names, author=None, email=None):
         if os.path.isdir(msl_root):
             print('Created MSL-' + msl_pkg)
         else:
-            print(Style.BOLD + Fore.RED + 'Error creating... ' + msl_pkg)
+            print(Style.BRIGHT + Fore.RED + 'Error creating... ' + msl_pkg)
