@@ -15,6 +15,7 @@ Contents
    API Documentation <api>
    CLI Usage <cli_usage>
    API Examples <examples>
+   Developers Guide <developers_guide>
    License <license>
    Authors <authors>
    Release Notes <changelog>
