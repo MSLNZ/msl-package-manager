@@ -31,7 +31,7 @@ setup(
     author_email='joseph.borbely@callaghaninnovation.govt.nz',
     url='https://github.com/MSLNZ/'+fetch_init('PKG_NAME'),
     version=fetch_init('__version__'),
-    description='MSL Package Manager to install, uninstall, list and create MSL packages',
+    description='Install, uninstall, list and create MSL packages',
     long_description=read('README.rst'),
     platforms='any',
     license='MIT',
