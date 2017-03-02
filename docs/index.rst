@@ -1,8 +1,6 @@
 MSL Package Manager
 ===================
 
-*a work in progress...*
-
 The MSL Package Manager allows you to install, uninstall, list and create MSL packages.
 
 Contents
@@ -14,8 +12,9 @@ Contents
    Install <install>
    API Documentation <api>
    CLI Usage <cli_usage>
-   API Examples <examples>
-   Developers Guide <developers_guide>
+   API Usage <api_usage>
+   "Create" ReadMe <new_package_readme>
+   MSL Developers Guide <developers_guide>
    License <license>
    Authors <authors>
    Release Notes <changelog>

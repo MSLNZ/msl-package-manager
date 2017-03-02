@@ -1,8 +1,11 @@
+.. _cli-usage:
+
 Command Line Interface
 ======================
 
 Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install, uninstall, list and
-create MSL packages by using the command line interface.
+create MSL packages by using the command line interface. *You can also directly access these functions through the*
+:ref:`API <api_usage>`.
 
 install
 -------
@@ -59,6 +62,8 @@ Also, there is no guarantee that the owner of the repository created a release t
 latest release version information in the printed list then use::
 
    $ msl list github -r
+
+.. _create:
 
 create
 ------
