@@ -36,10 +36,10 @@ def create(names, author=None, email=None):
         names (str, list[str]): The name(s) of the MSL packages to create.
 
         author (str, optional): The name of the author. If :py:data:`None` then use
-            :func:`~msl.package_manager.helper.get_author` to determine the author's name.
+            :func:`.helper.get_username` to determine the author's name.
 
         email (str, optional): The author's email address. If :py:data:`None` then use
-            :func:`~msl.package_manager.helper.get_email` to determine the author's email
+            :func:`.helper.get_email` to determine the author's email
             address.
 
     Raises:
@@ -61,7 +61,8 @@ def create(names, author=None, email=None):
     roots, pkg_names = [], []
     for name in _names:
         if name[0].isdigit():
-            print(Style.BRIGHT + Fore.YELLOW + 'A package name cannot start with a number -- ignored ' + name)
+            m = 'A package name cannot start with a number -- ignored ' + name
+            print(Style.BRIGHT + Fore.YELLOW + m)
             continue
 
         keep = True

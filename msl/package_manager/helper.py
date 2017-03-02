@@ -26,7 +26,7 @@ def get_username():
     Automatically determine the name of the user.
 
     If git_ is installed then it returns the ``user.name`` parameter from the user's git_
-    account. If git_ is not installed then use :py:class:`getpass.getuser` to determine
+    account. If git_ is not installed then use :py:func:`getpass.getuser` to determine
     the username from an environment variable.
 
     .. _git: https://git-scm.com
@@ -88,9 +88,9 @@ def github(get_release_version=False):
 
     Args:
         get_release_version (bool, optional): Get the latest release version information.
-            Getting the release version will make this function take longer to finish and
-            also the repository might not have published a release tag so there is no
-            release information available. Default is :py:data:`True`.
+            Getting the release version will make this function take longer to finish. Also
+            the repository might not have published a release tag so the release information
+            might not be available. Default is :py:data:`False`.
 
     Returns:
         A :py:class:`dict` with the repository name for the keys and the values are a list of

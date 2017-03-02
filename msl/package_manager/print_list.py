@@ -1,13 +1,13 @@
 """
-Show the list of MSL packages that are available.
+Print the list of MSL packages that are available.
 """
 from .helper import github
 from .helper import installed
 
 
-def show(from_github=False, github_release_info=False):
+def print_list(from_github=False, github_release_info=False):
     """
-    Show the list of MSL packages that are available.
+    Print the list of MSL packages that are available.
 
     Args:
         from_github (bool, optional): Whether to show the MSL packages that are available as
@@ -31,7 +31,7 @@ def show(from_github=False, github_release_info=False):
     header = ['MSL ' + typ, 'Version', 'Description']
     widths = [len(h) for h in header]
     for p in pkgs:
-        widths = [max(widths[0], len(p)), max(widths[1], len(pkgs[p][0])), max(widths[1], len(pkgs[p][1]))]
+        widths = [max(widths[0], len(p)), max(widths[1], len(pkgs[p][0])), max(widths[2], len(pkgs[p][1]))]
 
     # print the results
     print(' '.join(header[i].ljust(widths[i]) for i in range(len(header))))

@@ -12,7 +12,7 @@ def install(names='ALL', yes=False):
 
     Args:
         names (str, list[str], optional): The name of a single GitHub repository or a list of
-            repository names. Default is to install all MSL packages.
+            repository names. Default is to install **all** MSL packages.
 
         yes (bool, optional): Don't ask for confirmation to install. Default is
             to ask before installing.

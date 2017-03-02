@@ -1,6 +1,6 @@
 """
 Main entry point to either install, uninstall, list or create MSL packages
-using the command-line interface.
+using the command-line interface (CLI).
 """
 import sys
 import argparse
@@ -8,13 +8,14 @@ import argparse
 from .install import install
 from .uninstall import uninstall
 from .create import create
-from .list import show
+from .print_list import print_list
 
 
 def main():
     """
-    Main entry point to either install, uninstall, list or create MSL packages
-    using the command-line interface.
+    Main entry point to either install, uninstall, list or create MSL packages using the CLI.
+
+    **This function should not be called directly as it is the main entry point for the CLI.**
     """
     parser = argparse.ArgumentParser(description='Manage MSL packages')
 
@@ -33,7 +34,7 @@ def main():
     parser.add_argument('-y', '--yes', action='store_true',
                         help="don't ask for confirmation to (un)install")
 
-    parser.add_argument('-r', '--release', action='store_true',
+    parser.add_argument('-r', '--release-info', action='store_true',
                         help="include the release info from GitHub [used by 'list', takes longer to execute]")
 
     args = parser.parse_args()
@@ -53,7 +54,7 @@ def main():
         if (len(args.names) >= 1) and (args.names[0] != 'github'):
             print('Invalid request. Must use "msl list" or "msl list github"')
         else:
-            show(len(args.names) == 1, args.release)
+            print_list(len(args.names) == 1, args.release_info)
     else:
         print('Invalid command "{}"'.format(args.command))
 
