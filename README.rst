@@ -10,7 +10,7 @@ Install
 
 To install the MSL Package Manager run::
 
-   $ pip install https://github.com/MSLNZ/msl-package-manager/archive/master.zip
+   pip install https://github.com/MSLNZ/msl-package-manager/archive/master.zip
 
 Documentation
 -------------
@@ -23,69 +23,69 @@ Usage
 Once the MSL Package Manager has been installed you will be able to install, uninstall, list and create MSL packages
 by using the command line interface. *You can also directly access these classes from a script in addition to the CLI.*
 
-Usage:install
-+++++++++++++
+install
++++++++
 
 Install all MSL packages that are available (asks for confirmation before installing)::
 
-   $ msl install
+   msl install
 
 Install all MSL packages without asking for confirmation::
 
-   $ msl install -y
+   msl install -y
 
 Install a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
-   $ msl install loadlib
+   msl install loadlib
 
 Install multiple MSL packages::
 
-   $ msl install loadlib instr
+   msl install loadlib instr
 
-Usage:uninstall
-+++++++++++++++
+uninstall
++++++++++
 
 Uninstall all MSL packages (except for the **msl-package-manager**)::
 
-   $ msl uninstall
+   msl uninstall
 
 Uninstall all MSL packages (except for the **msl-package-manager**) without asking for confirmation::
 
-   $ msl uninstall -y
+   msl uninstall -y
 
 Uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
-   $ msl uninstall loadlib
+   msl uninstall loadlib
 
 Uninstall multiple MSL packages::
 
-   $ msl uninstall loadlib instr
+   msl uninstall loadlib instr
 
-Usage:list
-++++++++++
+list
+++++
 
 List all MSL packages that are installed::
 
-   $ msl list
+   msl list
 
 List all MSL repositories that are available at https://github.com/MSLNZ/ ::
 
-   $ msl list github
+   msl list github
 
 Fetching the release information for each repository from GitHub will take longer than simply getting the names of
 the repositories that are available. Therefore, the default action is to ignore the release information from GitHub.
 Also, there is no guarantee that the owner of the repository created a release tag. If you want to include the
 latest release version information in the printed list then use::
 
-   $ msl list github -r
+   msl list github -r
 
-Usage:create
-++++++++++++
+create
+++++++
 
 To create a new MSL package called **MyPackage**, run::
 
-   $ cd path/where/you/want/to/create/the/package
-   $ msl create MyPackage
+   cd path/where/you/want/to/create/the/package
+   msl create MyPackage
 
 This will create a new folder (in the current working directory) called **msl-mypackage**. The name of the package
 will be displayed as **MSL-MyPackage** in the documentation; however, when you want to import the package you would
@@ -97,7 +97,7 @@ Running **msl create** will attempt to determine your user name and email addres
 **author** and **email** values in the files that it creates. Optionally, you can specify the name to use
 for the **author** and the **email** address by passing additional command-line arguments::
 
-   $ msl create MyPackage -a Firstname Lastname -e my.email@address.com
+   msl create MyPackage -a Firstname Lastname -e my.email@address.com
 
 
 .. |docs| image:: https://readthedocs.org/projects/msl-package-manager/badge/?version=latest

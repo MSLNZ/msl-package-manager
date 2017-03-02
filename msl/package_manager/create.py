@@ -9,7 +9,7 @@ from .helper import get_username, get_email, get_input
 
 HELP_MSG = """\
 To create a new MSL package you must specify an MSL package name,
-and optionally the author name and email address.
+and optionally the name and email address of the author.
 
 For example, to create a new "MSL-MyPackage" template that contains the standard
 directory structure for a new MSL repository you should specify MyPackage as
@@ -17,12 +17,12 @@ shown by the following command:
 
 $ msl create MyPackage
 
-To include the name of the author and an email address, use:
+To set the values to use for the name and email address of the author, use:
 
 $ msl create MyPackage -a Firstname Lastname -e my.email@address.com
 
 If you specify "MyPackage" then all the text in the documentation will be
-displayed as "MSL-MyPackage"; however, to import the package you would use:
+displayed as "MSL-MyPackage", however, to import the package you would use:
 
 >>> from msl import mypackage
 """
@@ -39,8 +39,7 @@ def create(names, author=None, email=None):
             :func:`.helper.get_username` to determine the author's name.
 
         email (str, optional): The author's email address. If :py:data:`None` then use
-            :func:`.helper.get_email` to determine the author's email
-            address.
+            :func:`.helper.get_email` to determine the author's email address.
 
     Raises:
         TypeError: If any of the input arguments do not have the correct data type
@@ -50,11 +49,14 @@ def create(names, author=None, email=None):
     # and that the folder does not already exist in the current working directory
     if isinstance(names, str):
         _names = [names.replace(' ', '_')]
-    elif isinstance(names, (list, tuple)) and isinstance(names[0], str):
+    elif isinstance(names, (list, tuple)):
         if len(names) == 0:
-            print(HELP_MSG)
+            print(Fore.YELLOW + HELP_MSG)
             return
-        _names = names[:]
+        elif not isinstance(names[0], str):
+            raise TypeError('The names argument must be either a string or a list of strings')
+        else:
+            _names = names[:]
     else:
         raise TypeError('The names argument must be either a string or a list of strings')
 

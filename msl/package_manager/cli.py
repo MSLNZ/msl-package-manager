@@ -4,6 +4,7 @@ using the command-line interface (CLI).
 """
 import sys
 import argparse
+from colorama import Fore, Style
 
 from .install import install
 from .uninstall import uninstall
@@ -51,11 +52,13 @@ def main():
         create(args.names, args.author, args.email)
 
     elif args.command == 'list':
-        if (len(args.names) >= 1) and (args.names[0] != 'github'):
-            print('Invalid request. Must use "msl list" or "msl list github"')
+        if len(args.names) == 0:
+            print_list()
+        elif len(args.names) == 1 and args.names[0].lower() == 'github':
+            print_list(True, args.release_info)
         else:
-            print_list(len(args.names) == 1, args.release_info)
+            print(Style.BRIGHT + Fore.RED + 'Invalid request. Must use "msl list" or "msl list github"')
     else:
-        print('Invalid command "{}"'.format(args.command))
+        print(Style.BRIGHT + Fore.RED + 'Invalid command "{}"'.format(args.command))
 
     sys.exit(0)
