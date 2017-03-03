@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+Version 1.0.2 (in development)
+==============================
+-
+
 Version 1.0.1 (2017.03.03)
 ==========================
 - show help message if no package name was specified for "create" command
