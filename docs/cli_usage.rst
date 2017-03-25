@@ -24,7 +24,7 @@ Install a specific MSL package, for example **msl-loadlib** *(you can ignore the
 
 Install multiple MSL packages::
 
-   $ msl install loadlib instr
+   $ msl install loadlib equipment
 
 uninstall
 ---------
@@ -43,7 +43,7 @@ Uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore t
 
 Uninstall multiple MSL packages::
 
-   $ msl uninstall loadlib instr
+   $ msl uninstall loadlib equipment
 
 list
 ----
