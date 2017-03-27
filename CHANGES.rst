@@ -2,9 +2,10 @@
 Release Notes
 =============
 
-Version 1.0.2 (in development)
-==============================
--
+Version 1.0.2 (2017.03.27)
+==========================
+- split requirements.txt using '\n' instead of by any white space
+- remove unnecessary "import time"
 
 Version 1.0.1 (2017.03.03)
 ==========================
