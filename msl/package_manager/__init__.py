@@ -4,14 +4,14 @@ The MSL-Package-Manager allows you to install, uninstall, list and create MSL pa
 The following constants are available.
 """
 import sys
-from collections import namedtuple
+#from collections import namedtuple
 
 __author__ = 'Joseph Borbely'
 __copyright__ = '\xa9 2017, ' + __author__
-__version__ = '1.0.2'
+__version__ = '1.0.3.dev'
 
-version_info = namedtuple('version_info', 'major minor micro')(*map(int, __version__.split('.')))
-""":py:func:`~collections.namedtuple`: Contains the version information as a (major, minor, micro) tuple."""
+#version_info = namedtuple('version_info', 'major minor micro')(*map(int, __version__.split('.')))
+#""":py:func:`~collections.namedtuple`: Contains the version information as a (major, minor, micro) tuple."""
 
 PKG_NAME = 'msl-package-manager'
 """:py:class:`str`: The name of this package when it is installed"""
