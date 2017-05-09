@@ -2,13 +2,15 @@
 Release Notes
 =============
 
-Version 1.0.4 (in development)
-==============================
--
-
-Version 1.0.3 (2017.09.05)
+Version 1.1.0 (2017.05.09)
 ==========================
-- add 'update' command
+- update email address to @measurement.govt.nz
+- previous release date (in CHANGES.rst) was yyyy.dd.mm should have been yyyy.mm.dd
+- previous release should have incremented the minor number (new **update** feature)
+
+Version 1.0.3 (2017.05.09)
+==========================
+- add **update** command
 - run pip commands using sys.executable
 
 Version 1.0.2 (2017.03.27)
