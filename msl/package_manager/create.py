@@ -29,20 +29,23 @@ displayed as "MSL-MyPackage", however, to import the package you would use:
 
 
 def create(names, author=None, email=None):
-    """
-    Create a new MSL package folder structure in the current working directory.
+    """Create a new MSL package folder structure in the current working directory.
 
-    Args:
-        names (str, list[str]): The name(s) of the MSL packages to create.
+    Parameters
+    ----------
+    names : :obj:`str` or :obj:`list` of :obj:`str`
+        The name(s) of the MSL packages to create.
+    author : :obj:`str`, optional
+        The name of the author. If :obj:`None` then use :func:`.helper.get_username` 
+        to determine the author's name.
+    email : :obj:`str`, optional
+        The author's email address. If :obj:`None` then use :func:`.helper.get_email` 
+        to determine the author's email address.
 
-        author (str, optional): The name of the author. If :py:data:`None` then use
-            :func:`.helper.get_username` to determine the author's name.
-
-        email (str, optional): The author's email address. If :py:data:`None` then use
-            :func:`.helper.get_email` to determine the author's email address.
-
-    Raises:
-        TypeError: If any of the input arguments do not have the correct data type
+    Raises
+    ------
+    TypeError
+        If any of the input arguments do not have the correct data type.
     """
 
     # ensure that the names contain valid characters for a python package

@@ -22,17 +22,18 @@ __all__ = ['get_username', 'get_email', 'get_input', 'github', 'installed']
 
 
 def get_username():
-    """
-    Automatically determine the name of the user.
+    """Automatically determine the name of the user.
 
     If git_ is installed then it returns the ``user.name`` parameter from the user's git_
-    account. If git_ is not installed then use :py:func:`getpass.getuser` to determine
+    account. If git_ is not installed then use :func:`getpass.getuser` to determine
     the username from an environment variable.
 
     .. _git: https://git-scm.com
 
-    Returns:
-         :py:class:`str`: The user's name.
+    Returns
+    -------
+    :obj:`str`
+        The user's name.
     """
     try:
         p1 = subprocess.Popen(['git', 'config', 'user.name'], stdout=subprocess.PIPE)
@@ -42,17 +43,18 @@ def get_username():
 
 
 def get_email():
-    """
-    Try to determine the user's email address.
+    """Try to determine the user's email address.
 
     If git_ is installed then it returns the ``user.email`` parameter from the user's git_
     account to use as the user's email address. If git_ is not installed then returns
-    :py:data:`None`.
+    :obj:`None`.
 
     .. _git: https://git-scm.com
 
-    Returns:
-         :py:class:`str`: The user's email address or :py:data:`None`.
+    Returns
+    -------
+    :obj:`str` or :obj:`None`
+        The user's email address.
     """
     try:
         p2 = subprocess.Popen(['git', 'config', 'user.email'], stdout=subprocess.PIPE)
@@ -62,17 +64,22 @@ def get_email():
 
 
 def get_input(msg):
-    """
-    Get the user input (for Python 2 and 3).
+    """Get the user input (for Python 2 and 3).
 
-    Args:
-        msg (str): The message to display.
+    Parameters
+    ----------
+    msg : :obj:`str`
+        The message to display.
 
-    Returns:
-        :py:class:`str`: The user's input from :py:data:`sys.stdin`.
+    Returns
+    -------
+    :obj:`str`
+        The user's input from :obj:`sys.stdin`.
 
-    Raises:
-        NotImplementedError: If the Python major version is not 2 or 3.
+    Raises
+    ------
+    NotImplementedError
+        If the Python major version is not 2 or 3.
     """
     if IS_PYTHON2:
         return raw_input(msg)
@@ -83,17 +90,20 @@ def get_input(msg):
 
 
 def github(get_release_version=False):
-    """
-    Get the list of MSL repositories that are available on GitHub.
+    """Get the list of MSL repositories that are available on GitHub.
 
-    Args:
-        get_release_version (bool, optional): Get the latest release version information.
-            Getting the release version will make this function take longer to finish. Also
-            the repository might not have published a release tag so the release information
-            might not be available. Default is :py:data:`False`.
+    Parameters
+    ----------
+    get_release_version : :obj:`bool`, optional
+        Get the latest release version information. Getting the release version 
+        will make this function take longer to finish. Also, the repository might
+        not have published a release tag so the release information might not be 
+        available. Default is :obj:`False`.
 
-    Returns:
-        A :py:class:`dict` with the repository name for the keys and the values are a list of
+    Returns
+    -------
+    :obj:`dict` 
+        With the repository name for the keys and the values are a list of 
         [version, description].
     """
     try:
@@ -119,11 +129,12 @@ def github(get_release_version=False):
 
 
 def installed():
-    """
-    Get the MSL packages that are installed.
+    """Get the MSL packages that are installed.
 
-    Returns:
-        A :py:class:`dict` with the repository name for the keys and the values are a list of
+    Returns
+    -------
+    :obj:`dict` 
+        With the repository name for the keys and the values are a list of
         [version, description].
     """
     pkgs = {}

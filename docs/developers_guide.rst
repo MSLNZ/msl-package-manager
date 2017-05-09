@@ -163,12 +163,12 @@ to the code base it will be easier to understand if there is a coherent structur
 
 * Follow the :pep:`8` style guide when possible *(by default, PyCharm will notify you if you do not)*.
 * Docstrings must be provided for all public classes, methods, and functions.
-* For the docstrings use the `Google Style`_ format.
+* For the docstrings use the `NumPy Style`_ format.
 
   * Press **CTRL + ALT + S** to open the **Settings** window and navigate to **Tools > Python Integrated Tools** to
-    select the **Google** docstring format and then click **Apply** then **OK**.
+    select the **NumPy** docstring format and then click **Apply** then **OK**.
 
-    .. image:: _static/pycharm_google_style.png
+    .. image:: _static/pycharm_numpy_style.png
 
 * Do not use :func:`print` statements to notify the end-user of the status of a program. Use :mod:`logging` instead.
   This has the advantage that you can use different `logging levels`_ to decide what message types are displayed and
@@ -192,6 +192,7 @@ to the code base it will be easier to understand if there is a coherent structur
 .. _coverage: http://coverage.readthedocs.io/en/latest/index.html
 .. _build_sphinx: http://www.sphinx-doc.org/en/latest/invocation.html#invocation-of-sphinx-build
 .. _Google Style: http://www.sphinx-doc.org/en/latest/ext/example_google.html
+.. _NumPy Style: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 .. _logging levels: https://docs.python.org/3/library/logging.html#logging-levels
 .. _clone: https://git-scm.com/docs/git-clone
 .. _Branch: https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell

@@ -6,21 +6,22 @@ from .helper import installed
 
 
 def print_list(from_github=False, github_release_info=False):
-    """
-    Print the list of MSL packages that are available.
-
-    Args:
-        from_github (bool, optional): Whether to show the MSL packages that are available as
-            GitHub_ repositories, :py:data:`True`, or the MSL packages that are installed,
-            :py:data:`False`. Default is to show the MSL packages that are installed.
-
-        github_release_info (bool, optional): Whether to fetch the release information from the
-            GitHub_ repositories. Getting the release information takes longer to execute the
-            request. This argument is only used if ``from_github`` is :py:data:`True`. The
-            release information is always included for installed packages. Default is to ignore
-            the release information from GitHub_.
+    """Print the list of MSL packages that are available.
 
     .. _GitHub: https://github.com/MSLNZ
+    
+    Parameters
+    ----------
+    from_github : :obj:`bool`, optional
+        Whether to show the MSL packages that are available as GitHub_ repositories, 
+        :obj:`True`, or the MSL packages that are installed, :obj:`False`. Default 
+        is to show the MSL packages that are installed.
+    github_release_info : :obj:`bool`, optional
+        Whether to fetch the release information from the GitHub_ repositories. 
+        Getting the release information takes longer to execute the request. This 
+        argument is only used if `from_github` is :obj:`True`. The release 
+        information is always included for installed packages. 
+        Default is to ignore the release information from GitHub_.    
     """
     if from_github:
         typ, pkgs = 'Repositories', github(github_release_info)
