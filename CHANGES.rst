@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+Version 1.1.1 (in development)
+==============================
+-
+
 Version 1.1.0 (2017.05.09)
 ==========================
 - update email address to @measurement.govt.nz
