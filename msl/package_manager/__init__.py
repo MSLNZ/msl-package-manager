@@ -26,6 +26,7 @@ from .helper import *
 from .create import create
 from .install import install
 from .uninstall import uninstall
+from .update import update
 from .print_list import print_list
 
 import colorama

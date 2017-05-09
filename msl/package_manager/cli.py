@@ -4,10 +4,12 @@ using the command-line interface (CLI).
 """
 import sys
 import argparse
+
 from colorama import Fore, Style
 
 from .install import install
 from .uninstall import uninstall
+from .update import update
 from .create import create
 from .print_list import print_list
 
@@ -21,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description='Manage MSL packages')
 
     parser.add_argument('command',
-                        help='the command to run [install, uninstall, create, list]')
+                        help='the command to run [install, uninstall, update, create, list]')
 
     parser.add_argument('names',
                         help='the name(s) of the MSL package(s)', nargs='*')
@@ -33,20 +35,24 @@ def main():
                         help="the email address for the author [used by 'create']")
 
     parser.add_argument('-y', '--yes', action='store_true',
-                        help="don't ask for confirmation to (un)install")
+                        help="don't ask for confirmation to (un)install or 'update'")
 
     parser.add_argument('-r', '--release-info', action='store_true',
-                        help="include the release info from GitHub [used by 'list', takes longer to execute]")
+                        help="include the release info from GitHub [used by 'list' and "
+                             "'install'], which will take longer to execute the command")
 
     args = parser.parse_args()
 
     args.command = args.command.lower()
 
     if args.command == 'install':
-        install(args.names if args.names else 'ALL', args.yes)
+        install(args.names if args.names else 'ALL', args.yes, args.release_info)
 
     elif args.command == 'uninstall':
         uninstall(args.names if args.names else 'ALL', args.yes)
+
+    elif args.command == 'update':
+        update(args.names if args.names else 'ALL', args.yes)
 
     elif args.command == 'create':
         create(args.names, args.author, args.email)
