@@ -25,6 +25,9 @@ which has the following classes
 | :class:`msl.package_manager.uninstall        | Use pip to uninstall MSL packages.                          |
 | <msl.package_manager.uninstall.uninstall>`   |                                                             |
 +----------------------------------------------+-------------------------------------------------------------+
+| :class:`msl.package_manager.update           | Use pip to update MSL packages.                             |
+| <msl.package_manager.update.update>`         |                                                             |
++----------------------------------------------+-------------------------------------------------------------+
 
 and the following helper module
 
@@ -44,3 +47,4 @@ Package Structure
    msl.package_manager.install <_api/msl.package_manager.install>
    msl.package_manager.print_list <_api/msl.package_manager.print_list>
    msl.package_manager.uninstall <_api/msl.package_manager.uninstall>
+   msl.package_manager.update <_api/msl.package_manager.update>

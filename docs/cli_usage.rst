@@ -22,6 +22,10 @@ Install a specific MSL package, for example **msl-loadlib** *(you can ignore the
 
    $ msl install loadlib
 
+Install the **msl-loadlib** package and display the latest release number::
+
+   $ msl install loadlib -r
+
 Install multiple MSL packages::
 
    $ msl install loadlib equipment
@@ -44,6 +48,25 @@ Uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore t
 Uninstall multiple MSL packages::
 
    $ msl uninstall loadlib equipment
+
+update
+------
+
+Update all MSL packages (except for the **msl-package-manager**)::
+
+   $ msl update
+
+Update all MSL packages (except for the **msl-package-manager**) without asking for confirmation::
+
+   $ msl update -y
+
+Update a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
+
+   $ msl update loadlib
+
+Update multiple MSL packages::
+
+   $ msl update loadlib equipment
 
 list
 ----
