@@ -1,6 +1,7 @@
 """
 Use pip to uninstall MSL packages.
 """
+import sys
 import subprocess
 
 from .helper import _get_packages
@@ -19,4 +20,4 @@ def uninstall(names='ALL', yes=False):
         Don't ask for confirmation to uninstall. Default is to ask before uninstalling.
     """
     for pkg in _get_packages('uninstall', names, yes):
-        subprocess.call(['pip', 'uninstall', '-y', pkg])
+        subprocess.call([sys.executable, '-m', 'pip', 'uninstall', '-y', pkg])
