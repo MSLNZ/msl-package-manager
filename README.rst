@@ -3,7 +3,7 @@ MSL Package Manager
 
 |docs|
 
-The MSL Package Manager allows you to install, uninstall, list and create MSL packages.
+The **MSL Package Manager** allows you to install, uninstall, update, list and create MSL packages.
 
 Install
 -------
