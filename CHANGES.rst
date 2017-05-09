@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+Version 1.0.4 (in development)
+==============================
+-
+
 Version 1.0.3 (2017.09.05)
 ==========================
 - add 'update' command
