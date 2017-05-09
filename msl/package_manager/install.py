@@ -27,4 +27,4 @@ def install(names='ALL', yes=False, get_release_version=False):
     """
     for pkg in _get_packages('install', names, yes, get_release_version=get_release_version):
         repo = 'https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg)
-        subprocess.call([sys.executable, '-m', 'pip', 'install', repo])
+        subprocess.call([sys.executable, '-m', 'pip', 'install', repo, '--process-dependency-links'])

@@ -199,12 +199,10 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
             if show_version:
                 msg += ' ' + values[0]
 
-        if not _yes:
-            msg += '\n\nProceed (y/[n])? '
-            res = get_input(msg).lower()
-            if res != 'y':
-                return {}
         print(msg)
+        if not (_yes or _ask_proceed()):
+            return {}
+        print()
     else:
         print('No MSL packages to ' + _command)
 
@@ -229,3 +227,16 @@ def _get_names(names):
             _names.append('msl-' + name)
 
     return _names
+
+
+def _ask_proceed():
+    """Ask whether to proceed with the command, e.g. install, uninstall, update"""
+    ask = '\nProceed (y/[n])? '
+    res = get_input(ask).lower()
+    while True:
+        if res == 'y':
+            return True
+        elif res == 'n' or len(res) == 0:
+            return False
+        else:
+            res = get_input(ask).lower()

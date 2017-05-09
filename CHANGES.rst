@@ -4,7 +4,8 @@ Release Notes
 
 Version 1.1.1 (in development)
 ==============================
--
+- include '--process-dependency-links' argument for 'pip install'
+- create **upgrade** alias for **update**
 
 Version 1.1.0 (2017.05.09)
 ==========================

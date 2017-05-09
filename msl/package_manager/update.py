@@ -8,7 +8,7 @@ from distutils.version import StrictVersion
 from colorama import Fore, Style
 
 from . import PKG_NAME
-from .helper import github, installed, get_input, _get_names
+from .helper import github, installed, _get_names, _ask_proceed
 
 
 def update(names='ALL', yes=False):
@@ -62,15 +62,14 @@ def update(names='ALL', yes=False):
             want = pkgs_to_update[pkg][0]
             msg += '\n  ' + pkg.ljust(w[0]) + ': ' + have.ljust(w[1]) + ' --> ' + want.ljust(w[2])
 
-        if not yes:
-            msg += '\n\nProceed (y/[n])? '
-            res = get_input(msg).lower()
-            if res != 'y':
-                return
         print(msg)
+        if not (yes or _ask_proceed()):
+            return
+        print()
+
+        for pkg in pkgs_to_update:
+            repo = 'https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg)
+            subprocess.call([sys.executable, '-m', 'pip', 'install', repo, '--upgrade', '--process-dependency-links'])
     else:
         print('No MSL packages to update')
 
-    for pkg in pkgs_to_update:
-        repo = 'https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg)
-        subprocess.call([sys.executable, '-m', 'pip', 'install', repo, '--upgrade'])
