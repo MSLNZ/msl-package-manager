@@ -6,6 +6,7 @@ import json
 import getpass
 import logging
 import subprocess
+
 from colorama import Fore, Style
 
 from msl.package_manager import IS_PYTHON2, IS_PYTHON3, PKG_NAME
@@ -149,30 +150,17 @@ def installed():
     return pkgs
 
 
-def _get_packages(_command, _names, _yes):
+def _get_packages(_command, _names, _yes, get_release_version=False):
     """
     Gets the list of available MSL packages, from either pip or GitHub.
     """
-    if isinstance(_names, str):
-        check_names = [] if _names == 'ALL' else [_names]
-    elif isinstance(_names, (list, tuple)) and isinstance(_names[0], str):
-        check_names = _names[:]
-    else:
-        raise TypeError('The package names must be either a string or a list of strings')
-
-    names = []
-    for name in check_names:
-        if name.startswith('msl-'):
-            names.append(name)
-        else:
-            names.append('msl-' + name)
-
     pkgs = {}
     pkgs_installed = installed()
+    names = _get_names(_names)
 
     if _command == 'install':
 
-        pkgs_github = github()
+        pkgs_github = github(get_release_version)
         if len(names) == 0:
             names = [pkg for pkg in pkgs_github if pkg != PKG_NAME]
 
@@ -197,15 +185,47 @@ def _get_packages(_command, _names, _yes):
                 pkgs[name] = pkgs_installed[name]
 
     if pkgs:
-        msg = 'The following MSL packages will be {0}ed:\n  '.format(_command)
-        msg += '\n  '.join(pkg for pkg in pkgs)
-        msg += '\nContinue (y/[n])? '
+        w = 0
+        show_version = False
+        for p in pkgs:
+            w = max(w, len(p))
+            if not show_version:
+                show_version = len(pkgs[p][0]) > 0
+
+        msg = 'The following MSL packages will be {0}ED:\n'.format(_command.upper())
+        for pkg, values in pkgs.items():
+            pkg_name = pkg + ':' if show_version else pkg
+            msg += '\n  ' + pkg_name.ljust(w)
+            if show_version:
+                msg += ' ' + values[0]
 
         if not _yes:
+            msg += '\n\nProceed (y/[n])? '
             res = get_input(msg).lower()
             if res != 'y':
                 return {}
+        print(msg)
     else:
         print('No MSL packages to ' + _command)
 
     return pkgs
+
+
+def _get_names(names):
+    """Convert `names` to friendly list of names."""
+
+    if isinstance(names, str):
+        check_names = [] if names == 'ALL' else [names]
+    elif isinstance(names, (list, tuple)) and isinstance(names[0], str):
+        check_names = names[:]
+    else:
+        raise TypeError('The package names must be either a string or a list of strings')
+
+    _names = []
+    for name in check_names:
+        if name.startswith('msl-'):
+            _names.append(name)
+        else:
+            _names.append('msl-' + name)
+
+    return _names
