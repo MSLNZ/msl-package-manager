@@ -2,9 +2,10 @@
 Release Notes
 =============
 
-Version 1.0.3 (in development)
-==============================
--
+Version 1.0.3 (2017.09.05)
+==========================
+- add 'update' command
+- run pip commands using sys.executable
 
 Version 1.0.2 (2017.03.27)
 ==========================
