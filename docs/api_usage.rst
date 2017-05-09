@@ -28,9 +28,9 @@ Print a list of all MSL repositories that are available (and include the version
 
    >>> pm.print_list(True, True)
    MSL Repositories    Version Description
-   ------------------- ------- -------------------------------------------------------------------------------
+   ------------------- ------- ----------------------------------------------------------------------
    msl-loadlib         0.2.1   Load a shared library (and access a 32-bit library from 64-bit Python)
-   msl-package-manager 0.1.0   MSL Package Manager to install, uninstall, update, list and create MSL packages
+   msl-package-manager 0.1.0   Install, uninstall, update, list and create MSL packages
 
 Get a dictionary of all the MSL packages that are installed
 
