@@ -16,7 +16,7 @@ def read(filename):
 def fetch_init(key):
     # open the __init__.py file to determine the value instead of importing the package to get the value
     init_text = read('msl/${msl-package-lower}/__init__.py')
-    return re.compile(r'{}\s+=\s+(.*)'.format(key)).search(init_text).group(1)[1:-1]
+    return re.compile(r'{}\s*=\s*(.*)'.format(key)).search(init_text).group(1)[1:-1]
 
 
 testing = {'test', 'tests', 'pytest'}.intersection(sys.argv)
@@ -38,7 +38,7 @@ setup(
     classifiers=[],  # list the classifiers, see: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest'],
-    install_requires=read('requirements.txt').split('\n'),
+    install_requires=read('requirements.txt').splitlines(),
     cmdclass={
         'docs': docs_commands.BuildDocs,
         'apidocs': docs_commands.ApiDocs,
