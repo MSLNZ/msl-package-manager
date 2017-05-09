@@ -35,7 +35,7 @@ def main():
                         help="the email address for the author [used by 'create']")
 
     parser.add_argument('-y', '--yes', action='store_true',
-                        help="don't ask for confirmation to (un)install or 'update'")
+                        help="don't ask for confirmation to '(un)install' or 'update'")
 
     parser.add_argument('-r', '--release-info', action='store_true',
                         help="include the release info from GitHub [used by 'list' and "
@@ -51,7 +51,7 @@ def main():
     elif args.command == 'uninstall':
         uninstall(args.names if args.names else 'ALL', args.yes)
 
-    elif args.command == 'update':
+    elif args.command == 'update' or args.command == 'upgrade':
         update(args.names if args.names else 'ALL', args.yes)
 
     elif args.command == 'create':
