@@ -104,8 +104,8 @@ def github(get_release_version=False):
     Returns
     -------
     :obj:`dict` 
-        With the repository name for the keys and the values are a list of 
-        [version, description].
+        With the repository name for the keys and the values are a :obj:`list`
+        of [version, description].
     """
     try:
         repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode())
@@ -135,8 +135,8 @@ def installed():
     Returns
     -------
     :obj:`dict` 
-        With the repository name for the keys and the values are a list of
-        [version, description].
+        With the repository name for the keys and the values are a :obj:`list`
+        of [version, description].
     """
     pkgs = {}
     for pkg in pip.get_installed_distributions():
