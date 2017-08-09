@@ -36,8 +36,8 @@ def create(names, author=None, email=None):
     names : :obj:`str` or :obj:`list` of :obj:`str`
         The name(s) of the MSL packages to create.
     author : :obj:`str`, optional
-        The name of the author. If :obj:`None` then use :func:`.helper.get_username` 
-        to determine the author's name.
+        The name of the author to use for the new package. If :obj:`None` then
+        use :func:`.helper.get_username` to determine the author's name.
     email : :obj:`str`, optional
         The author's email address. If :obj:`None` then use :func:`.helper.get_email` 
         to determine the author's email address.
