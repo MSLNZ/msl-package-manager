@@ -1,5 +1,5 @@
 """
-Main entry point to either install, uninstall, list or create MSL packages
+Main entry point to either install, uninstall, update, list or create MSL packages
 using the command-line interface (CLI).
 """
 import sys
@@ -16,7 +16,7 @@ from .print_list import print_list
 
 def main():
     """
-    Main entry point to either install, uninstall, list or create MSL packages using the CLI.
+    Main entry point to either install, uninstall, update, list or create MSL packages using the CLI.
 
     **This function should not be called directly as it is the main entry point for the CLI.**
     """
