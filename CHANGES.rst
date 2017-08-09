@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+Version 1.2.1 (in development)
+==============================
+
+
 Version 1.2.0 (2017.08.10)
 ==========================
 - add the ``--all`` flag for the CLI
