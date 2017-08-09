@@ -4,10 +4,10 @@ Release Notes
 
 Version 1.1.1 (in development)
 ==============================
-- include the "--all" CLI flag
-- bug fixes and edits for the print messages
-- include '--process-dependency-links' argument for 'pip install'
+- add the ``--all`` flag for the CLI
+- include ``--process-dependency-links`` argument for ``pip install``
 - create **upgrade** alias for **update**
+- bug fixes and edits for the print messages
 
 Version 1.1.0 (2017.05.09)
 ==========================
@@ -22,7 +22,7 @@ Version 1.0.3 (2017.05.09)
 
 Version 1.0.2 (2017.03.27)
 ==========================
-- split requirements.txt using '\n' instead of by any white space
+- split requirements.txt using ``\n`` instead of by any white space
 - remove unnecessary "import time"
 
 Version 1.0.1 (2017.03.03)
@@ -36,7 +36,7 @@ Version 1.0.0 (2017.03.02)
 - separate **install**, **uninstall**, **create** and **list** functions into different modules
 - fix MSL namespace
 - edit test_envs.py to work with colorama and update stdout in real time
-- add **--yes** and **--release-info** flags for CLI
+- add ``--yes`` and ``--release-info`` flags for CLI
 - create documentation and unit tests
 - many bug fixes
 
