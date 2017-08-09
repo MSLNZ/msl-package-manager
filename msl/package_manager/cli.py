@@ -23,29 +23,36 @@ def main():
     parser = argparse.ArgumentParser(description='Manage MSL packages')
 
     parser.add_argument('command',
-                        help='the command to run [install, uninstall, update, create, list]')
+                        help="the command to run: 'install', 'uninstall', 'update', 'create' or 'list'")
 
     parser.add_argument('names',
-                        help='the name(s) of the MSL package(s)', nargs='*')
+                        help='the name(s) of the MSL package(s) to execute the command with', nargs='*')
 
-    parser.add_argument('-a', '--author', nargs='+',
-                        help="the name of the author [used by 'create']")
-
-    parser.add_argument('-e', '--email',
-                        help="the email address for the author [used by 'create']")
+    parser.add_argument('--all', action='store_true',
+                        help="'(un)install' or 'update' all MSL packages")
 
     parser.add_argument('-y', '--yes', action='store_true',
-                        help="don't ask for confirmation to '(un)install' or 'update'")
+                        help="don't ask for confirmation to '(un)install' or 'update' the MSL package(s)")
 
     parser.add_argument('-r', '--release-info', action='store_true',
                         help="include the release info from GitHub [used by 'list' and "
-                             "'install'], which will take longer to execute the command")
+                             "'install']; enabling this will take longer to execute the command")
+
+    parser.add_argument('-a', '--author', nargs='+',
+                        help="the name of the author to use for the new package [used by 'create']")
+
+    parser.add_argument('-e', '--email',
+                        help="the email address of the author to use for the new package [used by 'create']")
 
     args = parser.parse_args()
 
     args.command = args.command.lower()
 
-    if args.command == 'install':
+    if args.command in ('install', 'uninstall', 'update', 'upgrade') and len(args.names) == 0 and not args.all:
+        msg = 'You must specify the MSL package name(s) to {} or use the "--all" flag'.format(args.command)
+        print(Style.BRIGHT + Fore.RED + msg)
+
+    elif args.command == 'install':
         install(args.names if args.names else 'ALL', args.yes, args.release_info)
 
     elif args.command == 'uninstall':

@@ -12,11 +12,11 @@ install
 
 Install all MSL packages that are available (asks for confirmation before installing)::
 
-   $ msl install
+   $ msl install --all
 
 Install all MSL packages without asking for confirmation::
 
-   $ msl install -y
+   $ msl install --all -y
 
 Install a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
@@ -28,18 +28,18 @@ Install the **msl-loadlib** package and display the latest release number::
 
 Install multiple MSL packages::
 
-   $ msl install loadlib equipment
+   $ msl install loadlib equipment qt
 
 uninstall
 ---------
 
 Uninstall all MSL packages (except for the **msl-package-manager**)::
 
-   $ msl uninstall
+   $ msl uninstall --all
 
 Uninstall all MSL packages (except for the **msl-package-manager**) without asking for confirmation::
 
-   $ msl uninstall -y
+   $ msl uninstall --all -y
 
 Uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
@@ -47,18 +47,18 @@ Uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore t
 
 Uninstall multiple MSL packages::
 
-   $ msl uninstall loadlib equipment
+   $ msl uninstall loadlib equipment qt
 
 update
 ------
 
 Update all MSL packages (except for the **msl-package-manager**)::
 
-   $ msl update
+   $ msl update --all
 
 Update all MSL packages (except for the **msl-package-manager**) without asking for confirmation::
 
-   $ msl update -y
+   $ msl update --all -y
 
 Update a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
@@ -66,7 +66,7 @@ Update a specific MSL package, for example **msl-loadlib** *(you can ignore the 
 
 Update multiple MSL packages::
 
-   $ msl update loadlib equipment
+   $ msl update loadlib equipment qt
 
 list
 ----

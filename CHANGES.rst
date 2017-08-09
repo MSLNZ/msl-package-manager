@@ -4,6 +4,8 @@ Release Notes
 
 Version 1.1.1 (in development)
 ==============================
+- include the "--all" CLI flag
+- bug fixes and edits for the print messages
 - include '--process-dependency-links' argument for 'pip install'
 - create **upgrade** alias for **update**
 
