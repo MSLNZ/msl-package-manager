@@ -8,7 +8,7 @@ from colorama import Fore, Style
 from .helper import get_username, get_email, get_input
 
 HELP_MSG = """\
-To create a new MSL package you must specify an MSL package name,
+To create a new MSL package you must specify the MSL package name,
 and optionally the name and email address of the author.
 
 For example, to create a new "MSL-MyPackage" template that contains the standard
