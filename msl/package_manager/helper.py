@@ -195,7 +195,7 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
         msg = 'The following MSL packages will be {0}ED:\n'.format(_command.upper())
         for pkg, values in pkgs.items():
             pkg_name = pkg + ':' if show_version else pkg
-            msg += '\n  ' + pkg_name.ljust(w)
+            msg += '\n  ' + pkg_name.ljust(w+1)
             if show_version:
                 msg += ' ' + values[0]
 
