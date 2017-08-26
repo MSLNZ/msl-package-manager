@@ -13,9 +13,9 @@ is the *best way* to develop programs in the Python language [#f1]_.
 
 .. _Install and set up Python, Git and PyCharm:
 
-Install Python, Git and PyCharm
--------------------------------
-This section uses the `MSL-LoadLib <repo_>`_ repository as an example of a repository that one would like
+Install and set up Python, Git and PyCharm
+------------------------------------------
+This section uses the `MSL-LoadLib repository`_ as an example of a repository that one would like
 to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
 .. note::
@@ -74,12 +74,12 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
       .. image:: _static/pycharm_github_login.png
 
-   e) Clone_ the **MSL-LoadLib** `repository <repo_>`_. You will have to change the path of the **Parent Directory**
+   e) Clone_ the `MSL-LoadLib repository`_. You will have to change the path of the **Parent Directory**
       and you can choose the **Directory Name** to be any text that you want.
 
       .. image:: _static/pycharm_github_clone.png
 
-   f) Open the `repository <repo_>`_ in PyCharm.
+   f) Open the `MSL-LoadLib repository`_ in PyCharm.
 
       .. image:: _static/pycharm_github_open.png
 
@@ -110,11 +110,12 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
 Commit changes to a repository
 --------------------------------
-The following is only a very basic example of how to upload changes to the source code to the `repository <repo_>`_
-by using PyCharm. See `this link <githelp_>`_ for a much more detailed tutorial on how to use git.
+The following is only a very basic example of how to upload changes to the source code to the
+`MSL-LoadLib repository`_ by using PyCharm. See `this <githelp_>`_ link for a much more detailed overview
+on how to use git.
 
 .. note::
-   This section assumes that you followed the instructions from `Install Python, Git and PyCharm`_.
+   This section assumes that you followed the instructions from `Install and set up Python, Git and PyCharm`_.
 
 1. Make sure that the git Branch_ you are working on is up to date by performing a Pull_.
 
@@ -130,19 +131,20 @@ by using PyCharm. See `this link <githelp_>`_ for a much more detailed tutorial 
 
 2. Make changes to the code ...
 
-3. When you are happy with the changes that you have made you should Push_ the changes to the `repository <repo_>`_.
+3. When you are happy with the changes that you have made you should Push_ the changes to the
+   `MSL-LoadLib repository`_.
 
    a) Click on the :abbr:`VCS (Version Control Software)` *upward-arrow button* in the top-right corner to
       commit the changes.
    
       .. image:: _static/pycharm_github_commit1.png
 
-   b) Select the file(s) that you want to upload to the `repository <repo_>`_, add a useful message for the commit and
-      then select **Commit and Push**.
+   b) Select the file(s) that you want to upload to the `MSL-LoadLib repository`_, add a useful message for the
+      commit and then select **Commit and Push**.
 
       .. image:: _static/pycharm_github_commit2.png
 
-   c) Finally, Push_ the changes to the `repository <repo_>`_.
+   c) Finally, Push_ the changes to the `MSL-LoadLib repository`_.
    
       .. image:: _static/pycharm_github_commit3.png
 
@@ -150,7 +152,6 @@ by using PyCharm. See `this link <githelp_>`_ for a much more detailed tutorial 
 
 Using the setup.py and test_envs.py scripts
 -------------------------------------------
-
 MSL packages come with two scripts to help make development easier: **setup.py** and **test_envs.py**. See the
 :ref:`"Create" ReadMe <create-readme>` page for an overview on how to use these scripts.
 
@@ -160,6 +161,9 @@ Edit the source code using the style guide
 ------------------------------------------
 Please adhere to the following style guides when contributing to **MSL** packages. With multiple people contributing
 to the code base it will be easier to understand if there is a coherent structure to how code is written:
+
+.. note::
+   This section assumes that you followed the instructions from `Install and set up Python, Git and PyCharm`_.
 
 * Follow the :pep:`8` style guide when possible *(by default, PyCharm will notify you if you do not)*.
 * Docstrings must be provided for all public classes, methods, and functions.
@@ -178,10 +182,10 @@ to the code base it will be easier to understand if there is a coherent structur
 .. _Miniconda: http://conda.pydata.org/miniconda.html
 .. _Windows Command Prompt: http://www.computerhope.com/issues/chusedos.htm
 .. _virtual environment: http://conda.pydata.org/docs/using/envs.html
-.. _repo: https://github.com/MSLNZ/msl-loadlib
+.. _MSL-LoadLib repository: https://github.com/MSLNZ/msl-loadlib
 .. _git: https://git-scm.com/downloads
 .. _GitHub: https://github.com/join?source=header-home
-.. _githelp: https://www.atlassian.com/git/tutorials/
+.. _githelp: https://git-scm.com/doc
 .. _version control system: https://en.wikipedia.org/wiki/Version_control
 .. _Community Edition of PyCharm: https://www.jetbrains.com/pycharm/download/#section=windows
 .. _IDE: https://en.wikipedia.org/wiki/Integrated_development_environment
