@@ -202,7 +202,7 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
         print(msg)
         if not (_yes or _ask_proceed()):
             return {}
-        print()
+        print('')
     else:
         print('No MSL packages to ' + _command)
 

@@ -65,7 +65,7 @@ def update(names='ALL', yes=False):
         print(msg)
         if not (yes or _ask_proceed()):
             return
-        print()
+        print('')
 
         for pkg in pkgs_to_update:
             repo = 'https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg)
