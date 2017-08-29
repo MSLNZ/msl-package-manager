@@ -50,7 +50,7 @@ setup(
     ],
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest', 'colorama'],
-    install_requires=read('requirements.txt').splitlines(),
+    install_requires=read('requirements.txt').splitlines() if not testing else [],
     cmdclass={
         'docs': docs_commands.BuildDocs,
         'apidocs': docs_commands.ApiDocs,
