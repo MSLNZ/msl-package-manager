@@ -60,7 +60,7 @@ setup(
             'msl = msl.package_manager.cli:main',
         ],
     },
-    packages=find_packages(include=('msl*',)) + ['template'],
+    packages=find_packages(include=('msl*',)),
     include_package_data=True,
     zip_safe=False,
 )

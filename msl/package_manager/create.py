@@ -124,7 +124,7 @@ def create(names, author=None, email=None):
             return
 
     # create the new package
-    template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../template"))
+    template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'template'))
     for msl_root, msl_pkg in zip(roots, pkg_names):
 
         aliases = {'${msl-package}': msl_pkg,
