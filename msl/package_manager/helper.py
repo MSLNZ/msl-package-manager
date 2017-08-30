@@ -1,10 +1,13 @@
 """
 Helper functions for the MSL Package Manager.
 """
+import os
+import sys
 import pip
 import json
+import time
 import getpass
-import logging
+import tempfile
 import subprocess
 from collections import OrderedDict
 
@@ -91,7 +94,7 @@ def get_input(msg):
         raise NotImplementedError('Python major version is not 2 or 3')
 
 
-def github(get_release_version=False):
+def github(get_release_version=False, force=False):
     """Get the list of MSL repositories that are available on GitHub.
 
     Parameters
@@ -102,18 +105,41 @@ def github(get_release_version=False):
         not have published a release tag so the release information might not be 
         available. Default is :obj:`False`.
 
+    force : :obj:`bool`, optional
+        The repositories that are available are temporarily cached to use for
+        subsequent calls to this function. After 1 hour the cache is automatically
+        updated. Set `force` to be :obj:`True` to force the cache to be updated
+        when you call this function.
+
     Returns
     -------
     :obj:`dict` 
         With the repository name for the keys and the values are a :obj:`list`
         of [version, description].
     """
+    path = os.path.join(tempfile.gettempdir(), 'msl-github-repo-cache.json')
+    if not force and os.path.isfile(path) and (time.time() < os.path.getmtime(path) + 3600.0):
+        with open(path, 'rb') as f:
+            pkgs = json.load(f)
+        msg = Style.BRIGHT + Fore.YELLOW + 'Loaded cached GitHub repository information'
+        if get_release_version:
+            # check if the cached file contains the version info
+            has_versions = [True for val in pkgs.values() if val[0]]
+            if has_versions:
+                print(msg)
+                return pkgs
+        else:
+            print(msg)
+            return pkgs
+
     try:
-        repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode())
-    except:
+        print(Style.BRIGHT + Fore.YELLOW + 'Inspecting repositories on GitHub')
+        repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode('utf-8'))
+    except Exception as err:
         # it is possible to get an "API rate limit exceeded for" error if you call this
         # function too often or maybe the user does not have an internet connection
-        logging.log(logging.ERROR, 'Cannot connect to GitHub')
+        print(Fore.RED + Style.BRIGHT + 'Cannot connect to GitHub -- {}'.format(err))
+        print('Perhaps the GitHub API rate limit was exceeded. Please wait a while and try again...')
         return {}
 
     pkgs = {}
@@ -123,10 +149,14 @@ def github(get_release_version=False):
             if get_release_version:
                 url = 'https://api.github.com/repos/MSLNZ/{}/releases/latest'.format(repo['name'])
                 try:
-                    version = json.loads(urlopen(url).read().decode())['name'].replace('v', '')
+                    version = json.loads(urlopen(url).read().decode('utf-8'))['name'].replace('v', '')
                 except:
                     pass
             pkgs[repo['name']] = [version, repo['description']]
+
+    with open(path, 'wb') as fp:
+        json.dump(pkgs, fp)
+
     return pkgs
 
 
@@ -139,6 +169,7 @@ def installed():
         With the repository name for the keys and the values are a :obj:`list`
         of [version, description].
     """
+    print('Inspecting packages in {0}'.format(os.path.dirname(sys.executable)))
     pkgs = {}
     for pkg in pip.get_installed_distributions():
         if pkg.key.startswith('msl-'):
@@ -151,7 +182,7 @@ def installed():
     return pkgs
 
 
-def _get_packages(_command, _names, _yes, get_release_version=False):
+def _get_packages(_command, _names, _yes, get_release_version=False, force=False):
     """
     Returns a sorted dictionary of the available MSL packages, from either pip or GitHub.
     """
@@ -161,7 +192,7 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
 
     if _command == 'install':
 
-        pkgs_github = github(get_release_version)
+        pkgs_github = github(get_release_version, force)
         if len(names) == 0:
             names = [pkg for pkg in pkgs_github if pkg != PKG_NAME]
 
@@ -195,7 +226,7 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
             if not show_version:
                 show_version = len(pkgs[p][0]) > 0
 
-        msg = 'The following MSL packages will be {0}ED:\n'.format(_command.upper())
+        msg = '\nThe following MSL packages will be {0}{1}ED{2}:\n'.format(Fore.CYAN, _command.upper(), Fore.RESET)
         for pkg, values in pkgs.items():
             pkg_name = pkg + ':' if show_version else pkg
             msg += '\n  ' + pkg_name.ljust(w+1)
@@ -207,7 +238,7 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
             return {}
         print('')
     else:
-        print('No MSL packages to ' + _command)
+        print(Fore.CYAN + 'No MSL packages to ' + _command)
 
     return pkgs
 

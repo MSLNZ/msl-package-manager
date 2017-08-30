@@ -5,7 +5,7 @@ from .helper import github
 from .helper import installed
 
 
-def print_list(from_github=False, github_release_info=False):
+def print_list(from_github=False, github_release_info=False, update_github_cache=False):
     """Print the list of MSL packages that are available.
 
     .. _GitHub: https://github.com/MSLNZ
@@ -18,13 +18,17 @@ def print_list(from_github=False, github_release_info=False):
         is to show the MSL packages that are installed.
     github_release_info : :obj:`bool`, optional
         Whether to fetch the release information from the GitHub_ repositories. 
-        Getting the release information takes longer to execute the request. This 
-        argument is only used if `from_github` is :obj:`True`. The release 
-        information is always included for installed packages. 
-        Default is to ignore the release information from GitHub_.    
+        Default is to ignore the release information from GitHub_.
+    update_github_cache : :obj:`bool`, optional
+        The GitHub_ repositories that are available are temporarily cached to use for
+        subsequent calls to this function. After 1 hour the cache is automatically
+        updated. Set `force` to be :obj:`True` to force the cache to be updated
+        when you call this function.
     """
     if from_github:
-        typ, pkgs = 'Repositories', github(github_release_info)
+        typ, pkgs = 'Repositories', github(github_release_info, update_github_cache)
+        if not pkgs:
+            return
     else:
         typ, pkgs = 'Packages', installed()
 
@@ -35,6 +39,7 @@ def print_list(from_github=False, github_release_info=False):
         widths = [max(widths[0], len(p)), max(widths[1], len(pkgs[p][0])), max(widths[2], len(pkgs[p][1]))]
 
     # print the results
+    print('')
     print(' '.join(header[i].ljust(widths[i]) for i in range(len(header))))
     print(' '.join('-' * w for w in widths))
     for p in sorted(pkgs):

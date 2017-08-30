@@ -3,6 +3,7 @@ Use pip to update MSL packages.
 """
 import sys
 import subprocess
+from collections import OrderedDict
 from distutils.version import StrictVersion
 
 from colorama import Fore, Style
@@ -11,7 +12,7 @@ from . import PKG_NAME
 from .helper import github, installed, _get_names, _ask_proceed
 
 
-def update(names='ALL', yes=False):
+def update(names='ALL', yes=False, update_github_cache=False):
     """Use pip to update MSL packages.
 
     Parameters
@@ -19,12 +20,18 @@ def update(names='ALL', yes=False):
     names : :obj:`str` or :obj:`list` of :obj:`str`, optional
         The name of a single MSL package or a list of MSL package names to update. 
         Default is to update all MSL packages (except for the **msl-package-manager**).
-
     yes : :obj:`bool`, optional
         Don't ask for confirmation to update. Default is to ask before updating.
+    update_github_cache : :obj:`bool`, optional
+        The GitHub_ repositories that are available are temporarily cached to use for
+        subsequent calls to this function. After 1 hour the cache is automatically
+        updated. Set `force` to be :obj:`True` to force the cache to be updated
+        when you call this function.
     """
+    pkgs_github = github(get_release_version=True, force=update_github_cache)
+    if not pkgs_github:
+        return
     pkgs_installed = installed()
-    pkg_github = github(get_release_version=True)
 
     _names = _get_names(names)
 
@@ -38,7 +45,7 @@ def update(names='ALL', yes=False):
     for pkg in pkgs:
 
         try:
-            github_version = pkg_github[pkg][0]
+            github_version = pkgs_github[pkg][0]
         except KeyError:
             print(Style.BRIGHT + Fore.RED + 'Cannot update {0} -- package not found on github'.format(pkg))
             continue
@@ -56,7 +63,9 @@ def update(names='ALL', yes=False):
             print(Style.BRIGHT + Fore.YELLOW + 'The {0} package is already the latest'.format(pkg))
 
     if pkgs_to_update:
-        msg = 'The following MSL packages will be UPDATED:\n'
+        pkgs_to_update = OrderedDict([(k, pkgs_to_update[k]) for k in sorted(pkgs_to_update)])
+
+        msg = '\nThe following MSL packages will be {0}UPDATED{1}:\n'.format(Fore.CYAN, Fore.RESET)
         for pkg in pkgs_to_update:
             have = pkgs_to_update[pkg][1]
             want = pkgs_to_update[pkg][0]
@@ -71,5 +80,5 @@ def update(names='ALL', yes=False):
             repo = 'https://github.com/MSLNZ/{0}/archive/master.zip'.format(pkg)
             subprocess.call([sys.executable, '-m', 'pip', 'install', repo, '--upgrade', '--process-dependency-links'])
     else:
-        print('No MSL packages to update')
+        print(Fore.CYAN + 'No MSL packages to update')
 
