@@ -3,8 +3,8 @@
 Command Line Interface
 ======================
 
-Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install, uninstall, list and
-create MSL packages by using the command line interface. *You can also directly access these functions through the*
+Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install, uninstall, update, list
+and create MSL packages by using the command line interface. *You can also directly call these functions through the*
 :ref:`API <api_usage>`.
 
 install

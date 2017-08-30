@@ -4,7 +4,7 @@ API Usage
 =========
 
 In cases where using the :ref:`command-line interface <cli-usage>` is not desired, you can use the :ref:`API <api>`
-functions directly to install, uninstall, list and create MSL packages.
+functions directly to install, uninstall, update, list and create MSL packages.
 
 First, import the **MSL-Package-Manager**
 
@@ -20,7 +20,7 @@ Print a list of all MSL packages that are installed
    MSL Packages        Version Description
    ------------------- ------- ----------------------------------------------------------------------
    msl-loadlib         0.2.3   Load a shared library (and access a 32-bit library from 64-bit Python)
-   msl-package-manager 1.0.0   Install, uninstall, list and create MSL packages
+   msl-package-manager 1.0.0   Install, uninstall, update, list and create MSL packages
 
 Print a list of all MSL repositories that are available (and include the version information)
 
@@ -38,12 +38,12 @@ Get a dictionary of all the MSL packages that are installed
 
    >>> pkg_dict = pm.helper.installed()
    >>> pkg_dict
-   {'msl-loadlib': ['0.2.3', 'Load a shared library (and access a 32-bit library from 64-bit Python)'], 'msl-package-manager': ['1.0.0', 'Install, uninstall, list and create MSL packages']}
+   {'msl-loadlib': ['0.2.3', 'Load a shared library (and access a 32-bit library from 64-bit Python)'], 'msl-package-manager': ['1.0.0', 'Install, uninstall, update, list and create MSL packages']}
    >>> for pkg, info in pkg_dict.items():
    ...     print(pkg, info)
    ...
    msl-loadlib ['0.2.3', 'Load a shared library (and access a 32-bit library from 64-bit Python)']
-   msl-package-manager ['1.0.0', 'Install, uninstall, list and create MSL packages']
+   msl-package-manager ['1.0.0', 'Install, uninstall, update, list and create MSL packages']
 
 Uninstall the **msl-loadlib** package
 
