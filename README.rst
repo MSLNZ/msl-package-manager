@@ -27,7 +27,7 @@ Usage
 -----
 
 Once the MSL Package Manager has been installed you will be able to install, uninstall, update, list and create MSL packages
-by using the command line interface (CLI). *You can also directly call these functions through the *
+by using the command line interface (CLI). *You can also directly call these functions through the*
 `API <http://msl-package-manager.readthedocs.io/en/latest/api_usage.html#api-usage>`_.
 
 install
