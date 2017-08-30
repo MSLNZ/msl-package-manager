@@ -34,10 +34,7 @@ def main():
     parser.add_argument('-y', '--yes', action='store_true',
                         help="don't ask for confirmation to '(un)install' or 'update' the MSL package(s)")
 
-    parser.add_argument('-r', '--release-info', action='store_true',
-                        help="include the release info from GitHub [used by 'install' and 'list']")
-
-    parser.add_argument('-f', '--force', action='store_true',
+    parser.add_argument('-u', '--update-github-cache', action='store_true',
                         help="force the GitHub cache to be updated [used by 'install', 'update' and 'list']")
 
     parser.add_argument('-a', '--author', nargs='+',
@@ -55,13 +52,13 @@ def main():
         print(Style.BRIGHT + Fore.RED + msg)
 
     elif args.command == 'install':
-        install(args.names if args.names else 'ALL', args.yes, args.release_info, args.force)
+        install(args.names if args.names else 'ALL', args.yes, args.update_github_cache)
 
     elif args.command == 'uninstall':
         uninstall(args.names if args.names else 'ALL', args.yes)
 
     elif args.command == 'update' or args.command == 'upgrade':
-        update(args.names if args.names else 'ALL', args.yes, args.force)
+        update(args.names if args.names else 'ALL', args.yes, args.update_github_cache)
 
     elif args.command == 'create':
         create(args.names, args.author, args.email)
@@ -70,7 +67,7 @@ def main():
         if len(args.names) == 0:
             print_list()
         elif len(args.names) == 1 and args.names[0].lower() == 'github':
-            print_list(True, args.release_info, args.force)
+            print_list(True, args.update_github_cache)
         else:
             print(Style.BRIGHT + Fore.RED + 'Invalid request. Must use "msl list" or "msl list github"')
     else:

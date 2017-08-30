@@ -10,6 +10,7 @@ import getpass
 import tempfile
 import subprocess
 from collections import OrderedDict
+from multiprocessing.pool import ThreadPool
 
 from colorama import Fore, Style
 
@@ -43,7 +44,7 @@ def get_username():
     try:
         p1 = subprocess.Popen(['git', 'config', 'user.name'], stdout=subprocess.PIPE)
         return p1.communicate()[0].decode().strip()
-    except FileNotFoundError:
+    except IOError:
         return getpass.getuser()
 
 
@@ -64,7 +65,7 @@ def get_email():
     try:
         p2 = subprocess.Popen(['git', 'config', 'user.email'], stdout=subprocess.PIPE)
         return p2.communicate()[0].decode().strip()
-    except FileNotFoundError:
+    except IOError:
         return None
 
 
@@ -94,70 +95,69 @@ def get_input(msg):
         raise NotImplementedError('Python major version is not 2 or 3')
 
 
-def github(get_release_version=False, force=False):
-    """Get the list of MSL repositories that are available on GitHub.
+def github(force=False):
+    """Get the list of MSL repositories that are available on GitHub_.
+
+    .. _GitHub: https://github.com/MSLNZ
 
     Parameters
     ----------
-    get_release_version : :obj:`bool`, optional
-        Get the latest release version information. Getting the release version 
-        will make this function take longer to finish. Also, the repository might
-        not have published a release tag so the release information might not be 
-        available. Default is :obj:`False`.
-
     force : :obj:`bool`, optional
-        The repositories that are available are temporarily cached to use for
-        subsequent calls to this function. After 1 hour the cache is automatically
-        updated. Set `force` to be :obj:`True` to force the cache to be updated
-        when you call this function.
+        The information about the repositories that are available on GitHub_ are
+        temporarily cached to use for subsequent calls to this function. After
+        24 hours the cache is automatically updated. Set `force` to be :obj:`True`
+        to force the cache to be updated when you call this function.
 
     Returns
     -------
-    :obj:`dict` 
-        With the repository name for the keys and the values are a :obj:`list`
-        of [version, description].
+    :obj:`dict` of :obj:`tuple`
+        With the repository name for the keys and the values are (version, description).
     """
+    def fetch_version(repo_info):
+        repo_name, description = repo_info
+        url = 'https://api.github.com/repos/MSLNZ/{}/releases/latest'.format(repo_name)
+        try:
+            return repo_name, json.loads(urlopen(url).read().decode('utf-8'))['name'].replace('v', ''), description
+        except:
+            return repo_name, '', description
+
     path = os.path.join(tempfile.gettempdir(), 'msl-github-repo-cache.json')
-    if not force and os.path.isfile(path) and (time.time() < os.path.getmtime(path) + 3600.0):
-        with open(path, 'rb') as f:
-            pkgs = json.load(f)
-        msg = Style.BRIGHT + Fore.YELLOW + 'Loaded cached GitHub repository information'
-        if get_release_version:
-            # check if the cached file contains the version info
-            has_versions = [True for val in pkgs.values() if val[0]]
-            if has_versions:
-                print(msg)
-                return pkgs
-        else:
-            print(msg)
-            return pkgs
+
+    cached_msg = Fore.CYAN + 'Loaded the cached information about the GitHub repositories'
+
+    cached_pgks = None
+    if os.path.isfile(path):
+        with open(path, 'r') as f:
+            cached_pgks = _sort_packages(json.load(f))
+
+    one_day = 60 * 60 * 24
+    if (not force) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
+        print(cached_msg)
+        return cached_pgks
 
     try:
-        print(Style.BRIGHT + Fore.YELLOW + 'Inspecting repositories on GitHub')
+        print(Fore.CYAN + 'Inspecting repositories on GitHub')
         repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode('utf-8'))
     except Exception as err:
         # it is possible to get an "API rate limit exceeded for" error if you call this
         # function too often or maybe the user does not have an internet connection
-        print(Fore.RED + Style.BRIGHT + 'Cannot connect to GitHub -- {}'.format(err))
-        print('Perhaps the GitHub API rate limit was exceeded. Please wait a while and try again...')
+        print(Style.BRIGHT + Fore.RED + 'Cannot connect to GitHub -- {}'.format(err))
+        if cached_pgks is not None:
+            print(cached_msg)
+            return cached_pgks
+        print('Perhaps the GitHub API rate limit was exceeded. Please wait a while and try again later...')
         return {}
 
     pkgs = {}
-    for repo in repos:
-        if repo['name'].startswith('msl-'):
-            version = ''
-            if get_release_version:
-                url = 'https://api.github.com/repos/MSLNZ/{}/releases/latest'.format(repo['name'])
-                try:
-                    version = json.loads(urlopen(url).read().decode('utf-8'))['name'].replace('v', '')
-                except:
-                    pass
-            pkgs[repo['name']] = [version, repo['description']]
+    info = [(repo['name'], repo['description']) for repo in repos if repo['name'].startswith('msl-')]
+    results = ThreadPool(len(info)).imap_unordered(fetch_version, info)
+    for name, version, description in results:
+        pkgs[name] = (version, description)
 
-    with open(path, 'wb') as fp:
+    with open(path, 'w') as fp:
         json.dump(pkgs, fp)
 
-    return pkgs
+    return _sort_packages(pkgs)
 
 
 def installed():
@@ -165,11 +165,10 @@ def installed():
 
     Returns
     -------
-    :obj:`dict` 
-        With the repository name for the keys and the values are a :obj:`list`
-        of [version, description].
+    :obj:`dict` of :obj:`tuple`
+        With the package name for the keys and the values are (version, description).
     """
-    print('Inspecting packages in {0}'.format(os.path.dirname(sys.executable)))
+    print(Fore.CYAN + 'Inspecting packages in {0}'.format(os.path.dirname(sys.executable)))
     pkgs = {}
     for pkg in pip.get_installed_distributions():
         if pkg.key.startswith('msl-'):
@@ -179,10 +178,10 @@ def installed():
                     description = item.split('Summary:')[1].strip()
                     break
             pkgs[pkg.key] = [pkg.version, description]
-    return pkgs
+    return _sort_packages(pkgs)
 
 
-def _get_packages(_command, _names, _yes, get_release_version=False, force=False):
+def _get_packages(_command, _names, _yes, update_github_cache=False):
     """
     Returns a sorted dictionary of the available MSL packages, from either pip or GitHub.
     """
@@ -192,13 +191,13 @@ def _get_packages(_command, _names, _yes, get_release_version=False, force=False
 
     if _command == 'install':
 
-        pkgs_github = github(get_release_version, force)
+        pkgs_github = github(update_github_cache)
         if len(names) == 0:
             names = [pkg for pkg in pkgs_github if pkg != PKG_NAME]
 
         for name in names:
             if name in pkgs_installed:
-                print(Style.BRIGHT + Fore.YELLOW + 'The {0} package is already installed'.format(name))
+                print(Fore.YELLOW + 'The {0} package is already installed'.format(name))
             elif name not in pkgs_github:
                 print(Style.BRIGHT + Fore.RED + 'Cannot install {0} -- package not found'.format(name))
             else:
@@ -217,7 +216,7 @@ def _get_packages(_command, _names, _yes, get_release_version=False, force=False
                 pkgs[name] = pkgs_installed[name]
 
     if pkgs:
-        pkgs = OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+        pkgs = _sort_packages(pkgs)
 
         w = 0
         show_version = False
@@ -251,7 +250,7 @@ def _get_names(names):
     elif isinstance(names, (list, tuple)) and isinstance(names[0], str):
         check_names = names[:]
     else:
-        raise TypeError('The package names must be either a string or a list of strings')
+        assert False, 'The package names must be either a string or a list of strings'
 
     _names = []
     for name in check_names:
@@ -274,3 +273,8 @@ def _ask_proceed():
             return False
         else:
             res = get_input(ask).lower()
+
+
+def _sort_packages(pkgs):
+    """Sort the MSL packages by name"""
+    return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])

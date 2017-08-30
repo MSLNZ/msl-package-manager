@@ -5,8 +5,11 @@ from .helper import github
 from .helper import installed
 
 
-def print_list(from_github=False, github_release_info=False, update_github_cache=False):
+def print_list(from_github=False, update_github_cache=False):
     """Print the list of MSL packages that are available.
+
+    The list of packages can be either those that are installed or that are
+    available on GitHub_.
 
     .. _GitHub: https://github.com/MSLNZ
     
@@ -16,21 +19,19 @@ def print_list(from_github=False, github_release_info=False, update_github_cache
         Whether to show the MSL packages that are available as GitHub_ repositories, 
         :obj:`True`, or the MSL packages that are installed, :obj:`False`. Default 
         is to show the MSL packages that are installed.
-    github_release_info : :obj:`bool`, optional
-        Whether to fetch the release information from the GitHub_ repositories. 
-        Default is to ignore the release information from GitHub_.
     update_github_cache : :obj:`bool`, optional
-        The GitHub_ repositories that are available are temporarily cached to use for
-        subsequent calls to this function. After 1 hour the cache is automatically
-        updated. Set `force` to be :obj:`True` to force the cache to be updated
-        when you call this function.
+        The information about the repositories that are available on GitHub_ are
+        temporarily cached to use for subsequent calls to this function. After
+        24 hours the cache is automatically updated. Set `update_github_cache`
+        to be :obj:`True` to force the cache to be updated when you call this
+        function.
     """
     if from_github:
-        typ, pkgs = 'Repositories', github(github_release_info, update_github_cache)
+        typ, pkgs = 'Repository', github(update_github_cache)
         if not pkgs:
             return
     else:
-        typ, pkgs = 'Packages', installed()
+        typ, pkgs = 'Package', installed()
 
     # determine the maximum width of each column
     header = ['MSL ' + typ, 'Version', 'Description']
