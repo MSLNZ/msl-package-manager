@@ -10,9 +10,9 @@ Contents
    :maxdepth: 2
 
    Install <install>
-   API Documentation <api>
    CLI Usage <cli_usage>
    API Usage <api_usage>
+   API Documentation <api>
    "Create" ReadMe <new_package_readme>
    MSL Developers Guide <developers_guide>
    License <license>
