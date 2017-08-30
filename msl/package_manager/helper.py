@@ -6,6 +6,7 @@ import json
 import getpass
 import logging
 import subprocess
+from collections import OrderedDict
 
 from colorama import Fore, Style
 
@@ -152,7 +153,7 @@ def installed():
 
 def _get_packages(_command, _names, _yes, get_release_version=False):
     """
-    Gets the list of available MSL packages, from either pip or GitHub.
+    Returns a sorted dictionary of the available MSL packages, from either pip or GitHub.
     """
     pkgs = {}
     pkgs_installed = installed()
@@ -185,6 +186,8 @@ def _get_packages(_command, _names, _yes, get_release_version=False):
                 pkgs[name] = pkgs_installed[name]
 
     if pkgs:
+        pkgs = OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+
         w = 0
         show_version = False
         for p in pkgs:
