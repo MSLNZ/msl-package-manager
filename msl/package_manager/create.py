@@ -54,7 +54,7 @@ def create(names, author=None, email=None):
         _names = [names.replace(' ', '_')]
     elif isinstance(names, (list, tuple)):
         if len(names) == 0:
-            print(Fore.YELLOW + HELP_MSG)
+            print(Fore.CYAN + HELP_MSG)
             return
         elif not isinstance(names[0], str):
             raise TypeError('The names argument must be either a string or a list of strings')
@@ -67,13 +67,13 @@ def create(names, author=None, email=None):
     for name in _names:
         if name[0].isdigit():
             m = 'A package name cannot start with a number -- ignored ' + name
-            print(Style.BRIGHT + Fore.YELLOW + m)
+            print(Fore.YELLOW + m)
             continue
 
         keep = True
         for c in name:
             if not (c.isalnum() or c != '_'):
-                print(Style.BRIGHT + Fore.CYAN + 'A package name can only contain letters, numbers and underscores -- ignored ' + name)
+                print(Fore.YELLOW + 'A package name can only contain letters, numbers and underscores -- ignored ' + name)
                 keep = False
                 break
 
@@ -81,7 +81,7 @@ def create(names, author=None, email=None):
             msl_name = 'msl-' + name.lower()
             root = os.path.join(os.getcwd(), msl_name)
             if os.path.isdir(root):
-                print(Style.BRIGHT + Fore.MAGENTA + 'A {0} folder already exists. Will not overwrite'.format(msl_name))
+                print(Fore.YELLOW + 'A {0} folder already exists. Will not overwrite'.format(msl_name))
             else:
                 roots.append(root)
                 pkg_names.append(name)
