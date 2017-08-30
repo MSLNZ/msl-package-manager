@@ -12,6 +12,12 @@ To install the MSL Package Manager run::
 
    pip install https://github.com/MSLNZ/msl-package-manager/archive/master.zip
 
+Dependencies
+++++++++++++
+* Python 2.7, 3.3-3.6
+* pip_
+* colorama_
+
 Documentation
 -------------
 
@@ -20,8 +26,9 @@ The documentation for **MSL Package Manager** can be found `here <http://msl-pac
 Usage
 -----
 
-Once the MSL Package Manager has been installed you will be able to install, uninstall, list and create MSL packages
-by using the command line interface. *You can also directly access these classes from a script in addition to the CLI.*
+Once the MSL Package Manager has been installed you will be able to install, uninstall, update, list and create MSL packages
+by using the command line interface (CLI). *You can also directly call these functions through the *
+`API <http://msl-package-manager.readthedocs.io/en/latest/api_usage.html#api-usage>`_.
 
 install
 +++++++
@@ -122,10 +129,11 @@ for the **author** and the **email** address by passing additional command-line 
 
    msl create MyPackage -a Firstname Lastname -e my.email@address.com
 
-
 .. |docs| image:: https://readthedocs.org/projects/msl-package-manager/badge/?version=latest
    :target: http://msl-package-manager.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
    :scale: 100%
 
 .. _git: https://git-scm.com
+.. _pip: https://pip.pypa.io/en/stable/
+.. _colorama: https://pypi.python.org/pypi/colorama
