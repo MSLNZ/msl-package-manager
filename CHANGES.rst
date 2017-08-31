@@ -2,9 +2,24 @@
 Release Notes
 =============
 
-Version 1.2.1 (in development)
-==============================
+Version 1.3.0 (2017.08.31)
+==========================
+* Improvements
 
+  - use a thread pool to request the version number of a release for MSL repositories on GitHub
+  - cache the package information about the GitHub repositories
+  - add an ``--update-github-cache`` flag for the CLI
+  - update documentation and docstrings
+
+* Bug Fixes
+
+  - the ``msl`` namespace got destroyed after uninstalling a package in Python 2.7
+  - running ``python setup.py test`` now sets ``install_requires = []``
+  - the ``test_envs.py`` file would hang if it had to "install eggs"
+
+* Removed
+
+  - the ``--release-info`` flag for the CLI is no longer supported
 
 Version 1.2.0 (2017.08.10)
 ==========================
