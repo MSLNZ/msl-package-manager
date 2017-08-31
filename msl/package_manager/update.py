@@ -22,7 +22,8 @@ def update(names='ALL', yes=False, update_github_cache=False):
         The name(s) of MSL package(s) to update. Default is to update **all** MSL
         packages (except for the **MSL Package Manager**).
     yes : :obj:`bool`, optional
-        Don't ask for confirmation to update. Default is to ask before updating.
+        If :obj:`True` then don't ask for confirmation to install.
+        Default is to ask before updating.
     update_github_cache : :obj:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the

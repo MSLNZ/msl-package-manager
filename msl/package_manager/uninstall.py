@@ -17,7 +17,8 @@ def uninstall(names='ALL', yes=False):
         The name(s) of MSL package(s) to uninstall. Default is to uninstall **all** MSL
         packages (except for the **MSL Package Manager**).
     yes : :obj:`bool`, optional
-        Don't ask for confirmation to uninstall. Default is to ask before uninstalling.
+        If :obj:`True` then don't ask for confirmation to install.
+        Default is to ask before uninstalling.
     """
 
     # after a MSL package gets uninstalled we must re-create the two "__init__.py"

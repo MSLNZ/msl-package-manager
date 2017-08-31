@@ -21,7 +21,8 @@ def install(names='ALL', yes=False, update_github_cache=False):
         `repository <repositories_>`_ names.
         Default is to install **all** MSL packages.
     yes : :obj:`bool`, optional
-        Don't ask for confirmation to install. Default is to ask before installing.
+        If :obj:`True` then don't ask for confirmation to install.
+        Default is to ask before installing.
     update_github_cache : :obj:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
