@@ -7,24 +7,26 @@ Once the MSL Package Manager has been :ref:`installed <install>` you will be abl
 and create MSL packages by using the command line interface. *You can also directly call these functions through the*
 :ref:`API <api_usage>`.
 
+.. note::
+   The information about the MSL repositories_ that are available on GitHub are cached for 24 hours after you request
+   information about a MSL repository. After 24 hours a subsequent request will automatically update the GitHub cache.
+   Using a cache is meant to not exceed the `rate limit`_ from GitHub. To force the cache to be updated include the
+   ``--update-github-cache`` flag, or more simply ``-u``.
+
 install
 -------
 
-Install all MSL packages that are available (asks for confirmation before installing)::
+Install all MSL packages that are available on the GitHub `repository <repositories_>`_::
 
    $ msl install --all
 
 Install all MSL packages without asking for confirmation::
 
-   $ msl install --all -y
+   $ msl install --all --yes
 
 Install a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
    $ msl install loadlib
-
-Install the **msl-loadlib** package and display the latest release number::
-
-   $ msl install loadlib -r
 
 Install multiple MSL packages::
 
@@ -39,7 +41,7 @@ Uninstall all MSL packages (except for the **msl-package-manager**)::
 
 Uninstall all MSL packages (except for the **msl-package-manager**) without asking for confirmation::
 
-   $ msl uninstall --all -y
+   $ msl uninstall --all --yes
 
 Uninstall a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
@@ -58,11 +60,15 @@ Update all MSL packages (except for the **msl-package-manager**)::
 
 Update all MSL packages (except for the **msl-package-manager**) without asking for confirmation::
 
-   $ msl update --all -y
+   $ msl update --all --yes
 
 Update a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
    $ msl update loadlib
+
+To ensure that you are updating to the latest version::
+
+   $ msl update loadlib --update-github-cache
 
 Update multiple MSL packages::
 
@@ -75,16 +81,13 @@ List all MSL packages that are installed::
 
    $ msl list
 
-List all MSL repositories that are available at https://github.com/MSLNZ/ ::
+List all MSL repositories_ that are available::
 
    $ msl list github
 
-Fetching the release information for each repository from GitHub will take longer than simply getting the names of
-the repositories that are available. Therefore, the default action is to ignore the release information from GitHub.
-Also, there is no guarantee that the owner of the repository created a release tag. If you want to include the
-latest release version information in the printed list then use::
+Update the GitHub cache and then list all MSL repositories_ that are available::
 
-   $ msl list github -r
+   $ msl list github --update-github-cache
 
 .. _create:
 
@@ -106,6 +109,8 @@ Running **msl create** will attempt to determine your user name and email addres
 **author** and **email** values in the files that it creates. Optionally, you can specify the name to use
 for the **author** and the **email** address by passing additional command-line arguments::
 
-   $ msl create MyPackage -a Firstname Lastname -e my.email@address.com
+   $ msl create MyPackage --author Firstname Lastname --email my.email@address.com
 
 .. _git: https://git-scm.com
+.. _repositories: https://github.com/MSLNZ
+.. _rate limit: https://developer.github.com/v3/rate_limit/

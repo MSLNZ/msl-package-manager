@@ -14,19 +14,20 @@ from .helper import github, installed, _get_names, _ask_proceed, _sort_packages
 def update(names='ALL', yes=False, update_github_cache=False):
     """Use pip to update MSL packages.
 
+    .. _repositories: https://github.com/MSLNZ
+
     Parameters
     ----------
     names : :obj:`str` or :obj:`list` of :obj:`str`, optional
-        The name of a single MSL package or a list of MSL package names to update. 
-        Default is to update all MSL packages (except for the **msl-package-manager**).
+        The name(s) of MSL package(s) to update. Default is to update **all** MSL
+        packages (except for the **MSL Package Manager**).
     yes : :obj:`bool`, optional
         Don't ask for confirmation to update. Default is to ask before updating.
     update_github_cache : :obj:`bool`, optional
-        The information about the repositories that are available on GitHub_ are
-        temporarily cached to use for subsequent calls to this function. After
-        24 hours the cache is automatically updated. Set `update_github_cache`
-        to be :obj:`True` to force the cache to be updated when you call this
-        function.
+        The information about the repositories_ that are available on GitHub are
+        cached to use for subsequent calls to this function. After 24 hours the
+        cache is automatically updated. Set `update_github_cache` to be :obj:`True`
+        to force the cache to be updated when you call this function.
     """
     pkgs_github = github(update_github_cache)
     if not pkgs_github:

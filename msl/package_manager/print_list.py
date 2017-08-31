@@ -8,23 +8,22 @@ from .helper import installed
 def print_list(from_github=False, update_github_cache=False):
     """Print the list of MSL packages that are available.
 
-    The list of packages can be either those that are installed or that are
-    available on GitHub_.
+    The list of packages can be either those that are installed or those that are
+    available as repositories_ on GitHub.
 
-    .. _GitHub: https://github.com/MSLNZ
+    .. _repositories: https://github.com/MSLNZ
     
     Parameters
     ----------
     from_github : :obj:`bool`, optional
-        Whether to show the MSL packages that are available as GitHub_ repositories, 
-        :obj:`True`, or the MSL packages that are installed, :obj:`False`. Default 
-        is to show the MSL packages that are installed.
+        Whether to show the MSL packages that are available as GitHub repositories_
+        or the MSL packages that are installed. Default is to show the MSL packages
+        that are installed.
     update_github_cache : :obj:`bool`, optional
-        The information about the repositories that are available on GitHub_ are
-        temporarily cached to use for subsequent calls to this function. After
-        24 hours the cache is automatically updated. Set `update_github_cache`
-        to be :obj:`True` to force the cache to be updated when you call this
-        function.
+        The information about the repositories_ that are available on GitHub are
+        cached to use for subsequent calls to this function. After 24 hours the
+        cache is automatically updated. Set `update_github_cache` to be :obj:`True`
+        to force the cache to be updated when you call this function.
     """
     if from_github:
         typ, pkgs = 'Repository', github(update_github_cache)

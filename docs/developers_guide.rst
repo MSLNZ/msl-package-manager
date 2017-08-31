@@ -29,7 +29,7 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
 3. Open a `Windows Command Prompt`_ and update all Miniconda_ packages::
 
-      conda update --yes --all
+      conda update --all --yes
 
 4. It is usually best to create a new `virtual environment`_ for each Python project that you are working on to avoid
    possible conflicts between the packages that are required for each Python project or to test the code against
@@ -39,12 +39,12 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
    Create a new **msl** `virtual environment`_ (you can pick another name, **msl** is just an example of a name) and
    install the latest Python interpreter in this environment::
 
-      conda create --yes --name msl python
+      conda create --name msl python --yes
 
    You may also want to create a new `virtual environment`_ so that you can test the code against another Python
    version. For example, here is an example of how to create a Python 2.7 `virtual environment`_::
 
-      conda create --yes --name msl27 python=2.7
+      conda create --name msl27 python=2.7 --yes
 
 5. Create a GitHub_ account *(if you do not already have one)*.
 

@@ -3,9 +3,11 @@
 "Create" ReadMe
 ===============
 
-An MSL package (that can be created by running the :ref:`msl create <create>` command) contains two scripts
-to help make development easier: **setup.py** and **test_envs.py**. *The following assumes that you are using*
-conda_ *as your Python package manager.*
+The MSL package that is created by running the :ref:`msl create <create>` command contains two scripts
+to help make development easier: **setup.py** and **test_envs.py**.
+
+.. attention::
+   The following assumes that you are using conda_ as your Python package manager.
 
 setup.py commands
 -----------------
@@ -16,8 +18,8 @@ in order to perform unit tests, to create the documentation, and to distribute/i
 .. note::
    The Python packages that are required to execute the following commands (e.g., the pytest_, and sphinx_
    packages) are automatically installed (into the **.eggs** folder) if they are not already installed in your
-   environment_. Therefore, the first time that you run the **docs** or **test** command it will take
-   longer to finish executing the command because these packages (and their own dependencies) need to be downloaded
+   environment_. Therefore, the first time that you run ``python setup.py docs`` or ``python setup.py test`` it will
+   take longer to finish executing the command because these packages (and their own dependencies) need to be downloaded
    then installed. If you prefer to install these packages directly in your environment_ you can use
    ``pip install -r requirements-dev.txt``.
 

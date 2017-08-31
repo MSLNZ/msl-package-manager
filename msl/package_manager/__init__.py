@@ -1,5 +1,5 @@
 """
-The MSL-Package-Manager allows you to install, uninstall, update, list and create MSL packages.
+Install, uninstall, update, list and create MSL packages.
 
 The following constants are available.
 """

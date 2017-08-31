@@ -18,7 +18,8 @@ def main():
     """
     Main entry point to either install, uninstall, update, list or create MSL packages using the CLI.
 
-    **This function should not be called directly as it is the main entry point for the CLI.**
+    .. attention::
+       This function should **not** be called directly as it is the main entry point for the CLI.
     """
     parser = argparse.ArgumentParser(description='Manage MSL packages')
 
