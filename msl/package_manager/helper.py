@@ -95,23 +95,23 @@ def get_input(msg):
         raise NotImplementedError('Python major version is not 2 or 3')
 
 
-def github(force=False):
-    """Get the list of MSL repositories that are available on GitHub_.
+def github(update_github_cache=False):
+    """Get the list of MSL repositories_ that are available on GitHub.
 
-    .. _GitHub: https://github.com/MSLNZ
+    .. _repositories: https://github.com/MSLNZ
 
     Parameters
     ----------
-    force : :obj:`bool`, optional
-        The information about the repositories that are available on GitHub_ are
-        temporarily cached to use for subsequent calls to this function. After
-        24 hours the cache is automatically updated. Set `force` to be :obj:`True`
+    update_github_cache : :obj:`bool`, optional
+        The information about the repositories_ that are available on GitHub are
+        cached to use for subsequent calls to this function. After 24 hours the
+        cache is automatically updated. Set `update_github_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
 
     Returns
     -------
     :obj:`dict` of :obj:`tuple`
-        With the repository name for the keys and the values are (version, description).
+        With the repository name for the keys and the values are ``(version, description)``.
     """
     def fetch_version(repo_info):
         repo_name, description = repo_info
@@ -131,7 +131,7 @@ def github(force=False):
             cached_pgks = _sort_packages(json.load(f))
 
     one_day = 60 * 60 * 24
-    if (not force) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
+    if (not update_github_cache) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
         print(cached_msg)
         return cached_pgks
 
@@ -166,7 +166,7 @@ def installed():
     Returns
     -------
     :obj:`dict` of :obj:`tuple`
-        With the package name for the keys and the values are (version, description).
+        With the package name for the keys and the values are ``(version, description)``.
     """
     print(Fore.CYAN + 'Inspecting packages in {0}'.format(os.path.dirname(sys.executable)))
     pkgs = {}
@@ -177,7 +177,7 @@ def installed():
                 if 'Summary:' in item:
                     description = item.split('Summary:')[1].strip()
                     break
-            pkgs[pkg.key] = [pkg.version, description]
+            pkgs[pkg.key] = (pkg.version, description)
     return _sort_packages(pkgs)
 
 
@@ -215,6 +215,9 @@ def _get_packages(_command, _names, _yes, update_github_cache=False):
             else:
                 pkgs[name] = pkgs_installed[name]
 
+    else:
+        assert False, 'command should be only install or uninstall'
+
     if pkgs:
         pkgs = _sort_packages(pkgs)
 
@@ -225,7 +228,9 @@ def _get_packages(_command, _names, _yes, update_github_cache=False):
             if not show_version:
                 show_version = len(pkgs[p][0]) > 0
 
-        msg = '\nThe following MSL packages will be {0}{1}ED{2}:\n'.format(Fore.CYAN, _command.upper(), Fore.RESET)
+        action = 'INSTALLED' if _command == 'install' else 'REMOVED'
+
+        msg = '\nThe following MSL packages will be {0}{1}{2}:\n'.format(Fore.CYAN, action, Fore.RESET)
         for pkg, values in pkgs.items():
             pkg_name = pkg + ':' if show_version else pkg
             msg += '\n  ' + pkg_name.ljust(w+1)
