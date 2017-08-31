@@ -14,9 +14,8 @@ def uninstall(names='ALL', yes=False):
     Parameters
     ----------
     names : :obj:`str` or :obj:`list` of :obj:`str`, optional
-        The name of a single MSL package or a list of MSL package names to uninstall. 
-        Default is to uninstall all MSL packages (except for the **msl-package-manager**).
-
+        The name(s) of MSL package(s) to uninstall. Default is to uninstall **all** MSL
+        packages (except for the **MSL Package Manager**).
     yes : :obj:`bool`, optional
         Don't ask for confirmation to uninstall. Default is to ask before uninstalling.
     """
@@ -24,15 +23,15 @@ def uninstall(names='ALL', yes=False):
     # after a MSL package gets uninstalled we must re-create the two "__init__.py"
     # package files to maintain the 'msl' namespace
     template_dir = os.path.join(os.path.dirname(__file__), 'template', 'msl')
-    with open(os.path.join(template_dir, '__init__.py.template'), 'rt') as fp:
+    with open(os.path.join(template_dir, '__init__.py.template'), 'r') as fp:
         msl_init = fp.readlines()
-    with open(os.path.join(template_dir, 'examples', '__init__.py.template'), 'rt') as fp:
+    with open(os.path.join(template_dir, 'examples', '__init__.py.template'), 'r') as fp:
         msl_examples_init = fp.readlines()
 
     for pkg in _get_packages('uninstall', names, yes):
         subprocess.call([sys.executable, '-m', 'pip', 'uninstall', '-y', pkg])
 
-        with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'wt') as fp:
+        with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'w') as fp:
             fp.writelines(msl_init)
-        with open(os.path.join(os.path.dirname(__file__), '..', 'examples', '__init__.py'), 'wt') as fp:
+        with open(os.path.join(os.path.dirname(__file__), '..', 'examples', '__init__.py'), 'w') as fp:
             fp.writelines(msl_examples_init)
