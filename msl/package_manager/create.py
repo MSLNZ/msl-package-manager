@@ -1,5 +1,5 @@
 """
-Create a new MSL package folder structure in the current working directory.
+Create a new MSL package in the current working directory.
 """
 import os
 import time
@@ -29,12 +29,12 @@ displayed as "MSL-MyPackage", however, to import the package you would use:
 
 
 def create(names, author=None, email=None):
-    """Create a new MSL package folder structure in the current working directory.
+    """Create a new MSL package in the current working directory.
 
     Parameters
     ----------
     names : :obj:`str` or :obj:`list` of :obj:`str`
-        The name(s) of the MSL packages to create.
+        The name(s) of the MSL package(s) to create.
     author : :obj:`str`, optional
         The name of the author to use for the new package. If :obj:`None` then
         use :func:`.helper.get_username` to determine the author's name.
@@ -81,7 +81,7 @@ def create(names, author=None, email=None):
             msl_name = 'msl-' + name.lower()
             root = os.path.join(os.getcwd(), msl_name)
             if os.path.isdir(root):
-                print(Fore.YELLOW + 'A {0} folder already exists. Will not overwrite'.format(msl_name))
+                print(Fore.YELLOW + 'A {0} folder already exists -- ignored'.format(msl_name))
             else:
                 roots.append(root)
                 pkg_names.append(name)
@@ -104,7 +104,7 @@ def create(names, author=None, email=None):
             if new_name:
                 author_name = new_name
         except KeyboardInterrupt:
-            print(Style.BRIGHT + Fore.RED + 'Aborted --  did not create MSL package.')
+            print(Style.BRIGHT + Fore.RED + 'Aborted -- did not create MSL package.')
             return
 
     # determine the author's email address
@@ -120,7 +120,7 @@ def create(names, author=None, email=None):
             if new_email:
                 email_address = new_email
         except KeyboardInterrupt:
-            print(Style.BRIGHT + Fore.RED + 'Aborted --  did not create MSL package.')
+            print(Style.BRIGHT + Fore.RED + 'Aborted -- did not create MSL package.')
             return
 
     # create the new package
