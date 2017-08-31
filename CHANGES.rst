@@ -2,6 +2,9 @@
 Release Notes
 =============
 
+Version 1.3.1 (in development)
+==============================
+
 Version 1.3.0 (2017.08.31)
 ==========================
 * Improvements
