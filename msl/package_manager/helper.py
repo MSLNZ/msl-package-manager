@@ -110,16 +110,30 @@ def github(update_github_cache=False):
 
     Returns
     -------
-    :obj:`dict` of :obj:`tuple`
-        With the repository name for the keys and the values are ``(version, description)``.
+    :obj:`dict` of :obj:`dict`
+        With the repository name as the keys.
     """
-    def fetch_version(repo_info):
-        repo_name, description = repo_info
-        url = 'https://api.github.com/repos/MSLNZ/{}/releases/latest'.format(repo_name)
+    def fetch(url_suffix):
+        url = 'https://api.github.com/repos/MSLNZ/' + url_suffix
+        return json.loads(urlopen(url).read().decode('utf-8'))
+
+    def fetch_latest_release(name):
         try:
-            return repo_name, json.loads(urlopen(url).read().decode('utf-8'))['name'].replace('v', ''), description
+            return name, fetch(name+'/releases/latest')['name'].replace(u'v', u'')
         except:
-            return repo_name, '', description
+            return name, ''
+
+    def fetch_tags(name):
+        try:
+            return name, [tag['name'] for tag in fetch(name+'/tags')]
+        except:
+            return name, []
+
+    def fetch_branches(name):
+        try:
+            return name, [branch['name'] for branch in fetch(name+'/branches')]
+        except:
+            return name, []
 
     path = os.path.join(tempfile.gettempdir(), 'msl-github-repo-cache.json')
 
@@ -149,10 +163,20 @@ def github(update_github_cache=False):
         return {}
 
     pkgs = {}
-    info = [(repo['name'], repo['description']) for repo in repos if repo['name'].startswith('msl-')]
-    results = ThreadPool(len(info)).imap_unordered(fetch_version, info)
-    for name, version, description in results:
-        pkgs[name] = (version, description)
+    for repo in repos:
+        if repo['name'].startswith('msl-'):
+            pkgs[repo['name']] = {}
+            pkgs[repo['name']]['description'] = repo['description']
+
+    latest_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_latest_release, pkgs)
+    tags_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_tags, pkgs)
+    branches_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_branches, pkgs)
+    for repo_name, value in latest_thread:
+        pkgs[repo_name]['version'] = value
+    for repo_name, value in tags_thread:
+        pkgs[repo_name]['tags'] = value
+    for repo_name, value in branches_thread:
+        pkgs[repo_name]['branches'] = value
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
@@ -165,8 +189,8 @@ def installed():
 
     Returns
     -------
-    :obj:`dict` of :obj:`tuple`
-        With the package name for the keys and the values are ``(version, description)``.
+    :obj:`dict` of :obj:`dict`
+        With the package name as the keys.
     """
     print(Fore.CYAN + 'Inspecting packages in {0}'.format(os.path.dirname(sys.executable)))
     pkgs = {}
@@ -177,11 +201,13 @@ def installed():
                 if 'Summary:' in item:
                     description = item.split('Summary:')[1].strip()
                     break
-            pkgs[pkg.key] = (pkg.version, description)
+            pkgs[pkg.key] = {}
+            pkgs[pkg.key]['version'] = pkg.version
+            pkgs[pkg.key]['description'] = description
     return _sort_packages(pkgs)
 
 
-def _get_packages(_command, _names, _yes, update_github_cache=False):
+def _get_packages(_command, _names, _yes, update_github_cache=False, branch=None, tag=None):
     """
     Returns a sorted dictionary of the available MSL packages, from either pip or GitHub.
     """
@@ -192,14 +218,18 @@ def _get_packages(_command, _names, _yes, update_github_cache=False):
     if _command == 'install':
 
         pkgs_github = github(update_github_cache)
-        if len(names) == 0:
+        if not names:
             names = [pkg for pkg in pkgs_github if pkg != PKG_NAME]
 
         for name in names:
             if name in pkgs_installed:
-                print(Fore.YELLOW + 'The {0} package is already installed'.format(name))
+                print(Fore.YELLOW + 'The {} package is already installed'.format(name))
             elif name not in pkgs_github:
-                print(Style.BRIGHT + Fore.RED + 'Cannot install {0} -- package not found'.format(name))
+                print(Style.BRIGHT + Fore.RED + 'Cannot install {} -- package not found'.format(name))
+            elif branch is not None and branch not in pkgs_github[name]['branches']:
+                print(Style.BRIGHT + Fore.RED + 'Cannot install {} -- a "{}" branch does not exist'.format(name, branch))
+            elif tag is not None and tag not in pkgs_github[name]['tags']:
+                print(Style.BRIGHT + Fore.RED + 'Cannot install {} -- a "{}" tag does not exist'.format(name, tag))
             else:
                 pkgs[name] = pkgs_github[name]
 
@@ -211,7 +241,7 @@ def _get_packages(_command, _names, _yes, update_github_cache=False):
             if name == PKG_NAME:
                 print(Style.BRIGHT + Fore.RED + 'Cannot uninstall {0} using itself. Use "pip uninstall {0}"'.format(PKG_NAME))
             elif name not in pkgs_installed:
-                print(Style.BRIGHT + Fore.RED + 'Cannot uninstall {0} -- package not found'.format(name))
+                print(Style.BRIGHT + Fore.RED + 'Cannot uninstall {} -- package not found'.format(name))
             else:
                 pkgs[name] = pkgs_installed[name]
 
@@ -222,27 +252,32 @@ def _get_packages(_command, _names, _yes, update_github_cache=False):
         pkgs = _sort_packages(pkgs)
 
         w = 0
-        show_version = False
+        has_version_info = False
         for p in pkgs:
             w = max(w, len(p))
-            if not show_version:
-                show_version = len(pkgs[p][0]) > 0
+            if not has_version_info:
+                has_version_info = len(pkgs[p]['version']) > 0
 
         action = 'INSTALLED' if _command == 'install' else 'REMOVED'
 
         msg = '\nThe following MSL packages will be {0}{1}{2}:\n'.format(Fore.CYAN, action, Fore.RESET)
         for pkg, values in pkgs.items():
-            pkg_name = pkg + ':' if show_version else pkg
-            msg += '\n  ' + pkg_name.ljust(w+1)
-            if show_version:
-                msg += ' ' + values[0]
+            if has_version_info or branch:
+                pkg += ':'
+            msg += '\n  ' + pkg.ljust(w+1)
+            if branch is not None:
+                msg += ' [branch:{}]'.format(branch)
+            elif tag is not None:
+                msg += ' [tag:{}]'.format(tag)
+            elif has_version_info:
+                msg += ' ' + values['version']
 
         print(msg)
         if not (_yes or _ask_proceed()):
             return {}
         print('')
     else:
-        print(Fore.CYAN + 'No MSL packages to ' + _command)
+        print('No MSL packages to ' + _command)
 
     return pkgs
 
@@ -283,3 +318,20 @@ def _ask_proceed():
 def _sort_packages(pkgs):
     """Sort the MSL packages by name"""
     return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+
+
+def _get_zip_name(branch, tag):
+    """
+    Returns the name of the zip file to install/update or None if both branch and tag were specified
+    """
+    if branch is not None and tag is not None:
+        print(Style.BRIGHT + Fore.RED + 'Cannot specify both a branch ({}) and a tag ({})'.format(branch, tag))
+        return None
+    elif branch is None and tag is None:
+        return 'master'
+    elif branch is not None:
+        return branch
+    elif tag is not None:
+        return tag
+    else:
+        assert False, 'This branch ({}) and tag ({}) combo has not been handled'.format(branch, tag)

@@ -11,7 +11,7 @@ and create MSL packages by using the command line interface. *You can also direc
    The information about the MSL repositories_ that are available on GitHub are cached for 24 hours after you request
    information about a MSL repository. After 24 hours a subsequent request will automatically update the GitHub cache.
    Using a cache is meant to not exceed the `rate limit`_ from GitHub. To force the cache to be updated include the
-   ``--update-github-cache`` flag, or more simply ``-u``.
+   ``--update-github-cache`` flag.
 
 install
 -------
@@ -27,6 +27,14 @@ Install all MSL packages without asking for confirmation::
 Install a specific MSL package, for example **msl-loadlib** *(you can ignore the msl- prefix)*::
 
    $ msl install loadlib
+
+Install a package from a specific MSL GitHub branch *(by default the master branch is used)*::
+
+   $ msl install loadlib --branch develop
+
+Install a package from a specific MSL GitHub tag::
+
+   $ msl install loadlib --tag v0.3.0
 
 Install multiple MSL packages::
 
@@ -69,6 +77,14 @@ Update a specific MSL package, for example **msl-loadlib** *(you can ignore the 
 To ensure that you are updating to the latest version::
 
    $ msl update loadlib --update-github-cache
+
+Update a package from a specific MSL GitHub branch *(by default the master branch is used)*::
+
+   $ msl update loadlib --branch develop
+
+Update a package from a specific MSL GitHub tag::
+
+   $ msl update loadlib --tag v0.3.0
 
 Update multiple MSL packages::
 
