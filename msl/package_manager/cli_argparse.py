@@ -81,9 +81,9 @@ def add_argument_update_github_cache(parser):
         default=False,
         help='Force the GitHub cache to be updated.\n'
              'The information about the repositories are cached\n'
-             'for subsequent calls to this function. After 24\n'
+             'for subsequent calls to the {} command. After 24\n'
              'hours the cache is automatically updated. Include\n'
-             'this argument to force the cache to be updated.',
+             'this argument to force the cache to be updated.'.format(parser.get_command_name()),
     )
 
 
