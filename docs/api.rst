@@ -12,28 +12,19 @@ The root package is
 
 which has the following classes
 
-+----------------------------------------------+-------------------------------------------------------------+
-| :class:`msl.package_manager.create           | Create a new MSL package in the current working directory.  |
-| <msl.package_manager.create.create>`         |                                                             |
-+----------------------------------------------+-------------------------------------------------------------+
-| :class:`msl.package_manager.install          | Use pip to install MSL repositories from GitHub.            |
-| <msl.package_manager.install.install>`       |                                                             |
-+----------------------------------------------+-------------------------------------------------------------+
-| :class:`msl.package_manager.print_list       | Print the list of MSL packages that are available.          |
-| <msl.package_manager.print_list.print_list>` |                                                             |
-+----------------------------------------------+-------------------------------------------------------------+
-| :class:`msl.package_manager.uninstall        | Use pip to uninstall MSL packages.                          |
-| <msl.package_manager.uninstall.uninstall>`   |                                                             |
-+----------------------------------------------+-------------------------------------------------------------+
-| :class:`msl.package_manager.update           | Use pip to update MSL packages.                             |
-| <msl.package_manager.update.update>`         |                                                             |
-+----------------------------------------------+-------------------------------------------------------------+
+.. autosummary::
+
+   ~msl.package_manager.create.create
+   ~msl.package_manager.install.install
+   ~msl.package_manager.print_packages.print_packages
+   ~msl.package_manager.uninstall.uninstall
+   ~msl.package_manager.update.update
 
 and the following helper module
 
-+----------------------------------------------+-------------------------------------------------------------------+
-| :mod:`msl.package_manager.helper`            | Helper functions for the MSL Package Manager.                     |
-+----------------------------------------------+-------------------------------------------------------------------+
+.. autosummary::
+
+   msl.package_manager.helper
 
 Package Structure
 -----------------
@@ -42,9 +33,17 @@ Package Structure
 
    msl.package_manager <_api/msl.package_manager>
    msl.package_manager.cli <_api/msl.package_manager.cli>
+   msl.package_manager.cli_argparse <_api/msl.package_manager.cli_argparse>
+   msl.package_manager.cli_create <_api/msl.package_manager.cli_create>
+   msl.package_manager.cli_install <_api/msl.package_manager.cli_install>
+   msl.package_manager.cli_list <_api/msl.package_manager.cli_list>
+   msl.package_manager.cli_uninstall <_api/msl.package_manager.cli_uninstall>
+   msl.package_manager.cli_update <_api/msl.package_manager.cli_update>
    msl.package_manager.create <_api/msl.package_manager.create>
    msl.package_manager.helper <_api/msl.package_manager.helper>
    msl.package_manager.install <_api/msl.package_manager.install>
-   msl.package_manager.print_list <_api/msl.package_manager.print_list>
+   msl.package_manager.print_packages <_api/msl.package_manager.print_packages>
    msl.package_manager.uninstall <_api/msl.package_manager.uninstall>
    msl.package_manager.update <_api/msl.package_manager.update>
+
+.. _repositories: https://github.com/MSLNZ

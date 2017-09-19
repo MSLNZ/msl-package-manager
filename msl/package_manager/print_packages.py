@@ -1,11 +1,11 @@
 """
-Print the list of MSL packages that are available.
+Print the list of MSL packages that are installed or that can be installed.
 """
 from .helper import github
 from .helper import installed
 
 
-def print_list(from_github=False, update_github_cache=False):
+def print_packages(from_github=False, update_github_cache=False, detailed=False):
     """Print the list of MSL packages that are available.
 
     The list of packages can be either those that are installed or those that are
@@ -17,13 +17,17 @@ def print_list(from_github=False, update_github_cache=False):
     ----------
     from_github : :obj:`bool`, optional
         Whether to show the MSL packages that are available as GitHub repositories_
-        or the MSL packages that are installed. Default is to show the MSL packages
-        that are installed.
+        or the MSL packages that are installed. The default is to show the MSL
+        packages that are installed.
     update_github_cache : :obj:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_github_cache` to be :obj:`True`
-        to force the cache to be updated when you call this function.
+        to force the cache to be updated when you call this function. Only used
+        if `from_github` is :obj:`True`.
+    detailed : :obj:`bool`, optional
+        Whether to show detailed information about the MSL packages that are
+        available as GitHub repositories_ or the MSL packages that are installed.
     """
     if from_github:
         typ, pkgs = 'Repository', github(update_github_cache)
@@ -31,6 +35,21 @@ def print_list(from_github=False, update_github_cache=False):
             return
     else:
         typ, pkgs = 'Package', installed()
+
+    if detailed:
+        print('')
+        indent = '    '
+        for p in pkgs:
+            print(p + ':')
+            for key in sorted(pkgs[p]):
+                value = pkgs[p][key]
+                print(indent + key + ':')
+                if not value:
+                    continue
+                if not isinstance(value, list):
+                    value = [value]
+                print(indent + indent + ('\n' + indent + indent).join(v for v in value))
+        return
 
     # determine the maximum width of each column
     header = ['MSL ' + typ, 'Version', 'Description']

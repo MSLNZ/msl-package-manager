@@ -22,12 +22,12 @@ IS_PYTHON2 = sys.version_info[0] == 2
 IS_PYTHON3 = sys.version_info[0] == 3
 """:obj:`bool`: Whether Python 3.x is being used."""
 
-from .helper import *
+from . import helper
 from .create import create
 from .install import install
 from .uninstall import uninstall
 from .update import update
-from .print_list import print_list
+from .print_packages import print_packages
 
 import colorama
 colorama.init(autoreset=True)

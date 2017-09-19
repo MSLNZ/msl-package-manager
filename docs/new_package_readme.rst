@@ -1,13 +1,10 @@
 .. _create-readme:
 
-"Create" ReadMe
+"create" ReadMe
 ===============
 
 The MSL package that is created by running the :ref:`msl create <create>` command contains two scripts
 to help make development easier: **setup.py** and **test_envs.py**.
-
-.. attention::
-   The following assumes that you are using conda_ as your Python package manager.
 
 setup.py commands
 -----------------
@@ -52,6 +49,9 @@ To display the help message::
 
 test_envs.py commands
 ---------------------
+
+.. attention::
+   The following assumes that you are using conda_ as your Python package manager.
 
 Additionally, there is a **test_envs.py** file that is created from running :ref:`msl create <create>`. At the time
 of writing this script, tox_ and conda_ did not "play nice" together, see here_ , and so this script provided a way

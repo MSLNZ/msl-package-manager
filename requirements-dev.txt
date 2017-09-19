@@ -3,3 +3,4 @@ pytest-cov
 pytest-runner
 sphinx
 sphinx_rtd_theme
+colorama
