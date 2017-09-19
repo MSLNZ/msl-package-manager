@@ -2,8 +2,29 @@
 Release Notes
 =============
 
-Version 1.3.1 (in development)
-==============================
+Version 1.4.0 (2017.09.19)
+==========================
+* Improvements
+
+  - the implementation of the CLI got a complete overhaul (created an ArgumentParser subclass)
+  - can now ``install`` or ``update`` from a branch or a tag from the MSL GitHub repositories
+  - add a ``--branch`` and ``--tag`` argument for the ``install`` and ``update`` commands
+  - add a ``--path`` and ``--yes`` argument for the ``create`` command
+  - update the documentation and the docstrings
+  - added more functions to the helper module for the API:
+      + check_msl_prefix
+      + create_install_list
+      + create_uninstall_list
+      + get_zip_name
+      + print_error
+      + print_info
+      + print_warning
+      + print_install_uninstall_message
+      + sort_packages
+
+* Changes
+
+  - the ``print_list`` function was renamed to ``print_packages``
 
 Version 1.3.0 (2017.08.31)
 ==========================
