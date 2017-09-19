@@ -143,7 +143,7 @@ def create_uninstall_list(names):
     pkgs = {}
     for name in names:
         if name == PKG_NAME:
-            print_error('The MSL Package Manager cannot uninstall itself. Use "pip uninstall {}"'.format(PKG_NAME))
+            print_warning('The MSL Package Manager cannot uninstall itself. Use "pip uninstall {}"'.format(PKG_NAME))
         elif name not in pkgs_installed:
             print_error('Cannot uninstall {}: package not installed'.format(name))
         else:
