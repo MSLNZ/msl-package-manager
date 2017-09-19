@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+Version 1.4.1 (in development)
+==============================
+
+
 Version 1.4.0 (2017.09.19)
 ==========================
 * Improvements
