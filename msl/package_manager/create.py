@@ -1,46 +1,35 @@
 """
-Create a new MSL package in the current working directory.
+Create a new MSL package.
 """
 import os
 import time
-from colorama import Fore, Style
 
-from .helper import get_username, get_email, get_input
-
-HELP_MSG = """\
-To create a new MSL package you must specify the MSL package name,
-and optionally the name and email address of the author.
-
-For example, to create a new "MSL-MyPackage" template that contains the standard
-directory structure for a new MSL repository you should specify MyPackage as
-shown by the following command:
-
-$ msl create MyPackage
-
-To set the values to use for the name and email address of the author, use:
-
-$ msl create MyPackage -a Firstname Lastname -e my.email@address.com
-
-If you specify "MyPackage" then all the text in the documentation will be
-displayed as "MSL-MyPackage", however, to import the package you would use:
-
->>> from msl import mypackage
-"""
+from .helper import get_username, get_email, get_input, print_error, print_warning
 
 
-def create(names, author=None, email=None):
-    """Create a new MSL package in the current working directory.
+def create(names, yes=False, author=None, email=None, path=None):
+    """Create a new MSL package.
 
     Parameters
     ----------
     names : :obj:`str` or :obj:`list` of :obj:`str`
         The name(s) of the MSL package(s) to create.
+    yes : :obj:`bool`, optional
+        If :obj:`True` then don't ask for verification for the `author` name
+        and for the `email` address. This is only used if you do not specify the
+        `author` or the `email` value. The verification step allows you to change
+        the value that was automatically determined before the package is installed.
+        The default is to ask for verification before creating the package if
+        the `author` or the `email` value was not specified.
     author : :obj:`str`, optional
         The name of the author to use for the new package. If :obj:`None` then
-        use :func:`.helper.get_username` to determine the author's name.
+        uses :func:`.helper.get_username` to determine the author's name.
     email : :obj:`str`, optional
-        The author's email address. If :obj:`None` then use :func:`.helper.get_email` 
-        to determine the author's email address.
+        The author's email address. If :obj:`None` then uses
+        :func:`.helper.get_email` to determine the author's email address.
+    path : :obj:`str`, optional
+        The root path to where to create the new package. If :obj:`None`
+        then creates the new package(s) in the current working directory.
 
     Raises
     ------
@@ -53,35 +42,34 @@ def create(names, author=None, email=None):
     if isinstance(names, str):
         _names = [names.replace(' ', '_')]
     elif isinstance(names, (list, tuple)):
-        if len(names) == 0:
-            print(Fore.CYAN + HELP_MSG)
-            return
-        elif not isinstance(names[0], str):
-            raise TypeError('The names argument must be either a string or a list of strings')
-        else:
-            _names = names[:]
+        _names = [n.replace(' ', '_') for n in names]
     else:
         raise TypeError('The names argument must be either a string or a list of strings')
 
+    if path is None:
+        path = os.getcwd()
+
     roots, pkg_names = [], []
     for name in _names:
+        if name.lower().startswith('msl-'):
+            name = name[4:]
+
         if name[0].isdigit():
-            m = 'A package name cannot start with a number -- ignored ' + name
-            print(Fore.YELLOW + m)
+            print_warning('A package name cannot start with a number: ignored "{}"'.format(name))
             continue
 
         keep = True
         for c in name:
-            if not (c.isalnum() or c != '_'):
-                print(Fore.YELLOW + 'A package name can only contain letters, numbers and underscores -- ignored ' + name)
+            if not (c.isalnum() or c == '_'):
+                print_warning('A package name can only contain letters, numbers and underscores: ignored "{}"'.format(name))
                 keep = False
                 break
 
         if keep:
             msl_name = 'msl-' + name.lower()
-            root = os.path.join(os.getcwd(), msl_name)
+            root = os.path.join(path, msl_name)
             if os.path.isdir(root):
-                print(Fore.YELLOW + 'A {0} folder already exists -- ignored'.format(msl_name))
+                print_warning('A {} folder already exists: ignored "{}"'.format(root, name))
             else:
                 roots.append(root)
                 pkg_names.append(name)
@@ -99,13 +87,14 @@ def create(names, author=None, email=None):
             raise TypeError('The author\'s name must be either a string or a list of strings')
     else:
         author_name = get_username()
-        try:
-            new_name = get_input('You can enter a new author name [default: "{0}"]: '.format(author_name))
-            if new_name:
-                author_name = new_name
-        except KeyboardInterrupt:
-            print(Style.BRIGHT + Fore.RED + 'Aborted -- did not create MSL package.')
-            return
+        if not yes:
+            try:
+                new_name = get_input('You can enter a new author name [default: "{0}"]: '.format(author_name))
+                if new_name:
+                    author_name = new_name
+            except:
+                print_error('Aborted -- cannot create MSL package.')
+                return
 
     # determine the author's email address
     if email is not None:
@@ -115,13 +104,14 @@ def create(names, author=None, email=None):
             raise TypeError('The email address must be a string')
     else:
         email_address = get_email()
-        try:
-            new_email = get_input('You can enter a new email address [default: "{0}"]: '.format(email_address))
-            if new_email:
-                email_address = new_email
-        except KeyboardInterrupt:
-            print(Style.BRIGHT + Fore.RED + 'Aborted -- did not create MSL package.')
-            return
+        if not yes:
+            try:
+                new_email = get_input('You can enter a new email address [default: "{0}"]: '.format(email_address))
+                if new_email:
+                    email_address = new_email
+            except:
+                print_error('Aborted -- cannot create MSL package.')
+                return
 
     # create the new package
     template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'template'))
@@ -151,6 +141,6 @@ def create(names, author=None, email=None):
                     fp.write(lines)
 
         if os.path.isdir(msl_root):
-            print('Created MSL-' + msl_pkg)
+            print('Created MSL-{} in {}'.format(msl_pkg, msl_root))
         else:
-            print(Style.BRIGHT + Fore.RED + 'Error creating... ' + msl_pkg)
+            print_error('Error creating... ' + msl_pkg)

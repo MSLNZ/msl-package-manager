@@ -3,75 +3,66 @@ Main entry point to either install, uninstall, update, list or create MSL packag
 using the command-line interface (CLI).
 """
 import sys
-import argparse
 
-from colorama import Fore, Style
+from . import PKG_NAME, __version__
 
-from .install import install
-from .uninstall import uninstall
-from .update import update
-from .create import create
-from .print_list import print_list
+PARSER = None
 
 
-def main():
+def configure_parser():
+    """:class:`~msl.package_manager.cli_argparse.ArgumentParser`: Returns the argument parser."""
+
+    # pretty much mimics the ArgumentParser structure used by conda
+
+    global PARSER
+    if PARSER is not None:
+        return PARSER
+
+    from .cli_argparse import ArgumentParser
+    from .cli_install import add_parser_install
+    from .cli_uninstall import add_parser_uninstall
+    from .cli_update import add_parser_update
+    from .cli_list import add_parser_list
+    from .cli_create import add_parser_create
+
+    PARSER = ArgumentParser(description='Install, uninstall, update, list or create MSL packages.')
+
+    PARSER.add_argument(
+        '-V', '--version',
+        action='version',
+        version='{} {}'.format(PKG_NAME, __version__),
+        help='Show the MSL Package Manager version number and exit.'
+    )
+
+    command_parser = PARSER.add_subparsers(
+        metavar='command',
+        dest='cmd',
+    )
+    # http://bugs.python.org/issue9253
+    # http://stackoverflow.com/a/18283730/1599393
+    command_parser.required = True
+
+    add_parser_install(command_parser)
+    add_parser_uninstall(command_parser)
+    add_parser_uninstall(command_parser, 'remove')
+    add_parser_update(command_parser)
+    add_parser_update(command_parser, 'upgrade')
+    add_parser_list(command_parser)
+    add_parser_create(command_parser)
+
+    return PARSER
+
+
+def main(*args):
     """
     Main entry point to either install, uninstall, update, list or create MSL packages using the CLI.
-
-    .. attention::
-       This function should **not** be called directly as it is the main entry point for the CLI.
     """
-    parser = argparse.ArgumentParser(description='Manage MSL packages')
-
-    parser.add_argument('command',
-                        help="the command to run: 'install', 'uninstall', 'update', 'create' or 'list'")
-
-    parser.add_argument('names',
-                        help='the name(s) of the MSL package(s) to execute the command with', nargs='*')
-
-    parser.add_argument('--all', action='store_true',
-                        help="'(un)install' or 'update' all MSL packages")
-
-    parser.add_argument('-y', '--yes', action='store_true',
-                        help="don't ask for confirmation to '(un)install' or 'update' the MSL package(s)")
-
-    parser.add_argument('-u', '--update-github-cache', action='store_true',
-                        help="force the GitHub cache to be updated [used by 'install', 'update' and 'list']")
-
-    parser.add_argument('-a', '--author', nargs='+',
-                        help="the name of the author to use for the new package [used by 'create']")
-
-    parser.add_argument('-e', '--email',
-                        help="the email address of the author to use for the new package [used by 'create']")
-
-    args = parser.parse_args()
-
-    args.command = args.command.lower()
-
-    if args.command in ('install', 'uninstall', 'update', 'upgrade') and len(args.names) == 0 and not args.all:
-        msg = 'You must specify the MSL package name(s) to {} or use the "--all" flag'.format(args.command)
-        print(Style.BRIGHT + Fore.RED + msg)
-
-    elif args.command == 'install':
-        install(args.names if args.names else 'ALL', args.yes, args.update_github_cache)
-
-    elif args.command == 'uninstall':
-        uninstall(args.names if args.names else 'ALL', args.yes)
-
-    elif args.command == 'update' or args.command == 'upgrade':
-        update(args.names if args.names else 'ALL', args.yes, args.update_github_cache)
-
-    elif args.command == 'create':
-        create(args.names, args.author, args.email)
-
-    elif args.command == 'list':
-        if len(args.names) == 0:
-            print_list()
-        elif len(args.names) == 1 and args.names[0].lower() == 'github':
-            print_list(True, args.update_github_cache)
-        else:
-            print(Style.BRIGHT + Fore.RED + 'Invalid request. Must use "msl list" or "msl list github"')
-    else:
-        print(Style.BRIGHT + Fore.RED + 'Invalid command "{}"'.format(args.command))
-
+    parser = configure_parser()
+    if not args:
+        args = sys.argv[1:]
+    args = parser.parse_args(args)
+    args.func(args, parser)
     sys.exit(0)
+
+if __name__ == '__main__':
+    main()

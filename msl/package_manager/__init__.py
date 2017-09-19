@@ -8,7 +8,7 @@ from collections import namedtuple
 
 __author__ = 'Joseph Borbely'
 __copyright__ = '\xa9 2017, ' + __author__
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 
 version_info = namedtuple('version_info', 'major minor micro')(*map(int, __version__.split('.')[:3]))
 """:obj:`~collections.namedtuple`: Contains the version information as a (major, minor, micro) tuple."""
@@ -22,12 +22,12 @@ IS_PYTHON2 = sys.version_info[0] == 2
 IS_PYTHON3 = sys.version_info[0] == 3
 """:obj:`bool`: Whether Python 3.x is being used."""
 
-from .helper import *
+from . import helper
 from .create import create
 from .install import install
 from .uninstall import uninstall
 from .update import update
-from .print_list import print_list
+from .print_packages import print_packages
 
 import colorama
 colorama.init(autoreset=True)

@@ -1,17 +1,17 @@
 import os
 import pytest
 import shutil
+import tempfile
+
 import msl.package_manager as pm
 
 
 def test_create():
     filename = 'akjdSKmkmklmKMgvrd4ESExKOKuh'
-    pm.create(names=filename, author='Joe', email='a.b@c.com')
-    assert os.path.isdir('msl-'+filename)
-    shutil.rmtree('msl-'+filename)
-
-    with pytest.raises(TypeError):
-        pm.create(names=[1, 2])
+    pm.create(names=filename, author='Joe', email='a.b@c.com', path=tempfile.gettempdir())
+    path = os.path.join(tempfile.tempdir, 'msl-'+filename)
+    assert os.path.isdir(path)
+    shutil.rmtree(path)
 
     with pytest.raises(TypeError):
         pm.create(names=filename, author=1)
