@@ -1,10 +1,61 @@
-import os
 import re
 import sys
+from distutils.cmd import Command
 from setuptools import setup, find_packages
 
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), 'docs'))
-import docs_commands
+
+class ApiDocs(Command):
+    """
+    A custom command that calls sphinx-apidoc
+    see: http://www.sphinx-doc.org/en/latest/man/sphinx-apidoc.html
+    """
+    description = 'builds the api documentation using sphinx-apidoc'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from sphinx.apidoc import main
+        main([
+            'sphinx-apidoc',
+            '--force',  # overwrite existing files
+            '--module-first',  # put module documentation before submodule documentation
+            '--separate',  # put documentation for each module on its own page
+            '-o', './docs/_autosummary',  # where to save the output files
+            'msl',
+        ])
+        sys.exit(0)
+
+
+class BuildDocs(Command):
+    """
+    A custom command that calls sphinx-build
+    see: http://www.sphinx-doc.org/en/latest/man/sphinx-build.html
+    """
+    description = 'builds the documentation using sphinx-build'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from sphinx import build_main
+        build_main([
+            'sphinx-build',
+            '-b', 'html',  # the builder to use, e.g., create a HTML version of the documentation
+            '-a',  # generate output for all files
+            '-E',  # ignore cached files, forces to re-read all source files from disk
+            'docs',  # the source directory where the documentation files are located
+            './docs/_build/html',  # where to save the output files
+        ])
+        sys.exit(0)
 
 
 def read(filename):
@@ -27,10 +78,10 @@ sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
 setup(
     name=fetch_init('PKG_NAME'),
+    version=fetch_init('__version__'),
     author=fetch_init('__author__'),
     author_email='joseph.borbely@measurement.govt.nz',
     url='https://github.com/MSLNZ/'+fetch_init('PKG_NAME'),
-    version=fetch_init('__version__'),
     description='Install, uninstall, update, list and create MSL packages',
     long_description=read('README.rst'),
     platforms='any',
@@ -50,11 +101,8 @@ setup(
     ],
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest', 'colorama'],
-    install_requires=read('requirements.txt').splitlines() if not testing else [],
-    cmdclass={
-        'docs': docs_commands.BuildDocs,
-        'apidocs': docs_commands.ApiDocs,
-    },
+    install_requires=['pip', 'colorama'],
+    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     entry_points={
         'console_scripts': [
             'msl = msl.package_manager.cli:main',
