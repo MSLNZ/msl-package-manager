@@ -2,52 +2,75 @@
 Release Notes
 =============
 
-Version 1.4.1 (in development)
-==============================
+Version 1.4.1 (2017.10.19)
+==========================
 
+Added
+-----
+
+* ``pip`` as a dependency
+
+Changed
+-------
+
+* modified the template that is used for creating a new package:
+
+  + the setup.py file is now self-contained, i.e., it no longer depends on other files to be available
+
+    - removed requirements.txt and requirements-dev.txt so that one must specify the dependencies in install_requires
+    - added the ApiDocs and BuildDocs classes from docs/docs_commands.py and removed docs/docs_commands.py
+
+* print the help message if no command-line argument was passed in
+* updated the documentation and the docstrings
 
 Version 1.4.0 (2017.09.19)
 ==========================
-* Improvements
 
-  - the implementation of the CLI got a complete overhaul (created an ArgumentParser subclass)
-  - can now ``install`` or ``update`` from a branch or a tag from the MSL GitHub repositories
-  - add a ``--branch`` and ``--tag`` argument for the ``install`` and ``update`` commands
-  - add a ``--path`` and ``--yes`` argument for the ``create`` command
-  - update the documentation and the docstrings
-  - added more functions to the helper module for the API:
-      + check_msl_prefix
-      + create_install_list
-      + create_uninstall_list
-      + get_zip_name
-      + print_error
-      + print_info
-      + print_warning
-      + print_install_uninstall_message
-      + sort_packages
+Added
+-----
 
-* Changes
+* add a ``--branch`` and ``--tag`` argument for the ``install`` and ``update`` commands
+* add a ``--path`` and ``--yes`` argument for the ``create`` command
+* added more functions to the helper module for the API:
 
-  - the ``print_list`` function was renamed to ``print_packages``
+  + check_msl_prefix
+  + create_install_list
+  + create_uninstall_list
+  + get_zip_name
+  + print_error
+  + print_info
+  + print_warning
+  + print_install_uninstall_message
+  + sort_packages
+
+Changed
+-------
+
+* the ``print_list`` function was renamed to ``print_packages``
+* updated the documentation and the docstrings
 
 Version 1.3.0 (2017.08.31)
 ==========================
-* Improvements
 
-  - use a thread pool to request the version number of a release for MSL repositories on GitHub
-  - cache the package information about the GitHub repositories
-  - add an ``--update-github-cache`` flag for the CLI
-  - update documentation and docstrings
+Added
+-----
 
-* Bug Fixes
+* use a thread pool to request the version number of a release for MSL repositories on GitHub
+* cache the package information about the GitHub repositories
+* add an ``--update-github-cache`` flag for the CLI
+* update documentation and docstrings
 
-  - the ``msl`` namespace got destroyed after uninstalling a package in Python 2.7
-  - running ``python setup.py test`` now sets ``install_requires = []``
-  - the ``test_envs.py`` file would hang if it had to "install eggs"
+Fixed
+-----
 
-* Removed
+* the ``msl`` namespace got destroyed after uninstalling a package in Python 2.7
+* running ``python setup.py test`` now sets ``install_requires = []``
+* the ``test_envs.py`` file would hang if it had to "install eggs"
 
-  - the ``--release-info`` flag for the CLI is no longer supported
+Removed
+-------
+
+* the ``--release-info`` flag for the CLI is no longer supported
 
 Version 1.2.0 (2017.08.10)
 ==========================
