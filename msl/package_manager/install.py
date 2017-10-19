@@ -35,7 +35,7 @@ def install(names=None, yes=False, update_github_cache=False, branch=None, tag=N
         The name of a GitHub tag to use for the installation.
 
         .. attention::
-           Cannot specify both a `branch` and a `tag`.
+           Cannot specify both a `branch` and a `tag` simultaneously.
     """
     zip_name = helper.get_zip_name(branch, tag)
     if zip_name is None:

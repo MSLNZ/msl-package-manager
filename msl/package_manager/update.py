@@ -36,7 +36,7 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
         The name of a GitHub tag to use for the update.
 
         .. attention::
-           Cannot specify both a `branch` and a `tag`.
+           Cannot specify both a `branch` and a `tag` simultaneously.
 
         .. note::
            If you specify a `branch` or a `tag` then the update will be forced.
