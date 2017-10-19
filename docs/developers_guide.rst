@@ -5,7 +5,7 @@ This guide shows you how to:
 
 * `Install and set up Python, Git and PyCharm`_
 * `Commit changes to a repository`_
-* `Using the setup.py and test_envs.py scripts`_
+* `Use the setup.py and test_envs.py scripts`_
 * `Edit the source code using the style guide`_
 
 This guide describes *one way* to set up a Python environment and it does not intend to imply that the following
@@ -18,12 +18,30 @@ Install and set up Python, Git and PyCharm
 This section uses the `MSL-LoadLib repository`_ as an example of a repository that one would like
 to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
-.. note::
-   The following instructions are only valid for a Windows x64 operating system.
+The following instructions are written for a Windows x64 operating system. To install the same software on
+64-bit `Ubuntu <https://www.ubuntu.com/>`_ run:
+
+.. code-block:: bash
+
+   #!/bin/bash
+   sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
+   sudo apt-get update
+   sudo apt-get install git default-jre ubuntu-make -y
+   umake ide pycharm
+   wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   bash Miniconda*
+
+and answer the questions that you are asked. After running this bash script you can follow the appropriate
+set-up steps below.
+
+.. attention::
+   The screenshots below might not represent exactly what you see during the installation or configuration
+   procedure as this depends on the version of the software that you are installing or using. Hopefully
+   the screenshots are sufficient to guide you through the installation and configuration process.
 
 1. Download a 64-bit version of Miniconda_.
 
-2. Install Miniconda_ in a folder of your choice, but make sure to **Add** and **Register** Anaconda.
+2. Install Miniconda_ in a folder of your choice, but it is recommended to **Add** and **Register** Anaconda.
 
    .. image:: _static/anaconda_setup.png
 
@@ -33,16 +51,16 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
 4. It is usually best to create a new `virtual environment`_ for each Python project that you are working on to avoid
    possible conflicts between the packages that are required for each Python project or to test the code against
-   different versions of Python (i.e., it solves the "Project X depends on version 1.x but Project Y depends on
-   version 4.x" dilemma).
+   different versions of Python (i.e., it solves the *Project X depends on version 1.x but Project Y depends on*
+   *version 4.x* dilemma).
 
-   Create a new **msl** `virtual environment`_ (you can pick another name, **msl** is just an example of a name) and
-   install the latest Python interpreter in this environment::
+   Create a new ``msl`` `virtual environment`_ (you can pick another name, ``msl`` is just an example
+   of a name) and install the latest Python interpreter in this environment::
 
       conda create --name msl python --yes
 
-   You may also want to create a new `virtual environment`_ so that you can test the code against another Python
-   version. For example, here is an example of how to create a Python 2.7 `virtual environment`_::
+   You may also want to create another `virtual environment`_ so that you can test the code against another Python
+   version. For example, here is an example of how to create a Python 2.7 `virtual environment`_ named ``msl27``::
 
       conda create --name msl27 python=2.7 --yes
 
@@ -83,9 +101,9 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
       .. image:: _static/pycharm_github_open.png
 
-9. Specify the Python executable in the **msl** `virtual environment`_ as the **Project Interpreter**.
+9. Specify the Python executable in the ``msl`` `virtual environment`_ as the **Project Interpreter**.
    
-   a) Press **CTRL + ALT + S** to open the **Settings** window.
+   a) Press ``CTRL+ALT+S`` to open the **Settings** window.
    
    b) Go to **Project Interpreter** and click on the *gear* button in the top-right corner.
 
@@ -95,14 +113,14 @@ to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
     
       .. image:: _static/pycharm_interpreter2.png
       
-   d) Navigate to the folder where the **msl** `virtual environment`_ is located (e.g., path\\to\\Miniconda\\envs\\msl),
-      select the **python.exe** file and then click **OK**.
+   d) Navigate to the folder where the ``msl`` `virtual environment`_ is located, select the **python.exe** file
+      and then click **OK**.
    
       .. image:: _static/pycharm_interpreter3.png
 
    e) Click **Apply** then **OK**.
 
-   f) If you created a **msl27** `virtual environment`_ then repeat *step (d)* to add the Python 2.7 executable.
+   f) If you created a ``msl27`` `virtual environment`_ then repeat *step (d)* to add the Python 2.7 interpreter.
 
 10. The **MSL-LoadLib** project is now shown in the **Project** window and you can begin to modify the code.
 
@@ -148,10 +166,10 @@ on how to use git.
    
       .. image:: _static/pycharm_github_commit3.png
 
-.. _Using the setup.py and test_envs.py scripts:
+.. _Use the setup.py and test_envs.py scripts:
 
-Using the setup.py and test_envs.py scripts
--------------------------------------------
+Use the setup.py and test_envs.py scripts
+-----------------------------------------
 MSL packages come with two scripts to help make development easier: **setup.py** and **test_envs.py**. See the
 :ref:`"Create" ReadMe <create-readme>` page for an overview on how to use these scripts.
 
@@ -166,10 +184,10 @@ to the code base it will be easier to understand if there is a coherent structur
    This section assumes that you followed the instructions from `Install and set up Python, Git and PyCharm`_.
 
 * Follow the :pep:`8` style guide when possible *(by default, PyCharm will notify you if you do not)*.
-* Docstrings must be provided for all public classes, methods, and functions.
+* Docstrings must be provided for all public classes, methods and functions.
 * For the docstrings use the `NumPy Style`_ format.
 
-  * Press **CTRL + ALT + S** to open the **Settings** window and navigate to **Tools > Python Integrated Tools** to
+  * Press ``CTRL+ALT+S`` to open the **Settings** window and navigate to **Tools > Python Integrated Tools** to
     select the **NumPy** docstring format and then click **Apply** then **OK**.
 
     .. image:: _static/pycharm_numpy_style.png
