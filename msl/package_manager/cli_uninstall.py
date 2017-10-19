@@ -26,7 +26,7 @@ def add_parser_uninstall(parser, name='uninstall'):
     else:
         p = parser.add_parser(
             name,
-            help='Alias for "uninstall".',
+            help='Alias for uninstall.',
             description=DESCRIPTION.format(name.capitalize()),
             epilog=EXAMPLE.format(name),
         )

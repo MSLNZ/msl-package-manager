@@ -33,7 +33,7 @@ def add_parser_update(parser, name='update'):
     else:
         p = parser.add_parser(
             name,
-            help='Alias for "update".',
+            help='Alias for update.',
             description=DESCRIPTION.format(name.capitalize()),
             epilog=EXAMPLE.format(name),
         )
