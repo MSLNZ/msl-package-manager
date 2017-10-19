@@ -15,7 +15,7 @@ Changed
 
 * modified the template that is used for creating a new package:
 
-  + the setup.py file is now self-contained, i.e., it no longer depends on other files to be available
+  + the setup.py file is now self-contained, i.e., it no longer depends on other files to be available:
 
     - removed requirements.txt and requirements-dev.txt so that one must specify the dependencies in install_requires
     - added the ApiDocs and BuildDocs classes from docs/docs_commands.py and removed docs/docs_commands.py
