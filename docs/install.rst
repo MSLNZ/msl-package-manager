@@ -5,7 +5,7 @@ Install the MSL Package Manager
 
 To install the **MSL Package Manager** run::
 
-   $ pip install msl-package-manager
+   pip install msl-package-manager
 
 Dependencies
 ------------

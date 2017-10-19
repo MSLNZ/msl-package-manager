@@ -19,8 +19,8 @@ Print a list of all MSL packages that are installed
    >>> pm.print_packages()
    MSL Package         Version Description
    ------------------- ------- ----------------------------------------------------------------------
-   msl-loadlib         0.2.3   Load a shared library (and access a 32-bit library from 64-bit Python)
-   msl-package-manager 1.3.0   Install, uninstall, update, list and create MSL packages
+   msl-loadlib         0.3.1   Load a shared library (and access a 32-bit library from 64-bit Python)
+   msl-package-manager 1.4.0   Install, uninstall, update, list and create MSL packages
 
 Print a list of all MSL repositories_ that are available
 
@@ -30,20 +30,28 @@ Print a list of all MSL repositories_ that are available
    MSL Repository      Version Description
    ------------------- ------- ----------------------------------------------------------------------
    msl-equipment       0.1.0   Manage and communicate with equipment in the laboratory
-   msl-loadlib         0.2.3   Load a shared library (and access a 32-bit library from 64-bit Python)
-   msl-package-manager 1.3.0   Install, uninstall, update, list and create MSL packages
+   msl-loadlib         0.3.1   Load a shared library (and access a 32-bit library from 64-bit Python)
+   msl-package-manager 1.4.0   Install, uninstall, update, list and create MSL packages
    msl-qt              0.1.0   Custom Qt components for the user interface
 
 Get a dictionary of all the MSL packages that are installed
 
 .. code-block:: python
 
-   >>> pkg_dict = pm.helper.installed()
-   >>> for pkg, info in pkg_dict.items():
+   >>> pkgs = pm.installed()
+   >>> for pkg, info in pkgs.items():
    ...     print(pkg, info)
    ...
-   msl-loadlib {'version': '0.2.3', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)'}
-   msl-package-manager {'version': '1.3.0', 'description': 'Install, uninstall, update, list and create MSL packages'}
+   msl-loadlib {'version': '0.3.1', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)'}
+   msl-package-manager {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages'}
+
+Get a dictionary of all the MSL repositories_
+
+.. code-block:: python
+
+   >>> pkgs = pm.github()
+   >>> pkgs['msl-package-manager']
+   {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '1.4.0', 'tags': ['v1.4.0', 'v1.3.0', 'v1.2.0', 'v1.1.0', 'v1.0.3', 'v1.0.2', 'v1.0.1', 'v1.0.0', 'v0.1.0'], 'branches': ['develop', 'master']}
 
 Install the **msl-equipment** and **msl-qt** packages
 
@@ -64,7 +72,7 @@ Update the **msl-loadlib** package
    >>> pm.update('loadlib')
    The following MSL packages will be UPDATED:
 
-     msl-loadlib: 0.2.3 --> 0.3.1
+     msl-loadlib: 0.3.1 --> 0.3.2
 
    Proceed (y/[n])? y
 
@@ -77,13 +85,13 @@ Uninstall the **msl-loadlib** package
 
      msl-loadlib: 0.3.1
 
-   Proceed (y/[n])? y
+   Proceed (y/[n])? n
 
-Create a new **MyPackage** package
+Create a new **MSL-MyPackage** package
 
 .. code-block:: python
 
-   >>> pm.create('MyPackage', author='my name', email='my@email.com', path='D:\\test')
-   Created MSL-MyPackage in D:\test\msl-mypackage
+   >>> pm.create('MyPackage', author='my name', email='my@email.com', path='D:\\create\\here')
+   Created MSL-MyPackage in D:\create\here\msl-mypackage
 
 .. _repositories: https://github.com/MSLNZ

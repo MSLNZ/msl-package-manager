@@ -13,26 +13,28 @@ The **setup.py** file (that is created by running :ref:`msl create <create>`) ca
 in order to perform unit tests, to create the documentation, and to distribute/install your MSL package.
 
 .. note::
-   The Python packages that are required to execute the following commands (e.g., the pytest_, and sphinx_
-   packages) are automatically installed (into the **.eggs** folder) if they are not already installed in your
-   environment_. Therefore, the first time that you run ``python setup.py docs`` or ``python setup.py test`` it will
-   take longer to finish executing the command because these packages (and their own dependencies) need to be downloaded
-   then installed. If you prefer to install these packages directly in your environment_ you can use
-   ``pip install -r requirements-dev.txt``.
+   The Python packages that are required to execute the following commands (i.e., the pytest_, and sphinx_
+   packages) are automatically installed (in to the **.eggs** folder) if they are not already installed in your
+   environment_. Therefore, the first time that you run ``python setup.py docs``, ``python setup.py apidocs`` or
+   ``python setup.py tests`` it will take longer to finish executing the command because these packages (and their
+   own dependencies) need to be downloaded then installed. If you prefer to install these packages directly in to
+   your environment_ you can run ``pip install pytest pytest-cov pytest-runner sphinx sphinx_rtd_theme``.
 
 The following command will run all the tests that pytest_ finds in the **tests** folder as well as testing
 all the example code that is located within the docstrings of the source code. A coverage_
 report is created in the **htmlcov/index.html** file. This report provides an overview of which
-classes/functions/methods are being tested and not tested::
+classes, functions and methods are being tested and not tested::
 
-   python setup.py test
+   python setup.py tests
 
-Create the documentation files, which can be viewed by opening **docs/_build/html/index.html**::
+Create the documentation files (uses `sphinx-build <http://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_),
+which can be viewed by opening **docs/_build/html/index.html**::
 
    python setup.py docs
 
 Automatically create the API documentation from the docstrings in the source code (uses
-`sphinx-apidoc <http://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_)::
+`sphinx-apidoc <http://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_), which are saved to
+**docs/_autosummary**::
 
    python setup.py apidoc
 
@@ -41,7 +43,7 @@ Automatically create the API documentation from the docstrings in the source cod
    (overwrites existing files). As such, it is excluded from the repository (i.e., this folder is specified in the
    **.gitignore** file). If you want to keep the files located in **docs/_autosummary** you should rename the folder
    to, for example, **docs/_api** and then the changes made to the files in the **docs/_api** folder will be kept
-   and will be included in the repository.
+   and can be included in the repository.
 
 To display the help message::
 
@@ -62,16 +64,16 @@ Run the unit tests using all conda environment_\'s::
 
    python test_envs.py
 
-Run the unit tests using all conda environment_\'s that include **py** in the environment_ name::
+Run the unit tests using all conda environment_\'s that include, ``-i``, **py** in the environment_ name::
 
    python test_envs.py -i py
 
-Run the unit tests using all conda environment_\'s excluding those that contain **py26** and **py32** in the
+Run the unit tests using all conda environment_\'s excluding, ``-e``, those that contain **py26** and **py32** in the
 environment_ name::
 
    python test_envs.py -e py26 py33
 
-Show all the conda environment_\'s that are available and then exit::
+Show, ``-s``, all of the conda environment_\'s that are available and then exit::
 
    python test_envs.py -s
 
@@ -79,10 +81,10 @@ Show the conda environment_\'s that include **py** in the environment_ name then
 
    python test_envs.py -i py -s
 
-Show the conda environment_\'s that include **py** in the environment_ name *and* exclude those with **py33** in the
-name and then exit::
+Run the unit tests in the conda environment_\'s that include **py** in the environment_ name *and* exclude
+those with **py33** in the name::
 
-   python test_envs.py -i py -e py33 -s
+   python test_envs.py -i py -e py33
 
 .. _here: https://bitbucket.org/hpk42/tox/issues/273/support-conda-envs-when-using-miniconda
 .. _pytest: http://doc.pytest.org/en/latest/
