@@ -57,12 +57,15 @@ def main(*args):
     """
     Main entry point to either install, uninstall, update, list or create MSL packages using the CLI.
     """
-    parser = configure_parser()
     if not args:
         args = sys.argv[1:]
+        if not args:
+            args = ['--help']
+    parser = configure_parser()
     args = parser.parse_args(args)
     args.func(args, parser)
     sys.exit(0)
+
 
 if __name__ == '__main__':
     main()
