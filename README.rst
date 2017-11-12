@@ -1,7 +1,7 @@
 MSL Package Manager
 ===================
 
-|docs|
+|docs| |pypi|
 
 The **MSL Package Manager** allows you to install, uninstall, update, list and create MSL packages.
 
@@ -30,6 +30,9 @@ The documentation for **MSL Package Manager** can be found `here <http://msl-pac
    :target: http://msl-package-manager.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
    :scale: 100%
+
+.. |pypi| image:: https://badge.fury.io/py/msl-package-manager.svg
+   :target: https://badge.fury.io/py/msl-package-manager
 
 .. _git: https://git-scm.com
 .. _colorama: https://pypi.python.org/pypi/colorama
