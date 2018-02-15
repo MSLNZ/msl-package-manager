@@ -3,29 +3,26 @@
 Command Line Interface
 ======================
 
-Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install, uninstall, update, list
-and create MSL packages by using the command line interface.
+Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install,
+uninstall, update, list and create MSL packages by using the command line interface.
 
 *You can also directly call these functions through the* :ref:`API <api_usage>`.
 
 The ``install``, ``uninstall``, ``update`` and ``list`` commands fetch data from MSL repositories_.
-Some MSL packages are also available on PyPI_ and those packages can be installed by running
-``pip install msl-<packaage name>`` and to show which packages are on PyPI_ by running ``pip search msl-``.
-However, since MSL is a namespace_ package when doing a ``pip uninstall msl-<packaage name>`` you can
-break the namespace_. Therefore, it is recommended to use ``msl uninstall <packaage name>`` to uninstall
-MSL packages.
+Some MSL packages_ are also available on PyPI.
 
 .. attention::
-   The number of packages that are available on PyPI_ might be less than the number of repositories_ that
-   are available on GitHub. Also the **master** branch of the repositories_ is where the latest stable
-   version of the code is available and the releases on PyPI_ might not be the latest.
+   Since MSL is a namespace_ package, uninstalling MSL packages using ``pip uninstall msl-<packaage name>``
+   will break the namespace_. Therefore, it is recommended to use ``msl uninstall <packaage name>`` to
+   uninstall MSL packages.
 
-.. _github_cache_note:
+.. _cache_note:
 .. note::
-   The information about the MSL repositories_ that are available on GitHub are cached for 24 hours after you request
-   information about a MSL repository. After 24 hours a subsequent request will automatically update the GitHub cache.
-   Using a cache is meant to not exceed the `rate limit`_ from GitHub. To force the cache to be updated include the
-   ``--update-github-cache`` argument.
+   The information about the MSL repositories_ that are available on GitHub and the MSL packages_ on PyPI are
+   cached for 24 hours after you request information about a repository or package. After 24 hours a subsequent
+   request will automatically update the GitHub or PyPI cache. To force the cache to be updated for the
+   repositories_ or the packages_ include the ``--update-github-cache`` or the ``--update-pypi-cache``
+   flag respectively.
 
 To read the help documentation from the command line, type::
 
@@ -108,9 +105,9 @@ Update a specific MSL package, for example **msl-loadlib** (you can ignore the *
 
    msl update loadlib
 
-To ensure that you are updating to the latest :ref:`hot-off-the-press <github_cache_note>` release::
+To ensure that you are updating to the latest :ref:`hot-off-the-press <cache_note>` release::
 
-   msl update loadlib --update-github-cache
+   msl update loadlib --update-github-cache --update-pypi-cache
 
 Update a package from a specific GitHub branch (by default the **master** branch is used)::
 
@@ -131,15 +128,19 @@ List all MSL packages that are installed::
 
    msl list
 
-List all MSL repositories_ that are available to be installed::
+List all MSL repositories_ on GitHub that are available to be installed::
 
    msl list --github
+
+List all MSL packages_ on PyPI that are available to be installed::
+
+   msl list --pypi
 
 Update the GitHub cache and then list all MSL repositories_ that are available::
 
    msl list --github --update-github-cache
 
-Print the detailed information about the repositories_::
+Print the detailed information about the branches and the tags for the repositories_::
 
    msl list --github --detailed
 
@@ -174,5 +175,5 @@ name and **email** address values by adding the ``--yes`` argument::
 .. _git: https://git-scm.com
 .. _repositories: https://github.com/MSLNZ
 .. _rate limit: https://developer.github.com/v3/rate_limit/
-.. _PyPI: https://pypi.org/search/?q=msl-
+.. _packages: https://pypi.org/search/?q=msl-
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
