@@ -18,7 +18,7 @@ To install the MSL Package Manager run::
 
 Dependencies
 ++++++++++++
-* Python 2.7, 3.3-3.6
+* Python 2.7, 3.3+
 * colorama_
 
 Documentation
@@ -34,6 +34,5 @@ The documentation for **MSL Package Manager** can be found `here <http://msl-pac
 .. |pypi| image:: https://badge.fury.io/py/msl-package-manager.svg
    :target: https://badge.fury.io/py/msl-package-manager
 
-.. _git: https://git-scm.com
 .. _colorama: https://pypi.python.org/pypi/colorama
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/

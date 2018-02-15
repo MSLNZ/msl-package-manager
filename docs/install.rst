@@ -9,7 +9,7 @@ To install the **MSL Package Manager** run::
 
 Dependencies
 ------------
-* Python 2.7, 3.3-3.6
+* Python 2.7, 3.3+
 * colorama_
 
 .. _colorama: https://pypi.python.org/pypi/colorama
