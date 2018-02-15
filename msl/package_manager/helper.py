@@ -75,7 +75,7 @@ def check_msl_prefix(names):
 
 
 def create_install_list(names, branch, tag, update_github_cache):
-    """Create a list of package names to ``install``.
+    """Create a list of package names to ``install`` that are GitHub repositories_.
 
     .. _repository: https://github.com/MSLNZ
 
@@ -84,9 +84,9 @@ def create_install_list(names, branch, tag, update_github_cache):
     names : :obj:`str` or :obj:`list` of :obj:`str`
         The name of a single GitHub repository_ or a list of repository_ names.
     branch : :obj:`str`
-        The name of a GitHub branch to use for the ``install``.
+        The name of a GitHub branch.
     tag : :obj:`str`
-        The name of a GitHub tag to use for the ``install``.
+        The name of a GitHub tag.
     update_github_cache : :obj:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
 
@@ -174,7 +174,7 @@ def get_email():
 
 
 def get_input(msg):
-    """Get the input from the user (for Python 2 and 3).
+    """Get the input from the user (compatible with Python 2 and 3).
 
     Parameters
     ----------
@@ -221,7 +221,7 @@ def get_username():
 
 
 def get_zip_name(branch, tag):
-    """Returns the name of a zip file in the MSLNZ-GitHub archive.
+    """Returns the name of a zip file in the GitHub archive.
 
     Parameters
     ----------
@@ -352,15 +352,15 @@ def installed():
 
 
 def pypi(update_pypi_cache=False):
-    """Get the list of `MSL packages`_ that are available on PyPI_.
+    """Get the list of MSL packages_ that are available on PyPI_.
 
-    .. _MSL packages: https://pypi.org/search/?q=msl-*
+    .. _packages: https://pypi.org/search/?q=msl-*
     .. _PyPI: https://pypi.org/
 
     Parameters
     ----------
     update_pypi_cache : :obj:`bool`, optional
-        The information about the `MSL packages`_ that are available on PyPI_ are
+        The information about the MSL packages_ that are available on PyPI_ are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
@@ -368,7 +368,7 @@ def pypi(update_pypi_cache=False):
     Returns
     -------
     :obj:`dict` of :obj:`dict`
-        The `MSL packages`_ that are available on PyPI_.
+        The MSL packages_ that are available on PyPI_.
     """
     cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_pypi_cache)
     if cached_pgks:
