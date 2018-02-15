@@ -386,7 +386,6 @@ def pypi(update_pypi_cache=False):
         return dict()
 
     pkgs = dict()
-    show_warning = True
     for line in stdout.splitlines():
         match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
         if match:
@@ -394,10 +393,6 @@ def pypi(update_pypi_cache=False):
                 'version': match.group(2),
                 'description': match.group(3),
             }
-        else:
-            if show_warning:
-                print_warning('pip changed the way it prints the search results...')
-                show_warning = False
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
