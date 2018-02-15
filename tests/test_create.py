@@ -7,7 +7,7 @@ import msl.package_manager as pm
 
 
 def test_create():
-    filename = 'akjdSKmkmklmKMgvrd4ESExKOKuh'
+    filename = 'akjdskmkmklmkmgvrd4esexkokuh'
     pm.create(names=filename, author='Joe', email='a.b@c.com', path=tempfile.gettempdir())
     path = os.path.join(tempfile.gettempdir(), 'msl-'+filename)
     assert os.path.isdir(path)
