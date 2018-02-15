@@ -10,9 +10,20 @@ from . import helper
 def install(names=None, yes=False, update_github_cache=False, branch=None, tag=None, update_pypi_cache=False):
     """Install MSL packages.
 
-    .. _MSL repositories: https://github.com/MSLNZ
-    .. _MSL packages: https://pypi.org/search/?q=msl-*
+    MSL packages can be installed from PyPI packages_ (only if a release has been
+    uploaded to PyPI_) or from GitHub repositories_.
+
+    .. note::
+       If the MSL packages_ are available on PyPI_ then PyPI_ is used as the default
+       URI_ to install the package. If you want to force the installation to occur
+       from the ``master`` branch of the GitHub `repository <https://github.com/MSLNZ>`_
+       then set ``branch = 'master'``. If the package is not available on PyPI_
+       then the ``master`` branch is used as the default installation URI_.
+
+    .. _repositories: https://github.com/MSLNZ
+    .. _packages: https://pypi.org/search/?q=msl-*
     .. _PyPI: https://pypi.org/
+    .. _URI: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 
     Parameters
     ----------
@@ -23,17 +34,18 @@ def install(names=None, yes=False, update_github_cache=False, branch=None, tag=N
         If :obj:`True` then don't ask for confirmation before installing.
         The default is to ask before installing.
     update_github_cache : :obj:`bool`, optional
-        The information about the `MSL repositories`_ that are available on GitHub
+        The information about the MSL repositories_ that are available on GitHub
         are cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_github_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
     branch : :obj:`str`, optional
         The name of a GitHub branch to use for the installation. If :obj:`None`
-        and no `tag` value has been specified then installs from the **master** branch.
+        and no `tag` value has been specified then installs from the ``master``
+        branch.
     tag : :obj:`str`, optional
         The name of a GitHub tag to use for the installation.
     update_pypi_cache : :obj:`bool`, optional
-        The information about the `MSL packages`_ that are available on PyPI_ are
+        The information about the MSL packages_ that are available on PyPI_ are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
