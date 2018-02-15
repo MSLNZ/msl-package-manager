@@ -23,7 +23,7 @@ IS_PYTHON3 = sys.version_info[0] == 3
 """:obj:`bool`: Whether Python 3.x is being used."""
 
 from .helper import installed
-from .helper import github
+from .helper import github, pypi
 from .create import create
 from .install import install
 from .uninstall import uninstall

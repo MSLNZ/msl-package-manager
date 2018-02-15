@@ -1,24 +1,26 @@
 """
 Print the list of MSL packages that are installed or that can be installed.
 """
+from .helper import pypi
 from .helper import github
 from .helper import installed
 
 
-def print_packages(from_github=False, update_github_cache=False, detailed=False):
+def print_packages(from_github=False, update_github_cache=False, detailed=False,
+                   from_pypi=False, update_pypi_cache=False):
     """Print the list of MSL packages that are available.
 
-    The list of packages can be either those that are installed or those that are
-    available as repositories_ on GitHub.
+    The list of packages can be either those that are installed, those that are
+    available as repositories_ on GitHub or packages available on PyPI_.
 
     .. _repositories: https://github.com/MSLNZ
+    .. _PyPI: https://pypi.org/search/?q=msl-*
     
     Parameters
     ----------
     from_github : :obj:`bool`, optional
-        Whether to show the MSL packages that are available as GitHub repositories_
-        or the MSL packages that are installed. The default is to show the MSL
-        packages that are installed.
+        Whether to show the MSL packages that are available as GitHub repositories_.
+        The default action is to show the MSL packages that are installed.
     update_github_cache : :obj:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
@@ -26,17 +28,31 @@ def print_packages(from_github=False, update_github_cache=False, detailed=False)
         to force the cache to be updated when you call this function. Only used
         if `from_github` is :obj:`True`.
     detailed : :obj:`bool`, optional
-        Whether to show detailed information about the MSL packages that are
-        available as GitHub repositories_ or the MSL packages that are installed.
+        Whether to show detailed information about the MSL packages that are available
+        as GitHub repositories_ (i.e., displays additional information about the
+        branches and tags). Only used if `from_github` is :obj:`True`.
+    from_pypi : :obj:`bool`, optional
+        Whether to show the MSL packages that are available on PyPI_. The default
+        action is to show the MSL packages that are installed.
+    update_pypi_cache : :obj:`bool`, optional
+        The information about the MSL packages that are available on PyPI_ are
+        cached to use for subsequent calls to this function. After 24 hours the
+        cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
+        to force the cache to be updated when you call this function. Only used
+        if `from_pypi` is :obj:`True`.
     """
     if from_github:
         typ, pkgs = 'Repository', github(update_github_cache)
         if not pkgs:
             return
+    elif from_pypi:
+        typ, pkgs = 'PyPI Package', pypi(update_pypi_cache)
+        if not pkgs:
+            return
     else:
         typ, pkgs = 'Package', installed()
 
-    if detailed:
+    if detailed and from_github:
         print('')
         indent = '    '
         for p in pkgs:

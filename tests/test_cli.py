@@ -120,41 +120,71 @@ def test_list_args():
     assert not args.github
     assert not args.update_github_cache
     assert not args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list -g')
     assert args.github
     assert not args.update_github_cache
     assert not args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list --github')
     assert args.github
     assert not args.update_github_cache
     assert not args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list -g')
     assert args.github
     assert not args.update_github_cache
     assert not args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list --update-github-cache')
     assert not args.github
     assert args.update_github_cache
     assert not args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list -d')
     assert not args.github
     assert not args.update_github_cache
     assert args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list --detailed')
     assert not args.github
     assert not args.update_github_cache
     assert args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
 
     args = get_args('list -d -g --update-github-cache')
     assert args.github
     assert args.update_github_cache
     assert args.detailed
+    assert not args.pypi
+    assert not args.update_pypi_cache
+
+    args = get_args('list -p --update-pypi-cache')
+    assert not args.github
+    assert not args.update_github_cache
+    assert not args.detailed
+    assert args.pypi
+    assert args.update_pypi_cache
+
+    args = get_args('list --pypi --update-pypi-cache')
+    assert not args.github
+    assert not args.update_github_cache
+    assert not args.detailed
+    assert args.pypi
+    assert args.update_pypi_cache
 
 
 def test_create_args():

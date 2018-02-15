@@ -10,16 +10,18 @@ from colorama import Fore
 from . import PKG_NAME, helper
 
 
-def update(names=None, yes=False, update_github_cache=False, branch=None, tag=None):
+def update(names=None, yes=False, update_github_cache=False, branch=None, tag=None, update_pypi_cache=False):
     """Update MSL packages.
 
     .. _repositories: https://github.com/MSLNZ
+    .. _MSL packages: https://pypi.org/search/?q=msl-*
+    .. _PyPI: https://pypi.org/
 
     Parameters
     ----------
     names : :obj:`str` or :obj:`list` of :obj:`str`, optional
-        The name(s) of MSL package(s) to update. The default is to update
-        **all** MSL packages (except for the **MSL Package Manager**).
+        The name(s) of the MSL package(s) to update. The default is to update
+        **all** MSL packages (except for the **MSL Package Manager** -- use ``pip``).
     yes : :obj:`bool`, optional
         If :obj:`True` then don't ask for confirmation before updating.
         The default is to ask before updating.
@@ -34,6 +36,11 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
         **master** branch.
     tag : :obj:`str`, optional
         The name of a GitHub tag to use for the update.
+    update_pypi_cache : :obj:`bool`, optional
+        The information about the `MSL packages`_ that are available on PyPI_ are
+        cached to use for subsequent calls to this function. After 24 hours the
+        cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
+        to force the cache to be updated when you call this function.
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
@@ -46,7 +53,8 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
         return
 
     pkgs_github = helper.github(update_github_cache)
-    if not pkgs_github:
+    pkgs_pypi = helper.pypi(update_pypi_cache)
+    if not pkgs_github and not pkgs_pypi:
         return
 
     pkgs_installed = helper.installed()
@@ -68,31 +76,39 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
             helper.print_error(err_msg + 'package not installed')
             continue
 
-        if name not in pkgs_github:
-            helper.print_error(err_msg + 'package not found on github')
+        if name not in pkgs_github and name not in pkgs_pypi:
+            helper.print_error(err_msg + 'package not found on GitHub or PyPI')
             continue
 
         installed_version = pkgs_installed[name]['version']
 
+        # use PyPI to update the package (only if the package is available on PyPI)
+        using_pypi = name in pkgs_pypi and tag is None and branch is None
+
         if tag is not None:
             if tag in pkgs_github[name]['tags']:
-                pkgs_to_update[name] = (installed_version, '[tag:{}]'.format(tag))
+                pkgs_to_update[name] = (installed_version, '[tag:{}]'.format(tag), using_pypi)
             else:
                 helper.print_error(err_msg + 'a "{}" tag does not exist'.format(tag))
                 continue
         elif branch is not None:
             if branch in pkgs_github[name]['branches']:
-                pkgs_to_update[name] = (installed_version, '[branch:{}]'.format(branch))
+                pkgs_to_update[name] = (installed_version, '[branch:{}]'.format(branch), using_pypi)
             else:
                 helper.print_error(err_msg + 'a "{}" branch does not exist'.format(branch))
                 continue
         else:
-            github_version = pkgs_github[name]['version']
-            if not github_version:
+            if using_pypi:
+                version = pkgs_pypi[name]['version']
+            else:
+                version = pkgs_github[name]['version']
+
+            if not version:
+                # a version number must exist on PyPI, so if this occurs it must be for a github repo
                 helper.print_error(err_msg + 'the github repository does not contain a release')
                 continue
-            elif parse_version(github_version) > parse_version(installed_version):
-                pkgs_to_update[name] = (installed_version, github_version)
+            elif parse_version(version) > parse_version(installed_version):
+                pkgs_to_update[name] = (installed_version, version, using_pypi)
             else:
                 helper.print_warning('The {} package is already the latest [{}]'.format(name, installed_version))
                 continue
@@ -104,7 +120,7 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
 
         msg = '\nThe following MSL packages will be {}UPDATED{}:\n'.format(Fore.CYAN, Fore.RESET)
         for pkg in pkgs_to_update:
-            local, remote = pkgs_to_update[pkg]
+            local, remote, _ = pkgs_to_update[pkg]
             pkg += ': '
             msg += '\n  ' + pkg.ljust(w[0]+2) + local.ljust(w[1]) + ' --> ' + remote
 
@@ -116,7 +132,10 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
         exe = [sys.executable, '-m', 'pip', 'install']
         options = ['--upgrade', '--force-reinstall', '--no-deps']
         for pkg in pkgs_to_update:
-            repo = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
-            subprocess.call(exe + options + repo)
+            if pkgs_to_update[pkg][2]:
+                package = [pkg]  # update from PyPI
+            else:
+                package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
+            subprocess.call(exe + options + package)
     else:
         print('No MSL packages to update')

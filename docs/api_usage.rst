@@ -34,7 +34,7 @@ Print a list of all MSL repositories_ that are available
    msl-package-manager 1.4.0   Install, uninstall, update, list and create MSL packages
    msl-qt              0.1.0   Custom Qt components for the user interface
 
-Get a dictionary of all the MSL packages that are installed
+Get a dictionary of all MSL packages that are installed
 
 .. code-block:: python
 
@@ -45,13 +45,21 @@ Get a dictionary of all the MSL packages that are installed
    msl-loadlib {'version': '0.3.1', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)'}
    msl-package-manager {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages'}
 
-Get a dictionary of all the MSL repositories_
+Get a dictionary of all MSL repositories_ on GitHub
 
 .. code-block:: python
 
    >>> pkgs = pm.github()
    >>> pkgs['msl-package-manager']
    {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '1.4.0', 'tags': ['v1.4.0', 'v1.3.0', 'v1.2.0', 'v1.1.0', 'v1.0.3', 'v1.0.2', 'v1.0.1', 'v1.0.0', 'v0.1.0'], 'branches': ['develop', 'master']}
+
+Get a dictionary of all MSL packages_ on PyPI
+
+.. code-block:: python
+
+   >>> pkgs = pm.pypi()
+   >>> pkgs['msl-package-manager']
+   {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages'}
 
 Install the **msl-equipment** and **msl-qt** packages
 
@@ -63,7 +71,7 @@ Install the **msl-equipment** and **msl-qt** packages
      msl-equipment: 0.1.0
      msl-qt: 0.1.0
 
-   Proceed (y/[n])? y
+   Proceed ([y]/n)? y
 
 Update the **msl-loadlib** package
 
@@ -74,7 +82,7 @@ Update the **msl-loadlib** package
 
      msl-loadlib: 0.3.1 --> 0.3.2
 
-   Proceed (y/[n])? y
+   Proceed ([y]/n)? y
 
 Uninstall the **msl-loadlib** package
 
@@ -85,7 +93,7 @@ Uninstall the **msl-loadlib** package
 
      msl-loadlib: 0.3.1
 
-   Proceed (y/[n])? n
+   Proceed ([y]/n)? n
 
 Create a new **MSL-MyPackage** package
 
@@ -95,3 +103,4 @@ Create a new **MSL-MyPackage** package
    Created MSL-MyPackage in D:\create\here\msl-mypackage
 
 .. _repositories: https://github.com/MSLNZ
+.. _packages: https://pypi.org/search/?q=msl-*

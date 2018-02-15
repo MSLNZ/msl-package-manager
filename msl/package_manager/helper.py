@@ -1,6 +1,7 @@
 """
 Helper functions for the MSL Package Manager.
 """
+import re
 import os
 import sys
 import pip
@@ -32,12 +33,12 @@ def ask_proceed():
     :obj:`True`
         Whether to proceed.
     """
-    ask = '\nProceed (y/[n])? '
+    ask = '\nProceed ([y]/n)? '
     response = get_input(ask).lower()
     while True:
-        if response.startswith('y'):
+        if response.startswith('y') or not response:
             return True
-        elif response.startswith('n') or not response:
+        elif response.startswith('n'):
             return False
         else:
             print('Invalid response')
@@ -288,18 +289,8 @@ def github(update_github_cache=False):
         except:
             return name, []
 
-    path = os.path.join(tempfile.gettempdir(), 'msl-github-repo-cache.json')
-
-    cached_msg = 'Loaded the cached information about the GitHub repositories'
-
-    cached_pgks = None
-    if os.path.isfile(path):
-        with open(path, 'r') as f:
-            cached_pgks = sort_packages(json.load(f))
-
-    one_day = 60 * 60 * 24
-    if (not update_github_cache) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
-        print_info(cached_msg)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_github_cache)
+    if cached_pgks:
         return cached_pgks
 
     try:
@@ -313,12 +304,12 @@ def github(update_github_cache=False):
             print_info(cached_msg)
             return cached_pgks
         print('Perhaps the GitHub API rate limit was exceeded. Please wait a while and try again later...')
-        return {}
+        return dict()
 
-    pkgs = {}
+    pkgs = dict()
     for repo in repos:
         if repo['name'].startswith('msl-'):
-            pkgs[repo['name']] = {}
+            pkgs[repo['name']] = dict()
             pkgs[repo['name']]['description'] = repo['description']
 
     latest_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_latest_release, pkgs)
@@ -357,6 +348,60 @@ def installed():
             pkgs[pkg.key] = {}
             pkgs[pkg.key]['version'] = pkg.version
             pkgs[pkg.key]['description'] = description
+    return sort_packages(pkgs)
+
+
+def pypi(update_pypi_cache=False):
+    """Get the list of `MSL packages`_ that are available on PyPI_.
+
+    .. _MSL packages: https://pypi.org/search/?q=msl-*
+    .. _PyPI: https://pypi.org/
+
+    Parameters
+    ----------
+    update_pypi_cache : :obj:`bool`, optional
+        The information about the `MSL packages`_ that are available on PyPI_ are
+        cached to use for subsequent calls to this function. After 24 hours the
+        cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
+        to force the cache to be updated when you call this function.
+
+    Returns
+    -------
+    :obj:`dict` of :obj:`dict`
+        The `MSL packages`_ that are available on PyPI_.
+    """
+    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_pypi_cache)
+    if cached_pgks:
+        return cached_pgks
+
+    try:
+        print_info('Inspecting packages on PyPI')
+        p2 = subprocess.Popen(['pip', 'search', 'msl-*'], stdout=subprocess.PIPE)
+        stdout = p2.communicate()[0].decode('utf-8').strip()
+    except Exception as err:
+        print_error('Cannot connect to PyPI -- {}'.format(err))
+        if cached_pgks is not None:
+            print_info(cached_msg)
+            return cached_pgks
+        return dict()
+
+    pkgs = dict()
+    show_warning = True
+    for line in stdout.splitlines():
+        match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
+        if match:
+            pkgs[match.group(1)] = {
+                'version': match.group(2),
+                'description': match.group(3),
+            }
+        else:
+            if show_warning:
+                print_warning('pip changed the way it prints the search results...')
+                show_warning = False
+
+    with open(path, 'w') as fp:
+        json.dump(pkgs, fp)
+
     return sort_packages(pkgs)
 
 
@@ -447,3 +492,32 @@ def sort_packages(pkgs):
         The packages sorted by name.
     """
     return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+
+
+def _inspect_github_pypi(where, update):
+    """Inspects the temp directory for the cached json file."""
+
+    if where == 'github':
+        filename = 'msl-github-repo-cache.json'
+        suffix = 'GitHub repositories'
+    elif where == 'pypi':
+        filename = 'msl-pypi-pkgs-cache.json'
+        suffix = 'PyPI packages'
+    else:
+        assert False, 'Inspecting GitHub or PyPI has been configured. Got {}'.format(where)
+
+    path = os.path.join(tempfile.gettempdir(), filename)
+
+    cached_msg = 'Loaded the cached information about the ' + suffix
+
+    cached_pgks = None
+    if os.path.isfile(path):
+        with open(path, 'r') as f:
+            cached_pgks = sort_packages(json.load(f))
+
+    one_day = 60 * 60 * 24
+    if (not update) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
+        print_info(cached_msg)
+        return sort_packages(cached_pgks), path, cached_msg
+
+    return dict(), path, cached_msg
