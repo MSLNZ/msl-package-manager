@@ -2,8 +2,20 @@
 Release Notes
 =============
 
-Version 1.4.2 (in development)
-==============================
+Version 1.5.0 (2018.02.15)
+==========================
+
+Added
+-----
+
+* the default install/update URI is PyPI (and uses the GitHub URI if the package does not exist on PyPI)
+* ``--update-pypi-cache`` and ``--pypi`` flags for the CLI
+
+Changed
+-------
+
+* default "yes/no" choice for the CLI was changed to be "yes"
+* ``test_envs.py`` has been updated to properly color the output text from pytest (v3.3.1) using colorama
 
 
 Version 1.4.1 (2017.10.19)
