@@ -57,8 +57,8 @@ test_envs.py commands
 
 Additionally, there is a **test_envs.py** file that is created from running :ref:`msl create <create>`. At the time
 of writing this script, tox_ and conda_ did not "play nice" together, see here_ , and so this script provided a way
-around this issue. This script simulates tox_ by finding all conda environment_\'s (ignores the **root**
-environment_) and runs the unit tests with each environment_.
+around this issue. This script simulates tox_ by finding all of the specified conda environment_\'s
+(ignores the **root** environment_) and runs the unit tests with each environment_.
 
 Run the unit tests using all conda environment_\'s::
 

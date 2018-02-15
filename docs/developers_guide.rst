@@ -178,7 +178,7 @@ MSL packages come with two scripts to help make development easier: **setup.py**
 Edit the source code using the style guide
 ------------------------------------------
 Please adhere to the following style guides when contributing to **MSL** packages. With multiple people contributing
-to the code base it will be easier to understand if there is a coherent structure to how code is written:
+to the code base it will be easier to understand if there is a coherent structure to how the code is written:
 
 .. note::
    This section assumes that you followed the instructions from `Install and set up Python, Git and PyCharm`_.
@@ -195,7 +195,7 @@ to the code base it will be easier to understand if there is a coherent structur
 * Do not use :func:`print` statements to notify the end-user of the status of a program. Use :mod:`logging` instead.
   This has the advantage that you can use different `logging levels`_ to decide what message types are displayed and
   which are filtered and you can also easily redirect all messages, for example, to a GUI widget or to a file. The
-  `django project`_ has a nice overview of how to use Python's builtin logging module.
+  `django project`_ has a nice overview on how to use Python's builtin logging module.
 
 .. _Miniconda: http://conda.pydata.org/miniconda.html
 .. _Windows Command Prompt: http://www.computerhope.com/issues/chusedos.htm
