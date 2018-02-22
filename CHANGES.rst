@@ -2,8 +2,13 @@
 Release Notes
 =============
 
-Version 1.5.1 (in development)
-==============================
+Version 1.5.1 (2018.02.23)
+==========================
+
+Fixed
+-----
+
+* the ``setup.py`` file is now compatible with Sphinx 1.7.0
 
 
 Version 1.5.0 (2018.02.15)
