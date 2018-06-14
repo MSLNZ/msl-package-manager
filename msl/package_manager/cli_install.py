@@ -5,9 +5,8 @@ from .cli_argparse import add_argument_all
 from .cli_argparse import add_argument_branch
 from .cli_argparse import add_argument_package_names
 from .cli_argparse import add_argument_tag
-from .cli_argparse import add_argument_update_github_cache
+from .cli_argparse import add_argument_update_cache
 from .cli_argparse import add_argument_yes
-from .cli_argparse import add_argument_update_pypi_cache
 from .install import install
 
 HELP = 'Install MSL packages.'
@@ -37,12 +36,11 @@ def add_parser_install(parser):
     add_argument_yes(p)
     add_argument_tag(p)
     add_argument_branch(p)
-    add_argument_update_github_cache(p)
-    add_argument_update_pypi_cache(p)
+    add_argument_update_cache(p)
     p.set_defaults(func=execute)
 
 
 def execute(args, parser):
     """Executes the ``install`` command."""
     if parser.contains_package_names():
-        install(args.names, args.yes, args.update_github_cache, args.branch, args.tag, args.update_pypi_cache)
+        install(args.names, args.yes, args.branch, args.tag, args.update_cache)

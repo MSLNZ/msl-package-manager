@@ -6,14 +6,14 @@ from .helper import github
 from .helper import installed
 
 
-def print_packages(from_github=False, update_github_cache=False, detailed=False,
-                   from_pypi=False, update_pypi_cache=False):
+def print_packages(from_github=False, detailed=False, from_pypi=False, update_cache=False):
     """Print the list of MSL packages that are available.
 
     The list of packages can be either those that are installed, those that are
     available as repositories_ on GitHub or packages available on PyPI_.
 
     .. _repositories: https://github.com/MSLNZ
+    .. _packages: https://pypi.org/search/?q=msl-*
     .. _PyPI: https://pypi.org/search/?q=msl-*
     
     Parameters
@@ -21,12 +21,6 @@ def print_packages(from_github=False, update_github_cache=False, detailed=False,
     from_github : :class:`bool`, optional
         Whether to show the MSL packages that are available as GitHub repositories_.
         The default action is to show the MSL packages that are installed.
-    update_github_cache : :class:`bool`, optional
-        The information about the repositories_ that are available on GitHub are
-        cached to use for subsequent calls to this function. After 24 hours the
-        cache is automatically updated. Set `update_github_cache` to be :obj:`True`
-        to force the cache to be updated when you call this function. Only used
-        if `from_github` is :obj:`True`.
     detailed : :class:`bool`, optional
         Whether to show detailed information about the MSL packages that are available
         as GitHub repositories_ (i.e., displays additional information about the
@@ -34,19 +28,19 @@ def print_packages(from_github=False, update_github_cache=False, detailed=False,
     from_pypi : :class:`bool`, optional
         Whether to show the MSL packages that are available on PyPI_. The default
         action is to show the MSL packages that are installed.
-    update_pypi_cache : :class:`bool`, optional
-        The information about the MSL packages that are available on PyPI_ are
-        cached to use for subsequent calls to this function. After 24 hours the
-        cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
-        to force the cache to be updated when you call this function. Only used
-        if `from_pypi` is :obj:`True`.
+    update_cache : :class:`bool`, optional
+        The information about the MSL packages_ that are available on PyPI_ and about
+        the repositories_ that are available on GitHub are cached to use for subsequent
+        calls to this function. After 24 hours the cache is automatically updated. Set
+        `update_cache` to be :obj:`True` to force the cache to be updated when you call
+        this function.
     """
     if from_github:
-        typ, pkgs = 'Repository', github(update_github_cache)
+        typ, pkgs = 'Repository', github(update_cache)
         if not pkgs:
             return
     elif from_pypi:
-        typ, pkgs = 'PyPI Package', pypi(update_pypi_cache)
+        typ, pkgs = 'PyPI Package', pypi(update_cache)
         if not pkgs:
             return
     else:

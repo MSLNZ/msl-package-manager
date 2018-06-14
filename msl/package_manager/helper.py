@@ -74,7 +74,7 @@ def check_msl_prefix(names):
     return _names
 
 
-def create_install_list(names, branch, tag, update_github_cache):
+def create_install_list(names, branch, tag, update_cache):
     """Create a list of package names to ``install`` that are GitHub repositories_.
 
     .. _repository: https://github.com/MSLNZ
@@ -87,7 +87,7 @@ def create_install_list(names, branch, tag, update_github_cache):
         The name of a GitHub branch.
     tag : :class:`str`
         The name of a GitHub tag.
-    update_github_cache : :class:`bool`
+    update_cache : :class:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
 
     Returns
@@ -100,7 +100,7 @@ def create_install_list(names, branch, tag, update_github_cache):
         return
 
     pkgs_installed = installed()
-    pkgs_github = github(update_github_cache)
+    pkgs_github = github(update_cache)
 
     names = check_msl_prefix(names)
     if not names:
@@ -249,17 +249,17 @@ def get_zip_name(branch, tag):
         assert False, 'This branch ({}) and tag ({}) combo has not been handled'.format(branch, tag)
 
 
-def github(update_github_cache=False):
+def github(update_cache=False):
     """Get the list of MSL repositories_ that are available on GitHub.
 
     .. _repositories: https://github.com/MSLNZ
 
     Parameters
     ----------
-    update_github_cache : :class:`bool`, optional
+    update_cache : :class:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
-        cache is automatically updated. Set `update_github_cache` to be :obj:`True`
+        cache is automatically updated. Set `update_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
 
     Returns
@@ -289,7 +289,7 @@ def github(update_github_cache=False):
         except:
             return name, []
 
-    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_github_cache)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache)
     if cached_pgks:
         return cached_pgks
 
@@ -351,7 +351,7 @@ def installed():
     return sort_packages(pkgs)
 
 
-def pypi(update_pypi_cache=False):
+def pypi(update_cache=False):
     """Get the list of MSL packages_ that are available on PyPI_.
 
     .. _packages: https://pypi.org/search/?q=msl-*
@@ -359,10 +359,10 @@ def pypi(update_pypi_cache=False):
 
     Parameters
     ----------
-    update_pypi_cache : :class:`bool`, optional
+    update_cache : :class:`bool`, optional
         The information about the MSL packages_ that are available on PyPI_ are
         cached to use for subsequent calls to this function. After 24 hours the
-        cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
+        cache is automatically updated. Set `update_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
 
     Returns
@@ -370,7 +370,7 @@ def pypi(update_pypi_cache=False):
     :class:`dict` of :class:`dict`
         The MSL packages_ that are available on PyPI_.
     """
-    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_pypi_cache)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_cache)
     if cached_pgks:
         return cached_pgks
 

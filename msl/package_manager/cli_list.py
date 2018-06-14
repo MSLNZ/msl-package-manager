@@ -1,8 +1,7 @@
 """
 Command line interface for the ``list`` command.
 """
-from .cli_argparse import add_argument_update_github_cache
-from .cli_argparse import add_argument_update_pypi_cache
+from .cli_argparse import add_argument_update_cache
 from .print_packages import print_packages
 
 HELP = 'Print the information about MSL packages.'
@@ -36,7 +35,6 @@ def add_parser_list(parser):
         default=False,
         help='Print the information about the PyPI packages.'
     )
-    add_argument_update_pypi_cache(p)
     p.add_argument(
         '-g', '--github',
         action='store_true',
@@ -49,10 +47,10 @@ def add_parser_list(parser):
         default=False,
         help='Print the detailed information about the GitHub repositories.'
     )
-    add_argument_update_github_cache(p)
+    add_argument_update_cache(p)
     p.set_defaults(func=execute)
 
 
 def execute(args, parser):
     """Executes the ``list`` command."""
-    print_packages(args.github, args.update_github_cache, args.detailed, args.pypi, args.update_pypi_cache)
+    print_packages(args.github, args.detailed, args.pypi, args.update_cache)

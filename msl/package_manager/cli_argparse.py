@@ -73,28 +73,14 @@ def add_argument_tag(parser):
     )
 
 
-def add_argument_update_github_cache(parser):
-    """Add an ``--update-github-cache`` argument to the parser."""
+def add_argument_update_cache(parser):
+    """Add an ``--update-cache`` argument to the parser."""
     parser.add_argument(
-        '--update-github-cache',
+        '--update-cache',
         action='store_true',
         default=False,
-        help='Force the GitHub cache to be updated.\n'
-             'The information about the repositories are cached\n'
-             'for subsequent calls to the {} command. After 24\n'
-             'hours the cache is automatically updated. Include\n'
-             'this argument to force the cache to be updated.'.format(parser.get_command_name()),
-    )
-
-
-def add_argument_update_pypi_cache(parser):
-    """Add an ``--update-pypi-cache`` argument to the parser."""
-    parser.add_argument(
-        '--update-pypi-cache',
-        action='store_true',
-        default=False,
-        help='Force the PyPI cache to be updated.\n'
-             'The information about the packages are cached\n'
+        help='Force the GitHub and PyPI caches to be updated.\n'
+             'The information about MSL packages are cached\n'
              'for subsequent calls to the {} command. After 24\n'
              'hours the cache is automatically updated. Include\n'
              'this argument to force the cache to be updated.'.format(parser.get_command_name()),

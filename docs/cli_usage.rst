@@ -20,9 +20,8 @@ Some MSL packages_ are also available on PyPI.
 .. note::
    The information about the MSL repositories_ that are available on GitHub and the MSL packages_ on PyPI are
    cached for 24 hours after you request information about a repository or package. After 24 hours a subsequent
-   request will automatically update the GitHub or PyPI cache. To force the cache to be updated for the
-   repositories_ or the packages_ include the ``--update-github-cache`` or the ``--update-pypi-cache``
-   flag respectively.
+   request will automatically update the GitHub or PyPI cache. To force the cache to be updated immediately
+   include the ``--update-cache`` flag.
 
 To read the help documentation from the command line, type:
 
@@ -121,7 +120,7 @@ Update all MSL packages (except for the **msl-package-manager**):
    You can also use ``upgrade`` as an alias for ``update``, e.g., ``msl upgrade --all``
 
 .. note::
-   To update the MSL Package Manager run ``pip install msl-package-manager --upgrade``
+   To update the MSL Package Manager run ``pip install -U msl-package-manager``
 
 Update all MSL packages without asking for confirmation:
 
@@ -135,11 +134,11 @@ Update a specific MSL package, for example **msl-loadlib** (you can ignore the *
 
    msl update loadlib
 
-To update to a release that was created :ref:`\<24 hours ago <cache_note>`:
+Update a package that was released :ref:`\<24 hours ago <cache_note>`:
 
 .. code-block:: console
 
-   msl update loadlib --update-github-cache --update-pypi-cache
+   msl update loadlib --update-cache
 
 Update a package from a specific GitHub branch (by default the **master** branch is used):
 
@@ -184,7 +183,7 @@ Update the GitHub cache and then list all MSL repositories_ that are available:
 
 .. code-block:: console
 
-   msl list --github --update-github-cache
+   msl list --github --update-cache
 
 Print the detailed information about the branches and the tags for the repositories_:
 
