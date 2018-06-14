@@ -93,5 +93,5 @@ def add_argument_yes(parser):
         '-y', '--yes',
         action='store_true',
         default=False,
-        help='Don\'t ask for confirmation to {} the package.'.format(parser.get_command_name()),
+        help='Don\'t ask for confirmation to {} the package(s).'.format(parser.get_command_name()),
     )
