@@ -3,7 +3,9 @@
 Install the MSL Package Manager
 ===============================
 
-To install the **MSL Package Manager** run::
+To install the **MSL Package Manager** run:
+
+.. code-block:: console
 
    pip install msl-package-manager
 

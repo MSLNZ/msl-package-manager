@@ -24,45 +24,63 @@ Some MSL packages_ are also available on PyPI.
    repositories_ or the packages_ include the ``--update-github-cache`` or the ``--update-pypi-cache``
    flag respectively.
 
-To read the help documentation from the command line, type::
+To read the help documentation from the command line, type:
+
+.. code-block:: console
 
    msl --help
 
-Or for help about a specific command::
+Or for help about a specific command:
+
+.. code-block:: console
 
    msl install --help
 
 install
 -------
 
-Install all MSL packages that are available on the GitHub `repository <repositories_>`_::
+Install all MSL packages that are available on the GitHub `repository <repositories_>`_:
+
+.. code-block:: console
 
    msl install --all
 
-Install all MSL packages without asking for confirmation::
+Install all MSL packages without asking for confirmation:
+
+.. code-block:: console
 
    msl install --all --yes
 
-Install a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix)::
+Install a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix):
+
+.. code-block:: console
 
    msl install loadlib
 
-Install a package from a specific GitHub branch (by default the **master** branch is used)::
+Install a package from a specific GitHub branch (by default the **master** branch is used):
+
+.. code-block:: console
 
    msl install loadlib --branch develop
 
-Install a package from a specific GitHub tag::
+Install a package from a specific GitHub tag:
+
+.. code-block:: console
 
    msl install loadlib --tag v0.3.0
 
-Install multiple MSL packages::
+Install multiple MSL packages:
+
+.. code-block:: console
 
    msl install loadlib equipment qt
 
 uninstall
 ---------
 
-Uninstall all MSL packages (except for the **msl-package-manager**)::
+Uninstall all MSL packages (except for the **msl-package-manager**):
+
+.. code-block:: console
 
    msl uninstall --all
 
@@ -72,22 +90,30 @@ Uninstall all MSL packages (except for the **msl-package-manager**)::
 .. note::
    To uninstall the MSL Package Manager run ``pip uninstall msl-package-manager``
 
-Uninstall all MSL packages without asking for confirmation::
+Uninstall all MSL packages without asking for confirmation:
+
+.. code-block:: console
 
    msl uninstall --all --yes
 
-Uninstall a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix)::
+Uninstall a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix):
+
+.. code-block:: console
 
    msl uninstall loadlib
 
-Uninstall multiple MSL packages::
+Uninstall multiple MSL packages:
+
+.. code-block:: console
 
    msl uninstall loadlib equipment qt
 
 update
 ------
 
-Update all MSL packages (except for the **msl-package-manager**)::
+Update all MSL packages (except for the **msl-package-manager**):
+
+.. code-block:: console
 
    msl update --all
 
@@ -97,50 +123,72 @@ Update all MSL packages (except for the **msl-package-manager**)::
 .. note::
    To update the MSL Package Manager run ``pip install msl-package-manager --upgrade``
 
-Update all MSL packages without asking for confirmation::
+Update all MSL packages without asking for confirmation:
+
+.. code-block:: console
 
    msl update --all --yes
 
-Update a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix)::
+Update a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix):
+
+.. code-block:: console
 
    msl update loadlib
 
-To ensure that you are updating to the latest :ref:`hot-off-the-press <cache_note>` release::
+To update to a release that was created :ref:`\<24 hours ago <cache_note>`:
+
+.. code-block:: console
 
    msl update loadlib --update-github-cache --update-pypi-cache
 
-Update a package from a specific GitHub branch (by default the **master** branch is used)::
+Update a package from a specific GitHub branch (by default the **master** branch is used):
+
+.. code-block:: console
 
    msl update loadlib --branch develop
 
-Update a package from a specific GitHub tag::
+Update a package from a specific GitHub tag:
+
+.. code-block:: console
 
    msl update loadlib --tag v0.3.0
 
-Update multiple MSL packages::
+Update multiple MSL packages:
+
+.. code-block:: console
 
    msl update loadlib equipment qt
 
 list
 ----
 
-List all MSL packages that are installed::
+List all MSL packages that are installed:
+
+.. code-block:: console
 
    msl list
 
-List all MSL repositories_ on GitHub that are available to be installed::
+List all MSL repositories_ on GitHub that are available to be installed:
+
+.. code-block:: console
 
    msl list --github
 
-List all MSL packages_ on PyPI that are available to be installed::
+List all MSL packages_ on PyPI that are available to be installed:
+
+.. code-block:: console
 
    msl list --pypi
 
-Update the GitHub cache and then list all MSL repositories_ that are available::
+Update the GitHub cache and then list all MSL repositories_ that are available:
+
+.. code-block:: console
 
    msl list --github --update-github-cache
 
-Print the detailed information about the branches and the tags for the repositories_::
+Print the detailed information about the branches and the tags for the repositories_:
+
+.. code-block:: console
 
    msl list --github --detailed
 
@@ -149,26 +197,34 @@ Print the detailed information about the branches and the tags for the repositor
 create
 ------
 
-To create a new MSL package called **MyPackage**, run::
+To create a new MSL package called **MyPackage**, run:
+
+.. code-block:: console
 
    msl create MyPackage
 
 This will create a new folder (in the current working directory) called **msl-mypackage**. The name of the package
 will be displayed as **MSL-MyPackage** in the documentation; however, when you want to import the package you would
-use all lower-case letters, for example::
+use all lower-case letters, for example:
+
+.. code-block:: pycon
 
    >>> from msl import mypackage
 
 Running the ``create`` command attempts to determine your user name and email address from your git_ account
 to use as the **author** and **email** values in the files that it creates. You do not need git_ to be installed
 to use the ``create`` command, but it helps to make the process more automated. Optionally, you can specify the
-name to use for the **author** and the **email** address by passing additional arguments::
+name to use for the **author** and the **email** address by passing additional arguments:
+
+.. code-block:: console
 
    msl create MyPackage --author Firstname Lastname --email my.email@address.com
 
 You can also specify where to create the package (instead of the default location which is in the current working
 directory) by specifying a value for the ``--path`` argument and to automatically accept the default **author**
-name and **email** address values by adding the ``--yes`` argument::
+name and **email** address values by adding the ``--yes`` argument:
+
+.. code-block:: console
 
    msl create MyPackage --yes --path D:\create\package\here
 

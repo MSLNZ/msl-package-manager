@@ -45,7 +45,9 @@ set-up steps below.
 
    .. image:: _static/anaconda_setup.png
 
-3. Open a `Windows Command Prompt`_ and update all Miniconda_ packages::
+3. Open a `Windows Command Prompt`_ and update all Miniconda_ packages:
+
+   .. code-block:: console
 
       conda update --all --yes
 
@@ -55,12 +57,16 @@ set-up steps below.
    *version 4.x* dilemma).
 
    Create a new ``msl`` `virtual environment`_ (you can pick another name, ``msl`` is just an example
-   of a name) and install the latest Python interpreter in this environment::
+   of a name) and install the latest Python interpreter in this environment:
+
+   .. code-block:: console
 
       conda create --name msl python --yes
 
    You may also want to create another `virtual environment`_ so that you can test the code against another Python
-   version. For example, here is an example of how to create a Python 2.7 `virtual environment`_ named ``msl27``::
+   version. For example, here is an example of how to create a Python 2.7 `virtual environment`_ named ``msl27``:
+
+   .. code-block:: console
 
       conda create --name msl27 python=2.7 --yes
 

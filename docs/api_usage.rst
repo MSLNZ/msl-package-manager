@@ -8,13 +8,13 @@ functions directly to install, uninstall, update, list and create MSL packages.
 
 First, import the **MSL Package Manager**
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> from msl import package_manager as pm
 
 Print a list of all MSL packages that are installed
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pm.print_packages()
    MSL Package         Version Description
@@ -24,7 +24,7 @@ Print a list of all MSL packages that are installed
 
 Print a list of all MSL repositories_ that are available
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pm.print_packages(from_github=True)
    MSL Repository      Version Description
@@ -36,7 +36,7 @@ Print a list of all MSL repositories_ that are available
 
 Get a dictionary of all MSL packages that are installed
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pkgs = pm.installed()
    >>> for pkg, info in pkgs.items():
@@ -47,7 +47,7 @@ Get a dictionary of all MSL packages that are installed
 
 Get a dictionary of all MSL repositories_ on GitHub
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pkgs = pm.github()
    >>> pkgs['msl-package-manager']
@@ -55,7 +55,7 @@ Get a dictionary of all MSL repositories_ on GitHub
 
 Get a dictionary of all MSL packages_ on PyPI
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pkgs = pm.pypi()
    >>> pkgs['msl-package-manager']
@@ -63,7 +63,7 @@ Get a dictionary of all MSL packages_ on PyPI
 
 Install the **msl-equipment** and **msl-qt** packages
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pm.install(['equipment', 'qt'])
    The following MSL packages will be INSTALLED:
@@ -75,7 +75,7 @@ Install the **msl-equipment** and **msl-qt** packages
 
 Update the **msl-loadlib** package
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pm.update('loadlib')
    The following MSL packages will be UPDATED:
@@ -86,7 +86,7 @@ Update the **msl-loadlib** package
 
 Uninstall the **msl-loadlib** package
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pm.uninstall('loadlib')
    The following MSL packages will be REMOVED:
@@ -97,7 +97,7 @@ Uninstall the **msl-loadlib** package
 
 Create a new **MSL-MyPackage** package
 
-.. code-block:: python
+.. code-block:: pycon
 
    >>> pm.create('MyPackage', author='my name', email='my@email.com', path='D:\\create\\here')
    Created MSL-MyPackage in D:\create\here\msl-mypackage

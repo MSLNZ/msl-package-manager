@@ -23,18 +23,24 @@ in order to perform unit tests, to create the documentation, and to distribute/i
 The following command will run all the tests that pytest_ finds in the **tests** folder as well as testing
 all the example code that is located within the docstrings of the source code. A coverage_
 report is created in the **htmlcov/index.html** file. This report provides an overview of which
-classes, functions and methods are being tested and not tested::
+classes, functions and methods are being tested and not tested:
+
+.. code-block:: console
 
    python setup.py tests
 
 Create the documentation files (uses `sphinx-build <http://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_),
-which can be viewed by opening **docs/_build/html/index.html**::
+which can be viewed by opening **docs/_build/html/index.html**:
+
+.. code-block:: console
 
    python setup.py docs
 
 Automatically create the API documentation from the docstrings in the source code (uses
 `sphinx-apidoc <http://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_), which are saved to
-**docs/_autosummary**::
+**docs/_autosummary**:
+
+.. code-block:: console
 
    python setup.py apidoc
 
@@ -45,7 +51,9 @@ Automatically create the API documentation from the docstrings in the source cod
    to, for example, **docs/_api** and then the changes made to the files in the **docs/_api** folder will be kept
    and can be included in the repository.
 
-To display the help message::
+To display the help message:
+
+.. code-block:: console
 
    python setup.py --help
 
@@ -60,31 +68,49 @@ of writing this script, tox_ and conda_ did not "play nice" together, see here_ 
 around this issue. This script simulates tox_ by finding all of the specified conda environment_\'s
 (ignores the **root** environment_) and runs the unit tests with each environment_.
 
-Run the unit tests using all conda environment_\'s::
+Run the unit tests using all conda environment_\'s:
+
+.. code-block:: console
 
    python test_envs.py
 
-Run the unit tests using all conda environment_\'s that include, ``-i``, **py** in the environment_ name::
+Run the unit tests using all conda environment_\'s that include, ``-i``, **py** in the environment_ name:
+
+.. code-block:: console
 
    python test_envs.py -i py
 
 Run the unit tests using all conda environment_\'s excluding, ``-e``, those that contain **py26** and **py32** in the
-environment_ name::
+environment_ name:
+
+.. code-block:: console
 
    python test_envs.py -e py26 py33
 
-Show, ``-s``, all of the conda environment_\'s that are available and then exit::
+.. note::
+
+   The environment_ names following the include, ``-i``, and exclude, ``-e``, parameters support regex, so,
+   the above command could be replaced with ``python test_envs.py -e "py(26|33)"``, using ``"`` is necessary
+   because of the OR, ``|``, regex symbol to not be confused with a pipe_.
+
+Run the unit tests using the conda environment_\'s that include **py3** in the environment_ name *and* exclude
+those with **py33** in the name:
+
+.. code-block:: console
+
+   python test_envs.py -i py3 -e py33
+
+Show, ``-s``, all of the conda environment_\'s that are available and then exit:
+
+.. code-block:: console
 
    python test_envs.py -s
 
-Show the conda environment_\'s that include **py** in the environment_ name then exit::
+Show the conda environment_\'s that include **py** in the environment_ name then exit:
+
+.. code-block:: console
 
    python test_envs.py -i py -s
-
-Run the unit tests in the conda environment_\'s that include **py** in the environment_ name *and* exclude
-those with **py33** in the name::
-
-   python test_envs.py -i py -e py33
 
 .. _here: https://bitbucket.org/hpk42/tox/issues/273/support-conda-envs-when-using-miniconda
 .. _pytest: http://doc.pytest.org/en/latest/
@@ -95,3 +121,4 @@ those with **py33** in the name::
 .. _environment: https://conda.io/docs/using/envs.html
 .. _tox: https://tox.readthedocs.io/en/latest/
 .. _conda: http://conda.readthedocs.io/en/latest/
+.. _pipe: https://en.wikipedia.org/wiki/Pipeline_(Unix)
