@@ -10,7 +10,7 @@ from colorama import Fore
 from . import PKG_NAME, helper
 
 
-def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
+def update(names=None, yes=False, branch=None, tag=None, update_cache=False, quiet=False):
     """Update MSL packages.
 
     MSL packages can be installed from PyPI packages_ (only if a release has been
@@ -48,6 +48,8 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
         calls to this function. After 24 hours the cache is automatically updated. Set
         `update_cache` to be :obj:`True` to force the cache to be updated when you call
         this function.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
@@ -55,22 +57,23 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
         .. important::
            If you specify a `branch` or a `tag` then the update will be forced.
     """
-    zip_name = helper.get_zip_name(branch, tag)
+    zip_name = helper.get_zip_name(branch, tag, quiet=quiet)
     if zip_name is None:
         return
 
-    pkgs_github = helper.github(update_cache)
-    pkgs_pypi = helper.pypi(update_cache)
+    pkgs_github = helper.github(update_cache, quiet=quiet)
+    pkgs_pypi = helper.pypi(update_cache, quiet=quiet)
     if not pkgs_github and not pkgs_pypi:
         return
 
-    pkgs_installed = helper.installed()
+    pkgs_installed = helper.installed(quiet=quiet)
 
     names = helper.check_msl_prefix(names)
     if not names:
         names = [pkg for pkg in pkgs_installed if pkg != PKG_NAME]
     elif PKG_NAME in names:
-        helper.print_warning('Use "pip install {} --upgrade" to update the MSL Package Manager'.format(PKG_NAME))
+        if not quiet:
+            helper.print_warning('Use "pip install {} --upgrade" to update the MSL Package Manager'.format(PKG_NAME))
         del names[names.index(PKG_NAME)]
 
     w = [0, 0]
@@ -80,11 +83,13 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
         err_msg = 'Cannot update {}: '.format(name)
 
         if name not in pkgs_installed:
-            helper.print_error(err_msg + 'package not installed')
+            if not quiet:
+                helper.print_error(err_msg + 'package not installed')
             continue
 
         if name not in pkgs_github and name not in pkgs_pypi:
-            helper.print_error(err_msg + 'package not found on GitHub or PyPI')
+            if not quiet:
+                helper.print_error(err_msg + 'package not found on GitHub or PyPI')
             continue
 
         installed_version = pkgs_installed[name]['version']
@@ -96,13 +101,15 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
             if tag in pkgs_github[name]['tags']:
                 pkgs_to_update[name] = (installed_version, '[tag:{}]'.format(tag), using_pypi)
             else:
-                helper.print_error(err_msg + 'a "{}" tag does not exist'.format(tag))
+                if not quiet:
+                    helper.print_error(err_msg + 'a "{}" tag does not exist'.format(tag))
                 continue
         elif branch is not None:
             if branch in pkgs_github[name]['branches']:
                 pkgs_to_update[name] = (installed_version, '[branch:{}]'.format(branch), using_pypi)
             else:
-                helper.print_error(err_msg + 'a "{}" branch does not exist'.format(branch))
+                if not quiet:
+                    helper.print_error(err_msg + 'a "{}" branch does not exist'.format(branch))
                 continue
         else:
             if using_pypi:
@@ -112,12 +119,14 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
 
             if not version:
                 # a version number must exist on PyPI, so if this occurs it must be for a github repo
-                helper.print_error(err_msg + 'the github repository does not contain a release')
+                if not quiet:
+                    helper.print_error(err_msg + 'the github repository does not contain a release')
                 continue
             elif parse_version(version) > parse_version(installed_version):
                 pkgs_to_update[name] = (installed_version, version, using_pypi)
             else:
-                helper.print_warning('The {} package is already the latest [{}]'.format(name, installed_version))
+                if not quiet:
+                    helper.print_warning('The {} package is already the latest [{}]'.format(name, installed_version))
                 continue
 
         w = [max(w[0], len(name)), max(w[1], len(installed_version))]
@@ -131,10 +140,12 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
             pkg += ': '
             msg += '\n  ' + pkg.ljust(w[0]+2) + local.ljust(w[1]) + ' --> ' + remote
 
-        print(msg)
+        if not yes and not quiet:
+            print(msg)
         if not (yes or helper.ask_proceed()):
             return
-        print('')
+        if not quiet:
+            print('')
 
         exe = [sys.executable, '-m', 'pip', 'install']
         options = ['--upgrade', '--force-reinstall', '--no-deps']
@@ -145,4 +156,5 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False):
                 package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
             subprocess.call(exe + options + package)
     else:
-        print('No MSL packages to update')
+        if not quiet:
+            print('No MSL packages to update')

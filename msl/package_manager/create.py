@@ -7,7 +7,7 @@ import time
 from .helper import get_username, get_email, get_input, print_error, print_warning
 
 
-def create(names, yes=False, author=None, email=None, path=None):
+def create(names, yes=False, author=None, email=None, path=None, quiet=False):
     """Create a new MSL package.
 
     Parameters
@@ -30,6 +30,8 @@ def create(names, yes=False, author=None, email=None, path=None):
     path : :class:`str`, optional
         The root path to where to create the new package. If :obj:`None`
         then creates the new package(s) in the current working directory.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Raises
     ------
@@ -55,13 +57,16 @@ def create(names, yes=False, author=None, email=None, path=None):
             name = name[4:]
 
         if name[0].isdigit():
-            print_warning('A package name cannot start with a number: ignored "{}"'.format(name))
+            if not quiet:
+                print_warning('A package name cannot start with a number: ignored "{}"'.format(name))
             continue
 
         keep = True
         for c in name:
             if not (c.isalnum() or c == '_'):
-                print_warning('A package name can only contain letters, numbers and underscores: ignored "{}"'.format(name))
+                if not quiet:
+                    print_warning('A package name can only contain letters, numbers and underscores: '
+                                  'ignored "{}"'.format(name))
                 keep = False
                 break
 
@@ -69,7 +74,8 @@ def create(names, yes=False, author=None, email=None, path=None):
             msl_name = 'msl-' + name.lower()
             root = os.path.join(path, msl_name)
             if os.path.isdir(root):
-                print_warning('A {} folder already exists: ignored "{}"'.format(root, name))
+                if not quiet:
+                    print_warning('A {} folder already exists: ignored "{}"'.format(root, name))
             else:
                 roots.append(root)
                 pkg_names.append(name)
@@ -93,7 +99,8 @@ def create(names, yes=False, author=None, email=None, path=None):
                 if new_name:
                     author_name = new_name
             except:
-                print_error('Aborted -- cannot create MSL package.')
+                if not quiet:
+                    print_error('Aborted -- cannot create MSL package.')
                 return
 
     # determine the author's email address
@@ -110,7 +117,8 @@ def create(names, yes=False, author=None, email=None, path=None):
                 if new_email:
                     email_address = new_email
             except:
-                print_error('Aborted -- cannot create MSL package.')
+                if not quiet:
+                    print_error('Aborted -- cannot create MSL package.')
                 return
 
     # create the new package
@@ -140,7 +148,8 @@ def create(names, yes=False, author=None, email=None, path=None):
                 with open(os.path.join(new_dir, filename.replace('.template', '')), 'w') as fp:
                     fp.write(lines)
 
-        if os.path.isdir(msl_root):
-            print('Created MSL-{} in {}'.format(msl_pkg, msl_root))
-        else:
-            print_error('Error creating... ' + msl_pkg)
+        if not quiet:
+            if os.path.isdir(msl_root):
+                print('Created MSL-{} in {}'.format(msl_pkg, msl_root))
+            else:
+                print_error('Error creating... ' + msl_pkg)

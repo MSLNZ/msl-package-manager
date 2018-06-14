@@ -74,7 +74,7 @@ def check_msl_prefix(names):
     return _names
 
 
-def create_install_list(names, branch, tag, update_cache):
+def create_install_list(names, branch, tag, update_cache, quiet=False):
     """Create a list of package names to ``install`` that are GitHub repositories_.
 
     .. _repository: https://github.com/MSLNZ
@@ -89,18 +89,20 @@ def create_install_list(names, branch, tag, update_cache):
         The name of a GitHub tag.
     update_cache : :class:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
     :class:`dict` of :class:`dict`
         The MSL packages to ``install``.
     """
-    zip_name = get_zip_name(branch, tag)
+    zip_name = get_zip_name(branch, tag, quiet=quiet)
     if zip_name is None:
         return
 
-    pkgs_installed = installed()
-    pkgs_github = github(update_cache)
+    pkgs_installed = installed(quiet=quiet)
+    pkgs_github = github(update_cache, quiet=quiet)
 
     names = check_msl_prefix(names)
     if not names:
@@ -109,25 +111,31 @@ def create_install_list(names, branch, tag, update_cache):
     pkgs = {}
     for name in names:
         if name in pkgs_installed:
-            print_warning('The {} package is already installed'.format(name))
+            if not quiet:
+                print_warning('The {} package is already installed'.format(name))
         elif name not in pkgs_github:
-            print_error('Cannot install {}: package not found'.format(name))
+            if not quiet:
+                print_error('Cannot install {}: package not found'.format(name))
         elif branch is not None and branch not in pkgs_github[name]['branches']:
-            print_error('Cannot install {}: a "{}" branch does not exist'.format(name, branch))
+            if not quiet:
+                print_error('Cannot install {}: a "{}" branch does not exist'.format(name, branch))
         elif tag is not None and tag not in pkgs_github[name]['tags']:
-            print_error('Cannot install {}: a "{}" tag does not exist'.format(name, tag))
+            if not quiet:
+                print_error('Cannot install {}: a "{}" tag does not exist'.format(name, tag))
         else:
             pkgs[name] = pkgs_github[name]
     return pkgs
 
 
-def create_uninstall_list(names):
+def create_uninstall_list(names, quiet=False):
     """Create a list of package names to ``uninstall``.
 
     Parameters
     ----------
     names : :class:`str` or :class:`list` of :class:`str`
         The name(s) of the package(s) to ``uninstall``.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
@@ -135,7 +143,7 @@ def create_uninstall_list(names):
         The MSL packages to ``uninstall``.
     """
 
-    pkgs_installed = installed()
+    pkgs_installed = installed(quiet=quiet)
 
     names = check_msl_prefix(names)
     if not names:
@@ -144,9 +152,12 @@ def create_uninstall_list(names):
     pkgs = {}
     for name in names:
         if name == PKG_NAME:
-            print_warning('The MSL Package Manager cannot uninstall itself. Use "pip uninstall {}"'.format(PKG_NAME))
+            if not quiet:
+                print_warning('The MSL Package Manager cannot uninstall itself. '
+                              'Use "pip uninstall {}"'.format(PKG_NAME))
         elif name not in pkgs_installed:
-            print_error('Cannot uninstall {}: package not installed'.format(name))
+            if not quiet:
+                print_error('Cannot uninstall {}: package not installed'.format(name))
         else:
             pkgs[name] = pkgs_installed[name]
     return pkgs
@@ -220,7 +231,7 @@ def get_username():
         return getpass.getuser()
 
 
-def get_zip_name(branch, tag):
+def get_zip_name(branch, tag, quiet=False):
     """Returns the name of a zip file in the GitHub archive.
 
     Parameters
@@ -229,6 +240,8 @@ def get_zip_name(branch, tag):
         The name of a GitHub branch.
     tag : :class:`str` or :obj:`None`
         The name of a GitHub tag.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
@@ -237,7 +250,8 @@ def get_zip_name(branch, tag):
         and `tag` were specified.
     """
     if branch is not None and tag is not None:
-        print_error('Cannot specify both a branch ({}) and a tag ({})'.format(branch, tag))
+        if not quiet:
+            print_error('Cannot specify both a branch ({}) and a tag ({})'.format(branch, tag))
         return None
     elif branch is None and tag is None:
         return 'master'
@@ -249,7 +263,7 @@ def get_zip_name(branch, tag):
         assert False, 'This branch ({}) and tag ({}) combo has not been handled'.format(branch, tag)
 
 
-def github(update_cache=False):
+def github(update_cache=False, quiet=False):
     """Get the list of MSL repositories_ that are available on GitHub.
 
     .. _repositories: https://github.com/MSLNZ
@@ -261,6 +275,8 @@ def github(update_cache=False):
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
@@ -289,21 +305,25 @@ def github(update_cache=False):
         except:
             return name, []
 
-    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache, quiet=quiet)
     if cached_pgks:
         return cached_pgks
 
     try:
-        print_info('Inspecting repositories on GitHub')
+        if not quiet:
+            print_info('Inspecting repositories on GitHub')
         repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode('utf-8'))
     except Exception as err:
         # it is possible to get an "API rate limit exceeded for" error if you call this
         # function too often or maybe the user does not have an internet connection
-        print_error('Cannot connect to GitHub -- {}'.format(err))
+        if not quiet:
+            print_error('Cannot connect to GitHub -- {}'.format(err))
         if cached_pgks is not None:
-            print_info(cached_msg)
+            if not quiet:
+                print_info(cached_msg)
             return cached_pgks
-        print('Perhaps the GitHub API rate limit was exceeded. Please wait a while and try again later...')
+        if not quiet:
+            print('Perhaps the GitHub API rate limit was exceeded. Please wait a while and try again later...')
         return dict()
 
     pkgs = dict()
@@ -328,15 +348,21 @@ def github(update_cache=False):
     return sort_packages(pkgs)
 
 
-def installed():
+def installed(quiet=False):
     """Get the MSL packages that are installed.
+
+    Parameters
+    ----------
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
     :class:`dict` of :class:`dict`
         The MSL packages that are installed.
     """
-    print_info('Inspecting packages in {}'.format(os.path.dirname(sys.executable)))
+    if not quiet:
+        print_info('Inspecting packages in {}'.format(os.path.dirname(sys.executable)))
     pkgs = {}
     for pkg in pip.get_installed_distributions():
         if pkg.key.startswith('msl-'):
@@ -351,7 +377,7 @@ def installed():
     return sort_packages(pkgs)
 
 
-def pypi(update_cache=False):
+def pypi(update_cache=False, quiet=False):
     """Get the list of MSL packages_ that are available on PyPI_.
 
     .. _packages: https://pypi.org/search/?q=msl-*
@@ -364,24 +390,29 @@ def pypi(update_cache=False):
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
     :class:`dict` of :class:`dict`
         The MSL packages_ that are available on PyPI_.
     """
-    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_cache)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_cache, quiet=quiet)
     if cached_pgks:
         return cached_pgks
 
     try:
-        print_info('Inspecting packages on PyPI')
+        if not quiet:
+            print_info('Inspecting packages on PyPI')
         p2 = subprocess.Popen(['pip', 'search', 'msl-*'], stdout=subprocess.PIPE)
         stdout = p2.communicate()[0].decode('utf-8').strip()
     except Exception as err:
-        print_error('Cannot connect to PyPI -- {}'.format(err))
+        if not quiet:
+            print_error('Cannot connect to PyPI -- {}'.format(err))
         if cached_pgks is not None:
-            print_info(cached_msg)
+            if not quiet:
+                print_info(cached_msg)
             return cached_pgks
         return dict()
 
@@ -489,7 +520,7 @@ def sort_packages(pkgs):
     return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
 
 
-def _inspect_github_pypi(where, update):
+def _inspect_github_pypi(where, update, quiet=False):
     """Inspects the temp directory for the cached json file."""
 
     if where == 'github':
@@ -512,7 +543,8 @@ def _inspect_github_pypi(where, update):
 
     one_day = 60 * 60 * 24
     if (not update) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
-        print_info(cached_msg)
+        if not quiet:
+            print_info(cached_msg)
         return sort_packages(cached_pgks), path, cached_msg
 
     return dict(), path, cached_msg

@@ -7,7 +7,7 @@ import subprocess
 from . import helper
 
 
-def install(names=None, yes=False, branch=None, tag=None, update_cache=False):
+def install(names=None, yes=False, branch=None, tag=None, update_cache=False, quiet=False):
     """Install MSL packages.
 
     MSL packages can be installed from PyPI packages_ (only if a release has been
@@ -17,7 +17,7 @@ def install(names=None, yes=False, branch=None, tag=None, update_cache=False):
        If the MSL packages_ are available on PyPI_ then PyPI_ is used as the default
        URI_ to install the package. If you want to force the installation to occur
        from the ``master`` branch of the GitHub `repository <https://github.com/MSLNZ>`_
-       then set ``branch = 'master'``. If the package is not available on PyPI_
+       then set ``branch='master'``. If the package is not available on PyPI_
        then the ``master`` branch is used as the default installation URI_.
 
     .. _repositories: https://github.com/MSLNZ
@@ -45,26 +45,32 @@ def install(names=None, yes=False, branch=None, tag=None, update_cache=False):
         calls to this function. After 24 hours the cache is automatically updated. Set
         `update_cache` to be :obj:`True` to force the cache to be updated when you call
         this function.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
     """
-    zip_name = helper.get_zip_name(branch, tag)
+    zip_name = helper.get_zip_name(branch, tag, quiet=quiet)
     if zip_name is None:
         return
 
-    packages = helper.create_install_list(names, branch, tag, update_cache)
+    packages = helper.create_install_list(names, branch, tag, update_cache, quiet=quiet)
     if not packages:
-        print('No MSL packages to install')
+        if not quiet:
+            print('No MSL packages to install')
         return
 
-    pkgs_pypi = helper.pypi(update_cache)
+    pkgs_pypi = helper.pypi(update_cache, quiet=quiet)
 
-    helper.print_install_uninstall_message(packages, 'INSTALLED', branch, tag)
+    if not yes and not quiet:
+        helper.print_install_uninstall_message(packages, 'INSTALLED', branch, tag)
     if not (yes or helper.ask_proceed()):
         return
 
-    print('')
+    if not quiet:
+        print('')
+
     exe = [sys.executable, '-m', 'pip', 'install']
     github_options = ['--process-dependency-links']
     for pkg in packages:

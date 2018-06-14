@@ -8,7 +8,7 @@ import subprocess
 from . import helper
 
 
-def uninstall(names=None, yes=False):
+def uninstall(names=None, yes=False, quiet=False):
     """Uninstall MSL packages.
 
     Parameters
@@ -19,14 +19,18 @@ def uninstall(names=None, yes=False):
     yes : :class:`bool`, optional
         If :obj:`True` then don't ask for confirmation before uninstalling.
         The default is to ask before uninstalling.
+    quiet : :class:`bool`, optional
+        Whether to suppress the :func:`print` statements.
     """
-    packages = helper.create_uninstall_list(names)
+    packages = helper.create_uninstall_list(names, quiet=quiet)
     if not packages:
-        print('No MSL packages to uninstall')
+        if not quiet:
+            print('No MSL packages to uninstall')
         return
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do
-    helper.print_install_uninstall_message(packages, 'REMOVED')
+    if not yes and not quiet:
+        helper.print_install_uninstall_message(packages, 'REMOVED')
     if not (yes or helper.ask_proceed()):
         return
 
@@ -49,7 +53,9 @@ def uninstall(names=None, yes=False):
     with open(os.path.join(template_dir, 'examples', '__init__.py.template'), 'r') as fp:
         msl_examples_init = fp.readlines()
 
-    print('')
+    if not quiet:
+        print('')
+
     for pkg in packages:
         subprocess.call([sys.executable, '-m', 'pip', 'uninstall', '--yes', pkg])
 
