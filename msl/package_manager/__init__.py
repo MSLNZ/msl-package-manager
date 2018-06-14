@@ -14,13 +14,13 @@ version_info = namedtuple('version_info', 'major minor micro')(*map(int, __versi
 """:obj:`~collections.namedtuple`: Contains the version information as a (major, minor, micro) tuple."""
 
 PKG_NAME = 'msl-package-manager'
-""":obj:`str`: The name of this package when it is installed"""
+""":class:`str`: The name of this package when it is installed"""
 
 IS_PYTHON2 = sys.version_info[0] == 2
-""":obj:`bool`: Whether Python 2.x is being used."""
+""":class:`bool`: Whether Python 2.x is being used."""
 
 IS_PYTHON3 = sys.version_info[0] == 3
-""":obj:`bool`: Whether Python 3.x is being used."""
+""":class:`bool`: Whether Python 3.x is being used."""
 
 from .helper import installed
 from .helper import github, pypi

@@ -18,23 +18,23 @@ def print_packages(from_github=False, update_github_cache=False, detailed=False,
     
     Parameters
     ----------
-    from_github : :obj:`bool`, optional
+    from_github : :class:`bool`, optional
         Whether to show the MSL packages that are available as GitHub repositories_.
         The default action is to show the MSL packages that are installed.
-    update_github_cache : :obj:`bool`, optional
+    update_github_cache : :class:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_github_cache` to be :obj:`True`
         to force the cache to be updated when you call this function. Only used
         if `from_github` is :obj:`True`.
-    detailed : :obj:`bool`, optional
+    detailed : :class:`bool`, optional
         Whether to show detailed information about the MSL packages that are available
         as GitHub repositories_ (i.e., displays additional information about the
         branches and tags). Only used if `from_github` is :obj:`True`.
-    from_pypi : :obj:`bool`, optional
+    from_pypi : :class:`bool`, optional
         Whether to show the MSL packages that are available on PyPI_. The default
         action is to show the MSL packages that are installed.
-    update_pypi_cache : :obj:`bool`, optional
+    update_pypi_cache : :class:`bool`, optional
         The information about the MSL packages that are available on PyPI_ are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`

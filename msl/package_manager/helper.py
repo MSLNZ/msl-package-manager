@@ -30,7 +30,7 @@ def ask_proceed():
 
     Returns
     -------
-    :obj:`True`
+    :class:`bool`
         Whether to proceed.
     """
     ask = '\nProceed ([y]/n)? '
@@ -50,12 +50,12 @@ def check_msl_prefix(names):
 
      Parameters
      ----------
-     names : :obj:`str` or :obj:`list` of :obj:`str`
+     names : :class:`str` or :class:`list` of :class:`str`
         The package names.
 
      Returns
      -------
-     :obj:`list` of :obj:`str`
+     :class:`list` of :class:`str`
         A list of package names with the ``msl-`` prefix.
     """
     if names is None:
@@ -81,18 +81,18 @@ def create_install_list(names, branch, tag, update_github_cache):
 
     Parameters
     ----------
-    names : :obj:`str` or :obj:`list` of :obj:`str`
+    names : :class:`str` or :class:`list` of :class:`str`
         The name of a single GitHub repository_ or a list of repository_ names.
-    branch : :obj:`str`
+    branch : :class:`str`
         The name of a GitHub branch.
-    tag : :obj:`str`
+    tag : :class:`str`
         The name of a GitHub tag.
-    update_github_cache : :obj:`bool`
+    update_github_cache : :class:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
 
     Returns
     -------
-    :obj:`dict` of :obj:`dict`
+    :class:`dict` of :class:`dict`
         The MSL packages to ``install``.
     """
     zip_name = get_zip_name(branch, tag)
@@ -126,12 +126,12 @@ def create_uninstall_list(names):
 
     Parameters
     ----------
-    names : :obj:`str` or :obj:`list` of :obj:`str`
+    names : :class:`str` or :class:`list` of :class:`str`
         The name(s) of the package(s) to ``uninstall``.
 
     Returns
     -------
-    :obj:`dict` of :obj:`dict`
+    :class:`dict` of :class:`dict`
         The MSL packages to ``uninstall``.
     """
 
@@ -163,7 +163,7 @@ def get_email():
 
     Returns
     -------
-    :obj:`str` or :obj:`None`
+    :class:`str` or :obj:`None`
         The user's email address.
     """
     try:
@@ -178,13 +178,13 @@ def get_input(msg):
 
     Parameters
     ----------
-    msg : :obj:`str`
+    msg : :class:`str`
         The message to display.
 
     Returns
     -------
-    :obj:`str`
-        The user's input from :obj:`sys.stdin`.
+    :class:`str`
+        The user's input from :attr:`sys.stdin`.
 
     Raises
     ------
@@ -210,7 +210,7 @@ def get_username():
 
     Returns
     -------
-    :obj:`str`
+    :class:`str`
         The user's name.
     """
     try:
@@ -225,14 +225,14 @@ def get_zip_name(branch, tag):
 
     Parameters
     ----------
-    branch : :obj:`str` or :obj:`None`
+    branch : :class:`str` or :obj:`None`
         The name of a GitHub branch.
-    tag : :obj:`str` or :obj:`None`
+    tag : :class:`str` or :obj:`None`
         The name of a GitHub tag.
 
     Returns
     -------
-    :obj:`str`
+    :class:`str`
         The name of the zip file or :obj:`None` if both `branch`
         and `tag` were specified.
     """
@@ -256,7 +256,7 @@ def github(update_github_cache=False):
 
     Parameters
     ----------
-    update_github_cache : :obj:`bool`, optional
+    update_github_cache : :class:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_github_cache` to be :obj:`True`
@@ -264,7 +264,7 @@ def github(update_github_cache=False):
 
     Returns
     -------
-    :obj:`dict` of :obj:`dict`
+    :class:`dict` of :class:`dict`
         The MSL repositories_ that are available on GitHub.
     """
     def fetch(url_suffix):
@@ -333,7 +333,7 @@ def installed():
 
     Returns
     -------
-    :obj:`dict` of :obj:`dict`
+    :class:`dict` of :class:`dict`
         The MSL packages that are installed.
     """
     print_info('Inspecting packages in {}'.format(os.path.dirname(sys.executable)))
@@ -359,7 +359,7 @@ def pypi(update_pypi_cache=False):
 
     Parameters
     ----------
-    update_pypi_cache : :obj:`bool`, optional
+    update_pypi_cache : :class:`bool`, optional
         The information about the MSL packages_ that are available on PyPI_ are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`
@@ -367,7 +367,7 @@ def pypi(update_pypi_cache=False):
 
     Returns
     -------
-    :obj:`dict` of :obj:`dict`
+    :class:`dict` of :class:`dict`
         The MSL packages_ that are available on PyPI_.
     """
     cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_pypi_cache)
@@ -405,7 +405,7 @@ def print_error(msg):
 
     Parameters
     ----------
-    msg : :obj:`str`
+    msg : :class:`str`
         The message to print.
     """
     print(Style.BRIGHT + Fore.RED + msg)
@@ -416,7 +416,7 @@ def print_info(msg):
 
     Parameters
     ----------
-    msg : :obj:`str`
+    msg : :class:`str`
         The message to print.
     """
     print(Fore.CYAN + msg)
@@ -427,7 +427,7 @@ def print_warning(msg):
 
     Parameters
     ----------
-    msg : :obj:`str`
+    msg : :class:`str`
         The message to print.
     """
     print(Fore.YELLOW + msg)
@@ -438,14 +438,14 @@ def print_install_uninstall_message(packages, action, branch=None, tag=None):
 
     Parameters
     ----------
-    packages : :obj:`dict`
+    packages : :class:`dict`
         The packages that are affected.
-    action : :obj:`str`
+    action : :class:`str`
         The text to show in color and in upper case about what's happening.
-    branch : :obj:`str`, optional
+    branch : :class:`str`, optional
         The name of a GitHub branch to use for the ``install``.
         *Only used when installing packages*.
-    tag : :obj:`str`, optional
+    tag : :class:`str`, optional
         The name of a GitHub tag to use for the ``install``.
         *Only used when installing packages*.
     """
@@ -478,12 +478,12 @@ def sort_packages(pkgs):
 
     Parameters
     ----------
-    pkgs : :obj:`dict`
+    pkgs : :class:`dict`
         The MSL packages.
 
     Returns
     -------
-    :obj:`collections.OrderedDict`
+    :class:`collections.OrderedDict`
         The packages sorted by name.
     """
     return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])

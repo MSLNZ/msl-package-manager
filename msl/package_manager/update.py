@@ -30,24 +30,24 @@ def update(names=None, yes=False, update_github_cache=False, branch=None, tag=No
 
     Parameters
     ----------
-    names : :obj:`str` or :obj:`list` of :obj:`str`, optional
+    names : :class:`str` or :class:`list` of :class:`str`, optional
         The name(s) of the MSL package(s) to update. The default is to update
         **all** MSL packages (except for the **MSL Package Manager** -- use ``pip``).
-    yes : :obj:`bool`, optional
+    yes : :class:`bool`, optional
         If :obj:`True` then don't ask for confirmation before updating.
         The default is to ask before updating.
-    update_github_cache : :obj:`bool`, optional
+    update_github_cache : :class:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_github_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
-    branch : :obj:`str`, optional
+    branch : :class:`str`, optional
         The name of a GitHub branch to use for the update. If :obj:`None`, and no
         `tag` value has also been specified, then updates the package using the
         ``master`` branch.
-    tag : :obj:`str`, optional
+    tag : :class:`str`, optional
         The name of a GitHub tag to use for the update.
-    update_pypi_cache : :obj:`bool`, optional
+    update_pypi_cache : :class:`bool`, optional
         The information about the MSL packages_ that are available on PyPI_ are
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_pypi_cache` to be :obj:`True`

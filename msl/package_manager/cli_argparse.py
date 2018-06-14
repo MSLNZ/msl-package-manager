@@ -23,11 +23,11 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
     def get_command_name(self):
-        """:obj:`str`: Returns the name of the command, e.g., ``install``, ``list``, ..."""
+        """:class:`str`: Returns the name of the command, e.g., ``install``, ``list``, ..."""
         return self.prog.split()[-1]
 
     def contains_package_names(self):
-        """:obj:`bool`: Whether package names were specified or the ``--all`` flag was used."""
+        """:class:`bool`: Whether package names were specified or the ``--all`` flag was used."""
         args = self.parse_known_args()[0]
         if not args.all and not args.names:
             print_error('You must specify the MSL package name(s) to {} or use the "--all" argument'.format(args.cmd))

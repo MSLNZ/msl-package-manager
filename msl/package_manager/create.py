@@ -12,22 +12,22 @@ def create(names, yes=False, author=None, email=None, path=None):
 
     Parameters
     ----------
-    names : :obj:`str` or :obj:`list` of :obj:`str`
+    names : :class:`str` or :class:`list` of :class:`str`
         The name(s) of the MSL package(s) to create.
-    yes : :obj:`bool`, optional
+    yes : :class:`bool`, optional
         If :obj:`True` then don't ask for verification for the `author` name
         and for the `email` address. This argument is only used if you do not
         specify the `author` or the `email` value. The verification step allows
         you to change the value that was automatically determined before the
         package is created. The default is to ask for verification before creating
         the package if the `author` or the `email` value was not specified.
-    author : :obj:`str`, optional
+    author : :class:`str`, optional
         The name of the author to use for the new package. If :obj:`None` then
         uses :func:`.helper.get_username` to determine the author's name.
-    email : :obj:`str`, optional
+    email : :class:`str`, optional
         The author's email address. If :obj:`None` then uses
         :func:`.helper.get_email` to determine the author's email address.
-    path : :obj:`str`, optional
+    path : :class:`str`, optional
         The root path to where to create the new package. If :obj:`None`
         then creates the new package(s) in the current working directory.
 

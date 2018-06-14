@@ -13,10 +13,10 @@ def uninstall(names=None, yes=False):
 
     Parameters
     ----------
-    names : :obj:`str` or :obj:`list` of :obj:`str`, optional
+    names : :class:`str` or :class:`list` of :class:`str`, optional
         The name(s) of MSL package(s) to uninstall. If :obj:`None` then
         uninstall **all** MSL packages (except for the **MSL Package Manager**).
-    yes : :obj:`bool`, optional
+    yes : :class:`bool`, optional
         If :obj:`True` then don't ask for confirmation before uninstalling.
         The default is to ask before uninstalling.
     """
