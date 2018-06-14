@@ -10,7 +10,7 @@ The root package is
 
     msl.package_manager
 
-which has the following classes
+which has the following functions
 
 .. autosummary::
 
@@ -24,7 +24,7 @@ and the following helper module
 
 .. autosummary::
 
-   msl.package_manager.helper
+   ~msl.package_manager.helper
 
 Package Structure
 -----------------
