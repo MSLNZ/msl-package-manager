@@ -3,8 +3,10 @@ Main entry point to either install, uninstall, update, list or create MSL packag
 using the command-line interface (CLI).
 """
 import sys
+from pkg_resources import parse_version
 
 from . import PKG_NAME, __version__
+from .helper import pypi, print_warning
 
 PARSER = None
 
@@ -64,6 +66,14 @@ def main(*args):
     parser = configure_parser()
     args = parser.parse_args(args)
     args.func(args, parser)
+
+    pkgs = pypi(quiet=True)
+    latest = pkgs['msl-package-manager']['version']
+    if parse_version(latest) > parse_version(__version__):
+        print_warning('\nYou are using msl-package-manager version {}, however, version {} is available.\n'
+                      'You should consider upgrading via the "pip install -U msl-package-manager" '
+                      'command.'.format(__version__, latest))
+
     sys.exit(0)
 
 
