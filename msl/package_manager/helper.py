@@ -425,7 +425,7 @@ def pypi(update_cache=False, quiet=False):
     pkgs = dict()
     for line in stdout.splitlines():
         match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
-        if match:
+        if match and match.group(1).lower().startswith('msl-'):
             pkgs[match.group(1)] = {
                 'version': match.group(2),
                 'description': match.group(3),
