@@ -68,7 +68,7 @@ def print_packages(from_github=False, detailed=False, from_pypi=False, update_ca
         w = [
             max(w[0], len(p)),
             max(w[1], len(pkgs[p]['version'])),
-            max(w[2], len(pkgs[p]['description']))
+            max(w[2], len(pkgs[p]['description']) if pkgs[p]['description'] else 0)
         ]
 
     # print the results
@@ -76,4 +76,5 @@ def print_packages(from_github=False, detailed=False, from_pypi=False, update_ca
     print(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
     print(' '.join('-' * w for w in w))
     for p in sorted(pkgs):
-        print(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + pkgs[p]['description'].ljust(w[2]))
+        description = pkgs[p]['description'] if pkgs[p]['description'] else ''
+        print(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
