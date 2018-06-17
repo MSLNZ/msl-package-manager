@@ -366,20 +366,19 @@ def installed(quiet=False):
 
     pkgs = {}
     for dist in pkg_resources.working_set:
-        name = dist.project_name
-        if not name.startswith('msl-'):
+        if not dist.key.startswith('msl-'):
             continue
 
         description = ''
         if dist.has_metadata(dist.PKG_INFO):
             for line in dist.get_metadata_lines(dist.PKG_INFO):
                 if line.startswith('Summary:'):
-                    description = line[8:]
+                    description = line[8:].strip()
                     break
 
-        pkgs[name] = {}
-        pkgs[name]['version'] = dist.version
-        pkgs[name]['description'] = description
+        pkgs[dist.project_name] = dict()
+        pkgs[dist.project_name]['version'] = dist.version
+        pkgs[dist.project_name]['description'] = description
 
     return sort_packages(pkgs)
 
