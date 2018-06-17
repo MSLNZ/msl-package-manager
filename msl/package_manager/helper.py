@@ -318,7 +318,7 @@ def github(update_cache=False, quiet=False):
         # function too often or maybe the user does not have an internet connection
         if not quiet:
             print_error('Cannot connect to GitHub -- {}'.format(err))
-            print_error('Perhaps the GitHub API rate limit was exceeded or you do not have internet access')
+            print_error('Perhaps the GitHub API rate limit was exceeded or the computer does not have internet access')
 
         cached_pgks, path, cached_msg = _inspect_github_pypi('github', False, quiet=quiet)
         if cached_pgks:
