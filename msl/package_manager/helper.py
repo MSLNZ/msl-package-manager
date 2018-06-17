@@ -4,12 +4,12 @@ Helper functions for the MSL Package Manager.
 import re
 import os
 import sys
-import pip
 import json
 import time
 import getpass
 import tempfile
 import subprocess
+import pkg_resources
 from collections import OrderedDict
 from multiprocessing.pool import ThreadPool
 
@@ -363,17 +363,24 @@ def installed(quiet=False):
     """
     if not quiet:
         print_info('Inspecting packages in {}'.format(os.path.dirname(sys.executable)))
+
     pkgs = {}
-    for pkg in pip.get_installed_distributions():
-        if pkg.key.startswith('msl-'):
-            description = 'unknown'
-            for item in pkg._get_metadata(pkg.PKG_INFO):
-                if 'Summary:' in item:
-                    description = item.split('Summary:')[1].strip()
+    for dist in pkg_resources.working_set:
+        name = dist.project_name
+        if not name.startswith('msl-'):
+            continue
+
+        description = ''
+        if dist.has_metadata(dist.PKG_INFO):
+            for line in dist.get_metadata_lines(dist.PKG_INFO):
+                if line.startswith('Summary:'):
+                    description = line[8:]
                     break
-            pkgs[pkg.key] = {}
-            pkgs[pkg.key]['version'] = pkg.version
-            pkgs[pkg.key]['description'] = description
+
+        pkgs[name] = {}
+        pkgs[name]['version'] = dist.version
+        pkgs[name]['description'] = description
+
     return sort_packages(pkgs)
 
 

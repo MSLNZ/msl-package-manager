@@ -13,7 +13,9 @@ Dependencies
 ------------
 * Python 2.7, 3.3+
 * pip_
+* setuptools_
 * colorama_
 
-.. _pip: https://pypi.python.org/pypi/pip
-.. _colorama: https://pypi.python.org/pypi/colorama
+.. _pip: https://pypi.org/project/pip/
+.. _setuptools: https://pypi.org/project/setuptools/
+.. _colorama: https://pypi.org/project/colorama/
