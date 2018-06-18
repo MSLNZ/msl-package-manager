@@ -68,11 +68,11 @@ def main(*args):
     args.func(args, parser)
 
     pkgs = pypi(quiet=True)
-    latest = pkgs['msl-package-manager']['version']
+    latest = pkgs[PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
-        print_warning('\nYou are using msl-package-manager version {}, however, version {} is available.\n'
-                      'You should consider upgrading via the "pip install -U msl-package-manager" '
-                      'command.'.format(__version__, latest))
+        print_warning('\nYou are using {0} version {1}, however, version {2} is available.\n'
+                      'You should consider upgrading via the "pip install -U {0}" command.' \
+                      .format(PKG_NAME, __version__, latest))
 
     sys.exit(0)
 

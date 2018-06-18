@@ -56,5 +56,3 @@ def add_parser_list(parser):
 def execute(args, parser):
     """Executes the ``list`` command."""
     print_packages(args.github, args.detailed, args.pypi, args.update_cache)
-    if sys.platform != 'win32':
-        print('')
