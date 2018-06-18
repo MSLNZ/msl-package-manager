@@ -10,6 +10,7 @@ import getpass
 import tempfile
 import subprocess
 import pkg_resources
+from datetime import datetime
 from collections import OrderedDict
 from multiprocessing.pool import ThreadPool
 
@@ -289,7 +290,9 @@ def github(update_cache=False, quiet=False):
 
     def fetch_latest_release(name):
         try:
-            return name, fetch(name+'/releases/latest')['name'].replace(u'v', u'')
+            ret = fetch(name + '/releases/latest')
+            latest = ret['name'] if ret['name'] else ret['tag_name']
+            return name, latest.replace(u'v', u'')
         except:
             return name, ''
 
@@ -317,8 +320,17 @@ def github(update_cache=False, quiet=False):
         # it is possible to get an "API rate limit exceeded for" error if you call this
         # function too often or maybe the user does not have an internet connection
         if not quiet:
-            print_error('Cannot connect to GitHub -- {}'.format(err))
-            print_error('Perhaps the GitHub API rate limit was exceeded or the computer does not have internet access')
+            try:
+                r = json.loads(urlopen('https://api.github.com/rate_limit').read().decode('utf-8'))
+                if r['rate']['remaining'] == 0:
+                    hms = datetime.fromtimestamp(int(r['rate']['reset'])).strftime('%H:%M:%S')
+                    msg = 'The GitHub API rate limit was exceeded. Retry at {}'.format(hms)
+                else:
+                    msg = 'Unknown error... there are still {} of {} GitHub requests remaining'.format(
+                        r['rate']['remaining'], r['rate']['limit'])
+            except:
+                msg = 'Perhaps the computer does not have internet access'
+            print_error('Cannot connect to GitHub -- {}\n{}'.format(err, msg))
 
         cached_pgks, path, cached_msg = _inspect_github_pypi('github', False, quiet=quiet)
         if cached_pgks:
