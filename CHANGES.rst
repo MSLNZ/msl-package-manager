@@ -9,6 +9,7 @@ Version 1.5.2 (in development)
 
   * show a message if the current version of the MSL Package Manager is not the latest release
   * create a ``quiet`` kwarg
+  * the .pytest_cache/ directory to .gitignore
 
 - Changed
 
