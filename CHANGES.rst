@@ -14,6 +14,8 @@ Version 1.5.2 (in development)
 
   * the ``--update-github-cache`` and ``--update-pypi-cache`` flags have been replaced with a single
     ``--update-cache`` flag
+  * use ``pkg_resources.working_set`` instead of ``pip.get_installed_distributions`` to properly get
+    the information about MSL packages that are installed
 
 - Fixed
 
