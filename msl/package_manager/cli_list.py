@@ -1,6 +1,8 @@
 """
 Command line interface for the ``list`` command.
 """
+import sys
+
 from .cli_argparse import add_argument_update_cache
 from .print_packages import print_packages
 
@@ -54,3 +56,5 @@ def add_parser_list(parser):
 def execute(args, parser):
     """Executes the ``list`` command."""
     print_packages(args.github, args.detailed, args.pypi, args.update_cache)
+    if sys.platform != 'win32':
+        print('')
