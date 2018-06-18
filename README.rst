@@ -29,7 +29,7 @@ Dependencies
 Documentation
 -------------
 
-The documentation for the **MSL Package Manager** can be found here_.
+The documentation for **MSL Package Manager** can be found here_.
 
 .. |docs| image:: https://readthedocs.org/projects/msl-package-manager/badge/?version=latest
    :target: http://msl-package-manager.readthedocs.io/en/latest/?badge=latest
