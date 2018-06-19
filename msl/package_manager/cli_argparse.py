@@ -3,7 +3,7 @@ Custom argument parsers.
 """
 import argparse
 
-from .helper import print_error
+from . import utils
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -30,7 +30,7 @@ class ArgumentParser(argparse.ArgumentParser):
         """:class:`bool`: Whether package names were specified or the ``--all`` flag was used."""
         args = self.parse_known_args()[0]
         if not args.all and not args.names:
-            print_error('You must specify the MSL package name(s) to {} or use the "--all" argument'.format(args.cmd))
+            utils._print_error('You must specify the MSL package name(s) to {} or use the "--all" argument'.format(args.cmd))
             return False
         return True
 

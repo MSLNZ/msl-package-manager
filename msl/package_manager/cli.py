@@ -6,7 +6,7 @@ import sys
 from pkg_resources import parse_version
 
 from . import PKG_NAME, __version__
-from .helper import pypi, print_warning
+from . import utils
 
 PARSER = None
 
@@ -67,12 +67,12 @@ def main(*args):
     args = parser.parse_args(args)
     args.func(args, parser)
 
-    pkgs = pypi(quiet=True)
+    pkgs = utils.pypi(quiet=True)
     latest = pkgs[PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
-        print_warning('\nYou are using {0} version {1}, however, version {2} is available.\n'
-                      'You should consider upgrading via the "pip install -U {0}" command.' \
-                      .format(PKG_NAME, __version__, latest))
+        utils._print_warning('\nYou are using {0} version {1}, however, version {2} is available.\n'
+                             'You should consider upgrading via the "pip install -U {0}" command.' \
+                             .format(PKG_NAME, __version__, latest))
 
     sys.exit(0)
 

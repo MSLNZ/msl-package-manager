@@ -1,7 +1,7 @@
 """
 Command line interface for the ``create`` command.
 """
-from . import helper
+from . import utils
 from .create import create
 from .cli_argparse import add_argument_package_names
 from .cli_argparse import add_argument_yes
@@ -75,4 +75,4 @@ def execute(args, parser):
     if args.names:
         create(args.names, args.yes, args.author, args.email, args.path)
     else:
-        helper.print_error('You must specify the name of the new package')
+        utils._print_error('You must specify the name of the new package')

@@ -22,13 +22,14 @@ IS_PYTHON2 = sys.version_info[0] == 2
 IS_PYTHON3 = sys.version_info[0] == 3
 """:class:`bool`: Whether Python 3.x is being used."""
 
-from .helper import installed
-from .helper import github, pypi
+from .utils import pypi
+from .utils import github
+from .utils import installed
+from .utils import print_packages
+from .update import update
 from .create import create
 from .install import install
 from .uninstall import uninstall
-from .update import update
-from .print_packages import print_packages
 
 import colorama
 colorama.init(autoreset=True)

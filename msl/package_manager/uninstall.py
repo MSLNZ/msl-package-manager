@@ -5,24 +5,29 @@ import os
 import sys
 import subprocess
 
-from . import helper
+from . import utils
 
 
-def uninstall(*names, yes=False, quiet=False):
+def uninstall(*names, **kwargs):
     """Uninstall MSL packages.
 
     Parameters
     ----------
-    names : :class:`tuple` of :class:`str`
+    *names : :class:`tuple` of :class:`str`
         The name(s) of MSL package(s) to uninstall. If empty then
-        uninstall **all** MSL packages (except for the **MSL Package Manager**).
-    yes : :class:`bool`, optional
-        If :obj:`True` then don't ask for confirmation before uninstalling.
-        The default is to ask before uninstalling.
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
+        uninstall **all** MSL packages (except for the **MSL Package Manager** --
+        in which case use ``pip uninstall msl-package-manager``).
+    **kwargs
+        yes : :class:`bool`, default :obj:`False`
+            If :obj:`True` then don't ask for confirmation before uninstalling.
+            The default is to ask before uninstalling.
+        quiet : :class:`bool`, default :obj:`False`
+            Whether to suppress the :func:`print` statements.
     """
-    packages = helper.create_uninstall_list(names, quiet=quiet)
+    yes = kwargs.get('yes', False)
+    quiet = kwargs.get('quiet', False)
+
+    packages = utils._create_uninstall_list(names, quiet=quiet)
     if not packages:
         if not quiet:
             print('No MSL packages to uninstall')
@@ -30,8 +35,8 @@ def uninstall(*names, yes=False, quiet=False):
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do
     if not yes or not quiet:
-        helper.print_install_uninstall_message(packages, 'REMOVED')
-    if not (yes or helper.ask_proceed()):
+        utils._print_install_uninstall_message(packages, 'REMOVED')
+    if not (yes or utils._ask_proceed()):
         return
 
     # After the MSL package gets uninstalled the "msl" namespace gets destroyed.

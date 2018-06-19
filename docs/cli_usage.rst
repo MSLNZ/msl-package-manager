@@ -12,7 +12,7 @@ The ``install``, ``uninstall``, ``update`` and ``list`` commands fetch data from
 Some MSL packages_ are also available on PyPI.
 
 .. attention::
-   Since MSL is a namespace_ package, uninstalling MSL packages using ``pip uninstall msl-<packaage name>``
+   Since MSL packages are part of a namespace_, uninstalling MSL packages using ``pip uninstall msl-<packaage name>``
    will break the namespace_. Therefore, it is recommended to use ``msl uninstall <packaage name>`` to
    uninstall MSL packages.
 
@@ -23,7 +23,7 @@ Some MSL packages_ are also available on PyPI.
    request will automatically update the GitHub or PyPI cache. To force the cache to be updated immediately
    include the ``--update-cache`` flag.
 
-To read the help documentation from the command line, type:
+To read the help documentation from the command line, run:
 
 .. code-block:: console
 
@@ -56,7 +56,8 @@ Install a specific MSL package, for example **msl-loadlib** (you can ignore the 
 
    msl install loadlib
 
-Install a package from a specific GitHub branch (by default the **master** branch is used):
+Install a package from a specific GitHub branch (by default the **master** branch is used if the package
+is not available on PyPI):
 
 .. code-block:: console
 
@@ -140,7 +141,8 @@ Update a package that was released :ref:`\<24 hours ago <cache_note>`:
 
    msl update loadlib --update-cache
 
-Update a package from a specific GitHub branch (by default the **master** branch is used):
+Update a package from a specific GitHub branch (by default the **master** branch is used if the package
+is not available on PyPI):
 
 .. code-block:: console
 

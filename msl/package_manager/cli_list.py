@@ -2,7 +2,7 @@
 Command line interface for the ``list`` command.
 """
 from .cli_argparse import add_argument_update_cache
-from .print_packages import print_packages
+from .utils import print_packages
 
 HELP = 'Print the information about MSL packages.'
 

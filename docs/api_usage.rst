@@ -103,4 +103,4 @@ Create a new **MSL-MyPackage** package
    Created MSL-MyPackage in D:\create\here\msl-mypackage
 
 .. _repositories: https://github.com/MSLNZ
-.. _packages: https://pypi.org/search/?q=msl-*
+.. _packages: https://pypi.org/search/?q=msl-
