@@ -8,6 +8,7 @@ import json
 import time
 import getpass
 import tempfile
+import importlib
 import subprocess
 import pkg_resources
 from datetime import datetime
@@ -369,6 +370,9 @@ def installed(quiet=False):
     if not quiet:
         print_info('Inspecting packages in {}'.format(os.path.dirname(sys.executable)))
 
+    # refresh the working_set
+    importlib.reload(pkg_resources)
+
     pkgs = {}
     for dist in pkg_resources.working_set:
         if not dist.key.startswith('msl-'):
@@ -416,7 +420,7 @@ def pypi(update_cache=False, quiet=False):
     try:
         if not quiet:
             print_info('Inspecting packages on PyPI')
-        p2 = subprocess.Popen(['pip', 'search', 'msl-*'], stdout=subprocess.PIPE)
+        p2 = subprocess.Popen([sys.executable, '-m', 'pip', 'search', 'msl-*'], stdout=subprocess.PIPE)
         stdout = p2.communicate()[0].decode('utf-8').strip()
     except Exception as err:
         if not quiet:
