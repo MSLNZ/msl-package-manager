@@ -8,13 +8,13 @@ import subprocess
 from . import helper
 
 
-def uninstall(names=None, yes=False, quiet=False):
+def uninstall(*names, yes=False, quiet=False):
     """Uninstall MSL packages.
 
     Parameters
     ----------
-    names : :class:`str` or :class:`list` of :class:`str`, optional
-        The name(s) of MSL package(s) to uninstall. If :obj:`None` then
+    names : :class:`tuple` of :class:`str`
+        The name(s) of MSL package(s) to uninstall. If empty then
         uninstall **all** MSL packages (except for the **MSL Package Manager**).
     yes : :class:`bool`, optional
         If :obj:`True` then don't ask for confirmation before uninstalling.
@@ -29,7 +29,7 @@ def uninstall(names=None, yes=False, quiet=False):
         return
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do
-    if not yes and not quiet:
+    if not yes or not quiet:
         helper.print_install_uninstall_message(packages, 'REMOVED')
     if not (yes or helper.ask_proceed()):
         return

@@ -65,7 +65,7 @@ Install the **msl-equipment** and **msl-qt** packages
 
 .. code-block:: pycon
 
-   >>> pm.install(['equipment', 'qt'])
+   >>> pm.install('equipment', 'qt')
    The following MSL packages will be INSTALLED:
 
      msl-equipment: 0.1.0

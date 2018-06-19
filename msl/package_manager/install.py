@@ -7,7 +7,7 @@ import subprocess
 from . import helper
 
 
-def install(names=None, yes=False, branch=None, tag=None, update_cache=False, quiet=False):
+def install(*names, yes=False, branch=None, tag=None, update_cache=False, quiet=False):
     """Install MSL packages.
 
     MSL packages can be installed from PyPI packages_ (only if a release has been
@@ -27,8 +27,8 @@ def install(names=None, yes=False, branch=None, tag=None, update_cache=False, qu
 
     Parameters
     ----------
-    names : :class:`str` or :class:`list` of :class:`str`, optional
-        The name(s) of the MSL package(s) to install. If :obj:`None` then
+    names : :class:`tuple` of :class:`str`, optional
+        The name(s) of the MSL package(s) to install. If empty then
         install **all** MSL packages.
     yes : :class:`bool`, optional
         If :obj:`True` then don't ask for confirmation before installing.
@@ -61,9 +61,9 @@ def install(names=None, yes=False, branch=None, tag=None, update_cache=False, qu
             print('No MSL packages to install')
         return
 
-    pkgs_pypi = helper.pypi(update_cache, quiet=quiet)
+    pkgs_pypi = helper.pypi(update_cache, quiet=True)
 
-    if not yes and not quiet:
+    if not yes or not quiet:
         helper.print_install_uninstall_message(packages, 'INSTALLED', branch, tag)
     if not (yes or helper.ask_proceed()):
         return

@@ -46,12 +46,12 @@ def ask_proceed():
             response = get_input(ask).lower()
 
 
-def check_msl_prefix(names):
+def check_msl_prefix(*names):
     """Ensures that the package names start with ``msl-``.
 
      Parameters
      ----------
-     names : :class:`str` or :class:`list` of :class:`str`
+     names : :class:`tuple` of :class:`str`
         The package names.
 
      Returns
@@ -59,15 +59,8 @@ def check_msl_prefix(names):
      :class:`list` of :class:`str`
         A list of package names with the ``msl-`` prefix.
     """
-    if names is None:
-        return []
-    elif not isinstance(names, (list, tuple)):
-        check_names = [names]
-    else:
-        check_names = names
-
     _names = []
-    for name in check_names:
+    for name in names:
         if name.startswith('msl-'):
             _names.append(name)
         else:
@@ -82,8 +75,8 @@ def create_install_list(names, branch, tag, update_cache, quiet=False):
 
     Parameters
     ----------
-    names : :class:`str` or :class:`list` of :class:`str`
-        The name of a single GitHub repository_ or a list of repository_ names.
+    names : :class:`tuple` of :class:`str`
+        The name of a single GitHub repository_ or multiple repository_ names.
     branch : :class:`str`
         The name of a GitHub branch.
     tag : :class:`str`
@@ -105,7 +98,7 @@ def create_install_list(names, branch, tag, update_cache, quiet=False):
     pkgs_installed = installed(quiet=quiet)
     pkgs_github = github(update_cache, quiet=quiet)
 
-    names = check_msl_prefix(names)
+    names = check_msl_prefix(*names)
     if not names:
         names = [pkg for pkg in pkgs_github if pkg != PKG_NAME]
 
@@ -133,7 +126,7 @@ def create_uninstall_list(names, quiet=False):
 
     Parameters
     ----------
-    names : :class:`str` or :class:`list` of :class:`str`
+    names : :class:`tuple` of :class:`str`
         The name(s) of the package(s) to ``uninstall``.
     quiet : :class:`bool`, optional
         Whether to suppress the :func:`print` statements.
@@ -146,7 +139,7 @@ def create_uninstall_list(names, quiet=False):
 
     pkgs_installed = installed(quiet=quiet)
 
-    names = check_msl_prefix(names)
+    names = check_msl_prefix(*names)
     if not names:
         names = [pkg for pkg in pkgs_installed if pkg != PKG_NAME]
 

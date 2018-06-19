@@ -39,4 +39,4 @@ def add_parser_uninstall(parser, name='uninstall'):
 def execute(args, parser):
     """Executes the ``uninstall`` command."""
     if parser.contains_package_names():
-        uninstall(args.names, args.yes)
+        uninstall(*args.names, yes=args.yes)

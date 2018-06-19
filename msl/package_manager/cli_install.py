@@ -43,4 +43,4 @@ def add_parser_install(parser):
 def execute(args, parser):
     """Executes the ``install`` command."""
     if parser.contains_package_names():
-        install(args.names, args.yes, args.branch, args.tag, args.update_cache)
+        install(*args.names, yes=args.yes, branch=args.branch, tag=args.tag, update_cache=args.update_cache)

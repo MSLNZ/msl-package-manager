@@ -10,7 +10,7 @@ from colorama import Fore
 from . import PKG_NAME, helper
 
 
-def update(names=None, yes=False, branch=None, tag=None, update_cache=False, quiet=False):
+def update(*names, yes=False, branch=None, tag=None, update_cache=False, quiet=False):
     """Update MSL packages.
 
     MSL packages can be installed from PyPI packages_ (only if a release has been
@@ -30,9 +30,10 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False, qui
 
     Parameters
     ----------
-    names : :class:`str` or :class:`list` of :class:`str`, optional
-        The name(s) of the MSL package(s) to update. The default is to update
-        **all** MSL packages (except for the **MSL Package Manager** -- use ``pip``).
+    names : :class:`tuple` of :class:`str`
+        The name(s) of the MSL package(s) to update. If empty then
+        update **all** MSL packages (except for the **MSL Package Manager** --
+        in which case use ``pip install -U msl-package-manager``).
     yes : :class:`bool`, optional
         If :obj:`True` then don't ask for confirmation before updating.
         The default is to ask before updating.
@@ -68,12 +69,12 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False, qui
 
     pkgs_installed = helper.installed(quiet=quiet)
 
-    names = helper.check_msl_prefix(names)
+    names = helper.check_msl_prefix(*names)
     if not names:
         names = [pkg for pkg in pkgs_installed if pkg != PKG_NAME]
     elif PKG_NAME in names:
         if not quiet:
-            helper.print_warning('Use "pip install {} --upgrade" to update the MSL Package Manager'.format(PKG_NAME))
+            helper.print_warning('Use "pip install -U {}" to update the MSL Package Manager'.format(PKG_NAME))
         del names[names.index(PKG_NAME)]
 
     w = [0, 0]
@@ -140,7 +141,7 @@ def update(names=None, yes=False, branch=None, tag=None, update_cache=False, qui
             pkg += ': '
             msg += '\n  ' + pkg.ljust(w[0]+2) + local.ljust(w[1]) + ' --> ' + remote
 
-        if not yes and not quiet:
+        if not yes or not quiet:
             print(msg)
         if not (yes or helper.ask_proceed()):
             return

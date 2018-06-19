@@ -49,4 +49,4 @@ def add_parser_update(parser, name='update'):
 def execute(args, parser):
     """Executes the ``update`` command."""
     if parser.contains_package_names():
-        update(args.names, args.yes, args.branch, args.tag, args.update_cache)
+        update(*args.names, yes=args.yes, branch=args.branch, tag=args.tag, update_cache=args.update_cache)
