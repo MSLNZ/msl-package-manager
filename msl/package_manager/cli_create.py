@@ -1,10 +1,11 @@
 """
 Command line interface for the ``create`` command.
 """
-from . import utils
+from .utils import log
 from .create import create
 from .cli_argparse import add_argument_package_names
 from .cli_argparse import add_argument_yes
+from .cli_argparse import add_argument_quiet
 
 
 HELP = 'Create a new MSL package.'
@@ -67,6 +68,7 @@ def add_parser_create(parser):
              'If not specified then the new package will be created\n'
              'in the current working directory.'
     )
+    add_argument_quiet(p)
     p.set_defaults(func=execute)
 
 
@@ -75,4 +77,4 @@ def execute(args, parser):
     if args.names:
         create(args.names, args.yes, args.author, args.email, args.path)
     else:
-        utils._print_error('You must specify the name of the new package')
+        log.error('You must specify the name of the new package')

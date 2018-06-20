@@ -5,6 +5,7 @@ from .cli_argparse import add_argument_all
 from .cli_argparse import add_argument_branch
 from .cli_argparse import add_argument_package_names
 from .cli_argparse import add_argument_tag
+from .cli_argparse import add_argument_quiet
 from .cli_argparse import add_argument_update_cache
 from .cli_argparse import add_argument_yes
 from .install import install
@@ -36,6 +37,7 @@ def add_parser_install(parser):
     add_argument_yes(p)
     add_argument_tag(p)
     add_argument_branch(p)
+    add_argument_quiet(p)
     add_argument_update_cache(p)
     p.set_defaults(func=execute)
 

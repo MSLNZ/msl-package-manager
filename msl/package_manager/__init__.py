@@ -25,11 +25,8 @@ IS_PYTHON3 = sys.version_info[0] == 3
 from .utils import pypi
 from .utils import github
 from .utils import installed
-from .utils import print_packages
+from .utils import show_packages
 from .update import update
 from .create import create
 from .install import install
 from .uninstall import uninstall
-
-import colorama
-colorama.init(autoreset=True)

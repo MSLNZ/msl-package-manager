@@ -15,15 +15,21 @@ import sys
 import json
 import time
 import getpass
+import logging
 import tempfile
-import importlib
 import subprocess
 import pkg_resources
+
 from datetime import datetime
 from collections import OrderedDict
 from multiprocessing.pool import ThreadPool
 
-from colorama import Fore, Style
+try:
+    import imp as importlib
+except ImportError:
+    import importlib
+
+from colorama import Fore, Style, Back, init
 
 from . import IS_PYTHON2
 from . import IS_PYTHON3
@@ -35,6 +41,8 @@ elif IS_PYTHON3:
     from urllib.request import urlopen
 else:
     raise NotImplementedError('Python major version is not 2 or 3')
+
+_NUM_QUIET = 0
 
 
 def get_email():
@@ -75,7 +83,7 @@ def get_username():
         return getpass.getuser()
 
 
-def github(update_cache=False, quiet=False):
+def github(update_cache=False):
     """Get the MSL repositories that are available on GitHub_.
 
     Parameters
@@ -85,8 +93,6 @@ def github(update_cache=False, quiet=False):
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
@@ -117,31 +123,35 @@ def github(update_cache=False, quiet=False):
         except:
             return name, []
 
-    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache, quiet=quiet)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache)
     if cached_pgks:
         return cached_pgks
 
     try:
-        if not quiet:
-            _print_info('Inspecting repositories on GitHub')
+        log.debug('Getting repositories from GitHub')
         repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode('utf-8'))
     except Exception as err:
         # it is possible to get an "API rate limit exceeded for" error if you call this
         # function too often or maybe the user does not have an internet connection
-        if not quiet:
-            try:
-                r = json.loads(urlopen('https://api.github.com/rate_limit').read().decode('utf-8'))
-                if r['rate']['remaining'] == 0:
-                    hms = datetime.fromtimestamp(int(r['rate']['reset'])).strftime('%H:%M:%S')
-                    msg = 'The GitHub API rate limit was exceeded. Retry at {}'.format(hms)
-                else:
-                    msg = 'Unknown error... there are still {} of {} GitHub requests remaining'.format(
-                        r['rate']['remaining'], r['rate']['limit'])
-            except:
-                msg = 'Perhaps the computer does not have internet access'
-            _print_error('Cannot connect to GitHub -- {}\n{}'.format(err, msg))
+        try:
+            r = json.loads(urlopen('https://api.github.com/rate_limit').read().decode('utf-8'))
+            if r['rate']['remaining'] == 0:
+                hms = datetime.fromtimestamp(int(r['rate']['reset'])).strftime('%H:%M:%S')
+                msg = 'The GitHub API rate limit was exceeded. Retry at {}'.format(hms)
+            else:
+                msg = 'Unknown error... there are still {} of {} GitHub requests remaining'.format(
+                    r['rate']['remaining'], r['rate']['limit'])
+        except:
+            msg = 'Perhaps the computer does not have internet access'
+        log.error('Cannot connect to GitHub -- {}\n{}'.format(err, msg))
 
-        cached_pgks, path, cached_msg = _inspect_github_pypi('github', False, quiet=quiet)
+        # hide DEBUG messages in the following
+        current_level = log.level
+        if current_level < logging.INFO:
+            set_log_level(logging.INFO)
+        cached_pgks, path, cached_msg = _inspect_github_pypi('github', False)
+        set_log_level(current_level)
+
         if cached_pgks:
             return cached_pgks
 
@@ -169,21 +179,15 @@ def github(update_cache=False, quiet=False):
     return _sort_packages(pkgs)
 
 
-def installed(quiet=False):
+def installed():
     """Get the MSL packages that are installed.
-
-    Parameters
-    ----------
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
     :class:`dict` of :class:`dict`
         The MSL packages that are installed.
     """
-    if not quiet:
-        _print_info('Inspecting packages in {}'.format(os.path.dirname(sys.executable)))
+    log.debug('Getting packages from {}'.format(os.path.dirname(sys.executable)))
 
     # refresh the working_set
     importlib.reload(pkg_resources)
@@ -207,8 +211,8 @@ def installed(quiet=False):
     return _sort_packages(pkgs)
 
 
-def print_packages(from_github=False, detailed=False, from_pypi=False, update_cache=False):
-    """Print the MSL packages that are available.
+def show_packages(from_github=False, detailed=False, from_pypi=False, update_cache=False):
+    """Show the MSL packages that are available.
 
     The list of packages can be either those that are installed, are
     available as repositories_ on GitHub or are available as packages_ on PyPI.
@@ -232,30 +236,31 @@ def print_packages(from_github=False, detailed=False, from_pypi=False, update_ca
         `update_cache` to be :obj:`True` to force the cache to be updated when you call
         this function.
     """
+    current_level = log.level
+
+    if update_cache:
+        pypi(update_cache=True)
+        github(update_cache=True)
+
+        # temporarily hide the DEBUG messages below
+        if current_level < logging.INFO:
+            set_log_level(logging.INFO)
+
     if from_github:
-        typ, pkgs = 'Repository', github(update_cache)
+        typ, pkgs = 'Repository', github(update_cache=False)
         if not pkgs:
             return
     elif from_pypi:
-        typ, pkgs = 'PyPI Package', pypi(update_cache)
+        typ, pkgs = 'PyPI Package', pypi(update_cache=False)
         if not pkgs:
             return
     else:
         typ, pkgs = 'Package', installed()
 
+    set_log_level(current_level)
+
     if detailed and from_github:
-        print('')
-        indent = '    '
-        for p in pkgs:
-            print(p + ':')
-            for key in sorted(pkgs[p]):
-                value = pkgs[p][key]
-                print(indent + key + ':')
-                if not value:
-                    continue
-                if not isinstance(value, list):
-                    value = [value]
-                print(indent + indent + ('\n' + indent + indent).join(v for v in value))
+        log.info(json.dumps(pkgs, indent=2))
         return
 
     # determine the maximum width of each column
@@ -268,16 +273,16 @@ def print_packages(from_github=False, detailed=False, from_pypi=False, update_ca
             max(w[2], len(pkgs[p]['description']) if pkgs[p]['description'] else 0)
         ]
 
-    # print the results
-    print('')
-    print(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
-    print(' '.join('-' * w for w in w))
+    # log the results
+    log.info('')
+    log.info(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
+    log.info(' '.join('-' * w for w in w))
     for p in sorted(pkgs):
         description = pkgs[p]['description'] if pkgs[p]['description'] else ''
-        print(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
+        log.info(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
 
 
-def pypi(update_cache=False, quiet=False):
+def pypi(update_cache=False):
     """Get the MSL packages that are available on PyPI_.
 
     Parameters
@@ -287,29 +292,26 @@ def pypi(update_cache=False, quiet=False):
         cached to use for subsequent calls to this function. After 24 hours the
         cache is automatically updated. Set `update_cache` to be :obj:`True`
         to force the cache to be updated when you call this function.
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
     :class:`dict` of :class:`dict`
         The MSL packages_ that are available on PyPI.
     """
-    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_cache, quiet=quiet)
+    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_cache)
     if cached_pgks:
         return cached_pgks
 
     try:
-        if not quiet:
-            _print_info('Inspecting packages on PyPI')
-        p2 = subprocess.Popen([sys.executable, '-m', 'pip', 'search', 'msl-'], stdout=subprocess.PIPE)
+        log.debug('Getting packages from PyPI')
+        command = [sys.executable, '-m', 'pip', 'search', 'msl-']
+        options = ['--quiet'] * _NUM_QUIET
+        p2 = subprocess.Popen(command + options, stdout=subprocess.PIPE)
         stdout = p2.communicate()[0].decode('utf-8').strip()
     except Exception as err:
-        if not quiet:
-            _print_error('Cannot connect to PyPI -- {}'.format(err))
+        log.error('Cannot connect to PyPI -- {}'.format(err))
         if cached_pgks is not None:
-            if not quiet:
-                _print_info(cached_msg)
+            log.info(cached_msg)
             return cached_pgks
         return dict()
 
@@ -328,6 +330,28 @@ def pypi(update_cache=False, quiet=False):
     return _sort_packages(pkgs)
 
 
+def set_log_level(level):
+    """Set the logging level.
+
+    Parameters
+    ----------
+    level : :class:`int`
+        A value from one of the :py:ref:`levels`.
+    """
+    global _NUM_QUIET
+
+    if level <= logging.WARNING:
+        _NUM_QUIET = 0
+    elif level == logging.ERROR:
+        _NUM_QUIET = 1
+    elif level == logging.CRITICAL:
+        _NUM_QUIET = 2
+    else:
+        _NUM_QUIET = 3
+
+    log.setLevel(level)
+
+
 def _ask_proceed():
     """Ask whether to proceed with the command.
 
@@ -344,8 +368,14 @@ def _ask_proceed():
         elif response.startswith('n'):
             return False
         else:
-            print('Invalid response')
+            log.info('Invalid response')
             response = _get_input(ask).lower()
+
+
+def _check_kwargs(kwargs, allowed):
+    for item in kwargs:
+        if item not in allowed:
+            log.warning('Invalid kwarg')
 
 
 def _check_msl_prefix(*names):
@@ -370,7 +400,7 @@ def _check_msl_prefix(*names):
     return _names
 
 
-def _create_install_list(names, branch, tag, update_cache, quiet=False):
+def _create_install_list(names, branch, tag, update_cache):
     """Create a list of package names to ``install`` that are GitHub repositories_.
 
     Parameters
@@ -383,20 +413,18 @@ def _create_install_list(names, branch, tag, update_cache, quiet=False):
         The name of a GitHub tag.
     update_cache : :class:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
     :class:`dict` of :class:`dict`
         The MSL packages to ``install``.
     """
-    zip_name = _get_zip_name(branch, tag, quiet=quiet)
+    zip_name = _get_github_zip_name(branch, tag)
     if zip_name is None:
         return
 
-    pkgs_installed = installed(quiet=quiet)
-    pkgs_github = github(update_cache, quiet=quiet)
+    pkgs_installed = installed()
+    pkgs_github = github(update_cache)
 
     names = _check_msl_prefix(*names)
     if not names:
@@ -405,31 +433,25 @@ def _create_install_list(names, branch, tag, update_cache, quiet=False):
     pkgs = {}
     for name in names:
         if name in pkgs_installed:
-            if not quiet:
-                _print_warning('The {} package is already installed'.format(name))
+            log.warning('The {} package is already installed'.format(name))
         elif name not in pkgs_github:
-            if not quiet:
-                _print_error('Cannot install {}: package not found'.format(name))
+            log.error('Cannot install {}: package not found'.format(name))
         elif branch is not None and branch not in pkgs_github[name]['branches']:
-            if not quiet:
-                _print_error('Cannot install {}: a "{}" branch does not exist'.format(name, branch))
+            log.error('Cannot install {}: a "{}" branch does not exist'.format(name, branch))
         elif tag is not None and tag not in pkgs_github[name]['tags']:
-            if not quiet:
-                _print_error('Cannot install {}: a "{}" tag does not exist'.format(name, tag))
+            log.error('Cannot install {}: a "{}" tag does not exist'.format(name, tag))
         else:
             pkgs[name] = pkgs_github[name]
     return pkgs
 
 
-def _create_uninstall_list(names, quiet=False):
+def _create_uninstall_list(names):
     """Create a list of package names to ``uninstall``.
 
     Parameters
     ----------
     names : :class:`tuple` of :class:`str`
         The name(s) of the package(s) to ``uninstall``.
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
@@ -437,7 +459,7 @@ def _create_uninstall_list(names, quiet=False):
         The MSL packages to ``uninstall``.
     """
 
-    pkgs_installed = installed(quiet=quiet)
+    pkgs_installed = installed()
 
     names = _check_msl_prefix(*names)
     if not names:
@@ -446,17 +468,13 @@ def _create_uninstall_list(names, quiet=False):
     pkgs = {}
     for name in names:
         if name == PKG_NAME:
-            if not quiet:
-                _print_warning('The MSL Package Manager cannot uninstall itself. '
-                              'Use "pip uninstall {}"'.format(PKG_NAME))
+            log.warning('The MSL Package Manager cannot uninstall itself. '
+                        'Use "pip uninstall {}"'.format(PKG_NAME))
         elif name not in pkgs_installed:
-            if not quiet:
-                _print_error('Cannot uninstall {}: package not installed'.format(name))
+            log.error('Cannot uninstall {}: package not installed'.format(name))
         else:
             pkgs[name] = pkgs_installed[name]
     return pkgs
-
-
 
 
 def _get_input(msg):
@@ -485,7 +503,7 @@ def _get_input(msg):
         raise NotImplementedError('Python major version is not 2 or 3')
 
 
-def _get_zip_name(branch, tag, quiet=False):
+def _get_github_zip_name(branch, tag):
     """Returns the name of a zip file in the GitHub archive.
 
     Parameters
@@ -494,18 +512,15 @@ def _get_zip_name(branch, tag, quiet=False):
         The name of a GitHub branch.
     tag : :class:`str` or :obj:`None`
         The name of a GitHub tag.
-    quiet : :class:`bool`, optional
-        Whether to suppress the :func:`print` statements.
 
     Returns
     -------
-    :class:`str`
+    :class:`str` or :obj:`None`
         The name of the zip file or :obj:`None` if both `branch`
         and `tag` were specified.
     """
     if branch is not None and tag is not None:
-        if not quiet:
-            _print_error('Cannot specify both a branch ({}) and a tag ({})'.format(branch, tag))
+        log.error('Cannot specify both a branch ({}) and a tag ({})'.format(branch, tag))
         return None
     elif branch is None and tag is None:
         return 'master'
@@ -517,8 +532,25 @@ def _get_zip_name(branch, tag, quiet=False):
         assert False, 'This branch ({}) and tag ({}) combo has not been handled'.format(branch, tag)
 
 
-def _inspect_github_pypi(where, update, quiet=False):
-    """Inspects the temp directory for the cached json file."""
+def _inspect_github_pypi(where, update_cache):
+    """Inspects the temp directory for the cached json file.
+
+    Parameters
+    ----------
+    where : :class:`str`
+        Either 'github' or 'pypi'
+    update_cache : :class:`bool`
+        Whether to update the cache.
+
+    Returns
+    -------
+    :class:`dict`
+        The packages
+    :class:`str`
+        The path to the cached files.
+    :class:`str`
+        A message about the where the cached data comes from.
+    """
 
     if where == 'github':
         filename = 'msl-github-repo-cache.json'
@@ -539,48 +571,14 @@ def _inspect_github_pypi(where, update, quiet=False):
             cached_pgks = _sort_packages(json.load(f))
 
     one_day = 60 * 60 * 24
-    if (not update) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
-        if not quiet:
-            _print_info(cached_msg)
+    if (not update_cache) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
+        log.debug(cached_msg)
         return _sort_packages(cached_pgks), path, cached_msg
 
     return dict(), path, cached_msg
 
 
-def _print_error(msg):
-    """Print an error message.
-
-    Parameters
-    ----------
-    msg : :class:`str`
-        The message to print.
-    """
-    print(Style.BRIGHT + Fore.RED + msg)
-
-
-def _print_info(msg):
-    """Print an info message.
-
-    Parameters
-    ----------
-    msg : :class:`str`
-        The message to print.
-    """
-    print(Fore.CYAN + msg)
-
-
-def _print_warning(msg):
-    """Print a warning message.
-
-    Parameters
-    ----------
-    msg : :class:`str`
-        The message to print.
-    """
-    print(Fore.YELLOW + msg)
-
-
-def _print_install_uninstall_message(packages, action, branch=None, tag=None):
+def _log_install_uninstall_message(packages, action, branch, tag):
     """Print the ``install`` or ``uninstall`` summary for what is going to happen.
 
     Parameters
@@ -589,10 +587,10 @@ def _print_install_uninstall_message(packages, action, branch=None, tag=None):
         The packages that are affected.
     action : :class:`str`
         The text to show in color and in upper case about what's happening.
-    branch : :class:`str`, optional
+    branch : :class:`str` or :obj:`None`
         The name of a GitHub branch to use for the ``install``.
         *Only used when installing packages*.
-    tag : :class:`str`, optional
+    tag : :class:`str` or :obj:`None`
         The name of a GitHub tag to use for the ``install``.
         *Only used when installing packages*.
     """
@@ -617,7 +615,7 @@ def _print_install_uninstall_message(packages, action, branch=None, tag=None):
         elif has_version_info:
             msg += ' ' + values['version']
 
-    print(msg)
+    log.info(msg)
 
 
 def _sort_packages(pkgs):
@@ -634,3 +632,43 @@ def _sort_packages(pkgs):
         The packages sorted by name.
     """
     return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+
+
+class _ColourStreamHandler(logging.StreamHandler):
+    """A SteamHandler that is compatible with colorama."""
+
+    COLOURS = {
+        'DEBUG': Fore.CYAN,
+        'INFO': Fore.WHITE,
+        'WARN': Fore.YELLOW,
+        'WARNING': Fore.YELLOW,
+        'ERROR': Style.BRIGHT + Fore.RED,
+        'CRIT': Back.RED + Fore.WHITE,
+        'CRITICAL': Back.RED + Fore.WHITE
+    }
+
+    def emit(self, record):
+        try:
+            message = self.format(record)
+            self.stream.write(self.COLOURS[record.levelname] + message)
+            self.stream.write(getattr(self, 'terminator', '\n'))
+            self.flush()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            self.handleError(record)
+
+
+def _getLogger(name=None, fmt='%(message)s'):
+    """Create the default stream logger"""
+    init(autoreset=True)  # initialize colorama
+    logger = logging.getLogger(name)
+    handler = _ColourStreamHandler()
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(logging.Formatter(fmt))
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    return logger
+
+
+log = _getLogger(PKG_NAME)

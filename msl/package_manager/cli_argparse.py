@@ -3,7 +3,7 @@ Custom argument parsers.
 """
 import argparse
 
-from . import utils
+from .utils import log
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -30,7 +30,8 @@ class ArgumentParser(argparse.ArgumentParser):
         """:class:`bool`: Whether package names were specified or the ``--all`` flag was used."""
         args = self.parse_known_args()[0]
         if not args.all and not args.names:
-            utils._print_error('You must specify the MSL package name(s) to {} or use the "--all" argument'.format(args.cmd))
+            log.error('You must specify the MSL package name(s) to {} or use '
+                      'the --all flag'.format(args.cmd))
             return False
         return True
 
@@ -50,7 +51,8 @@ def add_argument_branch(parser):
     parser.add_argument(
         '-b', '--branch',
         help='The GitHub branch to use to {} the package.\n'
-             'Cannot specify both the branch and the tag.'.format(parser.get_command_name()),
+             'Cannot specify both the branch and the tag.'
+            .format(parser.get_command_name()),
     )
 
 
@@ -60,7 +62,20 @@ def add_argument_package_names(parser):
         'names',
         nargs='*',
         help='The name(s) of the MSL package(s) to {}.\n'
-             'The "msl-" prefix can be omitted.'.format(parser.get_command_name())
+             'The "msl-" prefix can be omitted.'
+            .format(parser.get_command_name())
+    )
+
+
+def add_argument_quiet(parser):
+    """Add a ``--quiet`` argument to the parser."""
+    parser.add_argument(
+        '-q', '--quiet',
+        action='count',
+        default=0,
+        help='Give less output. Option is additive, and can\n'
+             'be used up to 3 times (which corresponds to silencing\n'
+             'WARNING, ERROR and CRITICAL logging levels).'
     )
 
 
@@ -69,7 +84,8 @@ def add_argument_tag(parser):
     parser.add_argument(
         '-t', '--tag',
         help='The GitHub tag to use to {} the package.\n'
-             'Cannot specify both the tag and the branch.'.format(parser.get_command_name()),
+             'Cannot specify both the tag and the branch.'
+            .format(parser.get_command_name()),
     )
 
 
@@ -83,7 +99,8 @@ def add_argument_update_cache(parser):
              'The information about MSL packages are cached\n'
              'for subsequent calls to the {} command. After 24\n'
              'hours the cache is automatically updated. Include\n'
-             'this argument to force the cache to be updated.'.format(parser.get_command_name()),
+             'this argument to force the cache to be updated now.'
+            .format(parser.get_command_name()),
     )
 
 
@@ -93,5 +110,6 @@ def add_argument_yes(parser):
         '-y', '--yes',
         action='store_true',
         default=False,
-        help='Don\'t ask for confirmation to {} the package(s).'.format(parser.get_command_name()),
+        help='Don\'t ask for confirmation to {} the package(s).'
+            .format(parser.get_command_name()),
     )

@@ -31,15 +31,17 @@ def create(*names, **kwargs):
         path : :class:`str`, default :obj:`None`
             The root path to where to create the new package. If :obj:`None`
             then creates the new package(s) in the current working directory.
-        quiet : :class:`bool`, default :obj:`False`
-            Whether to suppress the :func:`print` statements.
 
     """
+    # Python 2.7 does not support named arguments after using *args
+    # we can define yes=False, author=None, email=None, path=None in the function signature
+    # if we choose to drop support for Python 2.7
+    utils._check_kwargs(kwargs, {'yes', 'author', 'email', 'path'})
+
     yes = kwargs.get('yes', False)
     author = kwargs.get('author', None)
     email = kwargs.get('email', None)
     path = kwargs.get('path', None)
-    quiet = kwargs.get('quiet', False)
 
     # ensure that the names contain valid characters for a python package
     # and that the folder does not already exist in the current working directory
@@ -54,16 +56,14 @@ def create(*names, **kwargs):
             name = name[4:]
 
         if name[0].isdigit():
-            if not quiet:
-                utils._print_warning('A package name cannot start with a number: ignored "{}"'.format(name))
+            utils.log.warning('A package name cannot start with a number: ignored "{}"'.format(name))
             continue
 
         keep = True
         for c in name:
             if not (c.isalnum() or c == '_'):
-                if not quiet:
-                    utils._print_warning('A package name can only contain letters, numbers and underscores: '
-                                         'ignored "{}"'.format(name))
+                utils.log.warning('A package name can only contain letters, numbers and underscores: '
+                                  'ignored "{}"'.format(name))
                 keep = False
                 break
 
@@ -71,8 +71,7 @@ def create(*names, **kwargs):
             msl_name = 'msl-' + name.lower()
             root = os.path.join(path, msl_name)
             if os.path.isdir(root):
-                if not quiet:
-                    utils._print_warning('A {} folder already exists: ignored "{}"'.format(root, name))
+                utils.log.warning('A {} folder already exists: ignored "{}"'.format(root, name))
             else:
                 roots.append(root)
                 pkg_names.append(name)
@@ -96,8 +95,7 @@ def create(*names, **kwargs):
                 if new_name:
                     author_name = new_name
             except:
-                if not quiet:
-                    utils._print_error('Aborted -- cannot create MSL package.')
+                utils.log.error('Aborted -- cannot create MSL package.')
                 return
 
     # determine the author's email address
@@ -114,8 +112,7 @@ def create(*names, **kwargs):
                 if new_email:
                     email_address = new_email
             except:
-                if not quiet:
-                    utils._print_error('Aborted -- cannot create MSL package.')
+                utils.log.error('Aborted -- cannot create MSL package.')
                 return
 
     # create the new package
@@ -145,8 +142,7 @@ def create(*names, **kwargs):
                 with open(os.path.join(new_dir, filename.replace('.template', '')), 'w') as fp:
                     fp.write(lines)
 
-        if not quiet:
-            if os.path.isdir(msl_root):
-                print('Created MSL-{} in {}'.format(msl_pkg, msl_root))
-            else:
-                utils._print_error('Error creating... ' + msl_pkg)
+        if os.path.isdir(msl_root):
+            utils.log.info('Created MSL-{} in {}'.format(msl_pkg, msl_root))
+        else:
+            utils.log.error('Error creating MSL-' + msl_pkg)

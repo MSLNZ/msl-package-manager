@@ -3,6 +3,7 @@ Main entry point to either install, uninstall, update, list or create MSL packag
 using the command-line interface (CLI).
 """
 import sys
+import logging
 from pkg_resources import parse_version
 
 from . import PKG_NAME, __version__
@@ -55,27 +56,45 @@ def configure_parser():
     return PARSER
 
 
-def main(*args):
+def _main(*args):
     """
     Main entry point to either install, uninstall, update, list or create MSL packages using the CLI.
     """
+
+    # parse the input
     if not args:
         args = sys.argv[1:]
         if not args:
             args = ['--help']
+
     parser = configure_parser()
     args = parser.parse_args(args)
+
+    if args.quiet == 1:
+        utils.set_log_level(logging.ERROR)
+    elif args.quiet == 2:
+        utils.set_log_level(logging.CRITICAL)
+    elif args.quiet == 3:
+        utils.set_log_level(logging.CRITICAL + 1)
+
+    # execute the command
     args.func(args, parser)
 
-    pkgs = utils.pypi(quiet=True)
+    # check if there is an update for the MSL Package Manager
+    if args.quiet == 0:  # do not log DEBUG messages when checking for the update
+        utils.set_log_level(logging.WARNING)
+
+    pkgs = utils.pypi()
     latest = pkgs[PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
-        utils._print_warning('\nYou are using {0} version {1}, however, version {2} is available.\n'
-                             'You should consider upgrading via the "pip install -U {0}" command.' \
-                             .format(PKG_NAME, __version__, latest))
+        utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
+                          'You should consider upgrading via the \'pip install --upgrade {0}\''
+                          ' command.'.format(PKG_NAME, __version__, latest))
 
-    sys.exit(0)
+
+def main(*args):
+    sys.exit(_main(*args))
 
 
 if __name__ == '__main__':
-    main()
+    _main()

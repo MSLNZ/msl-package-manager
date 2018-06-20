@@ -21,21 +21,21 @@ def uninstall(*names, **kwargs):
         yes : :class:`bool`, default :obj:`False`
             If :obj:`True` then don't ask for confirmation before uninstalling.
             The default is to ask before uninstalling.
-        quiet : :class:`bool`, default :obj:`False`
-            Whether to suppress the :func:`print` statements.
     """
-    yes = kwargs.get('yes', False)
-    quiet = kwargs.get('quiet', False)
+    # Python 2.7 does not support named arguments after using *args
+    # we can define yes=False in the function signature
+    # if we choose to drop support for Python 2.7
+    utils._check_kwargs(kwargs, {'yes', })
 
-    packages = utils._create_uninstall_list(names, quiet=quiet)
+    yes = kwargs.get('yes', False)
+
+    packages = utils._create_uninstall_list(names)
     if not packages:
-        if not quiet:
-            print('No MSL packages to uninstall')
+        utils.log.info('No MSL packages to uninstall')
         return
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do
-    if not yes or not quiet:
-        utils._print_install_uninstall_message(packages, 'REMOVED')
+    utils._log_install_uninstall_message(packages, 'REMOVED', None, None)
     if not (yes or utils._ask_proceed()):
         return
 
@@ -58,11 +58,12 @@ def uninstall(*names, **kwargs):
     with open(os.path.join(template_dir, 'examples', '__init__.py.template'), 'r') as fp:
         msl_examples_init = fp.readlines()
 
-    if not quiet:
-        print('')
+    utils.log.info('')
 
+    exe = [sys.executable, '-m', 'pip', 'uninstall']
+    options = ['--yes'] + ['--quiet'] * utils._NUM_QUIET
     for pkg in packages:
-        subprocess.call([sys.executable, '-m', 'pip', 'uninstall', '--yes', pkg])
+        subprocess.call(exe + options + [pkg])
 
         with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'w') as fp:
             fp.writelines(msl_init)

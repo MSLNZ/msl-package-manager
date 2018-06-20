@@ -46,44 +46,44 @@ def install(*names, **kwargs):
             calls to this function. After 24 hours the cache is automatically updated. Set
             `update_cache` to be :obj:`True` to force the cache to be updated when you call
             this function.
-        quiet : :class:`bool`, default :obj:`False`
-            Whether to suppress the :func:`print` statements.
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
     """
+    # Python 2.7 does not support named arguments after using *args
+    # we can define yes=False, branch=None, tag=None, update_cache=False in the function signature
+    # if we choose to drop support for Python 2.7
+    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache'})
+
     yes = kwargs.get('yes', False)
     branch = kwargs.get('branch', None)
     tag = kwargs.get('tag', None)
     update_cache = kwargs.get('update_cache', False)
-    quiet = kwargs.get('quiet', False)
 
-    zip_name = utils._get_zip_name(branch, tag, quiet=quiet)
+    zip_name = utils._get_github_zip_name(branch, tag)
     if zip_name is None:
         return
 
-    packages = utils._create_install_list(names, branch, tag, update_cache, quiet=quiet)
+    packages = utils._create_install_list(names, branch, tag, update_cache)
     if not packages:
-        if not quiet:
-            print('No MSL packages to install')
+        utils.log.info('No MSL packages to install')
         return
 
-    pkgs_pypi = utils.pypi(update_cache, quiet=True)
+    pkgs_pypi = utils.pypi(update_cache)
 
-    if not yes or not quiet:
-        utils._print_install_uninstall_message(packages, 'INSTALLED', branch, tag)
+    utils._log_install_uninstall_message(packages, 'INSTALLED', branch, tag)
     if not (yes or utils._ask_proceed()):
         return
 
-    if not quiet:
-        print('')
+    utils.log.info('')
 
     exe = [sys.executable, '-m', 'pip', 'install']
+    options = ['--quiet'] * utils._NUM_QUIET
     github_options = ['--process-dependency-links']
     for pkg in packages:
         if pkg in pkgs_pypi and branch is None and tag is None:
             # install the package from PyPI
-            subprocess.call(exe + [pkg])
+            subprocess.call(exe + options + [pkg])
         else:
             repo = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
-            subprocess.call(exe + github_options + repo)
+            subprocess.call(exe + options + github_options + repo)

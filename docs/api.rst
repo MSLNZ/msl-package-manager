@@ -18,7 +18,7 @@ which has the following functions
    ~msl.package_manager.utils.github
    ~msl.package_manager.install.install
    ~msl.package_manager.utils.installed
-   ~msl.package_manager.utils.print_packages
+   ~msl.package_manager.utils.show_packages
    ~msl.package_manager.utils.pypi
    ~msl.package_manager.uninstall.uninstall
    ~msl.package_manager.update.update
