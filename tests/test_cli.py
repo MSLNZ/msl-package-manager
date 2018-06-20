@@ -1,5 +1,4 @@
-
-from msl.package_manager import cli
+from msl.package_manager import cli, utils
 
 
 def get_args(command):
@@ -212,3 +211,33 @@ def test_create_args():
     assert args.author[2] == 'last'
     assert args.email == 'my@email.com'
     assert args.path == 'the/folder'
+
+
+def test_quiet():
+
+    args = get_args('list --quiet')
+    assert args.quiet == 1
+
+    args = get_args('list -q')
+    assert args.quiet == 1
+
+    args = get_args('list -q -q')
+    assert args.quiet == 2
+
+    args = get_args('list -q -q -q')
+    assert args.quiet == 3
+
+    cli._main(*('list', ))
+    assert utils._NUM_QUIET == 0
+
+    cli._main(*('list', '-q'))
+    assert utils._NUM_QUIET == 1
+
+    cli._main(*('list', '-q', '-q'))
+    assert utils._NUM_QUIET == 2
+
+    cli._main(*('list', '-q', '-q', '-q'))
+    assert utils._NUM_QUIET == 3
+
+    cli._main(*('list', '-q', '-q', '-q', '-q'))
+    assert utils._NUM_QUIET == 3  # 3 is the maximum allowed
