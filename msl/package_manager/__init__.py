@@ -26,6 +26,7 @@ from .utils import pypi
 from .utils import github
 from .utils import installed
 from .utils import show_packages
+from .utils import set_log_level
 from .update import update
 from .create import create
 from .install import install
