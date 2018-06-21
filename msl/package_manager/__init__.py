@@ -3,7 +3,6 @@ Install, uninstall, update, list and create MSL packages.
 
 The following constants are available.
 """
-import sys
 from collections import namedtuple
 
 __author__ = 'Joseph Borbely'
@@ -15,12 +14,6 @@ version_info = namedtuple('version_info', 'major minor micro')(*map(int, __versi
 
 PKG_NAME = 'msl-package-manager'
 """:class:`str`: The name of this package when it is installed"""
-
-IS_PYTHON2 = sys.version_info[0] == 2
-""":class:`bool`: Whether Python 2.x is being used."""
-
-IS_PYTHON3 = sys.version_info[0] == 3
-""":class:`bool`: Whether Python 3.x is being used."""
 
 from .utils import pypi
 from .utils import github

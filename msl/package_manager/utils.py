@@ -17,33 +17,29 @@ import time
 import base64
 import getpass
 import logging
+import datetime
 import tempfile
 import subprocess
+import collections
 import pkg_resources
-
-from datetime import datetime
-from collections import OrderedDict
 from multiprocessing.pool import ThreadPool
-
 try:
     import imp as importlib
 except ImportError:
     import importlib
+try:
+    from urllib2 import urlopen, Request, HTTPError  # Python 2
+except ImportError:
+    from urllib.request import urlopen, Request, HTTPError
 
 from colorama import Fore, Style, Back, init
 
-from . import IS_PYTHON2
-from . import IS_PYTHON3
 from . import PKG_NAME
 
-if IS_PYTHON2:
-    from urllib2 import urlopen, Request, HTTPError
-elif IS_PYTHON3:
-    from urllib.request import urlopen, Request, HTTPError
-else:
-    raise NotImplementedError('Python major version is not 2 or 3')
 
 _NUM_QUIET = 0
+
+_GITHUB_AUTH_PATH = os.path.join(os.path.expanduser('~'), '.msl-package-manager-github-auth')
 
 
 def get_email():
@@ -121,14 +117,10 @@ def github(update_cache=False):
                 reply = fetch('/rate_limit')
                 if reply['resources']['core']['remaining'] == 0:
                     reset = int(reply['resources']['core']['reset'])
-                    hms = datetime.fromtimestamp(reset).strftime('%H:%M:%S')
-                    msg = 'The GitHub API rate limit was exceeded. Retry again at {}\n' \
-                          'NOTE: If you have a GitHub account then you can create a file at\n' \
-                          '      "{}"\n' \
-                          '      (pay attention to the "." before the filename)\n' \
-                          '      and enter your GitHub username on the first line and your\n' \
-                          '      GitHub password on the second line to increase the rate limit.'\
-                        .format(hms, auth_file)
+                    hms = datetime.datetime.fromtimestamp(reset).strftime('%H:%M:%S')
+                    msg = 'The GitHub API rate limit was exceeded. Retry again at {} or create a file\n' \
+                          'with your GitHub authorization credentials to increase your rate limit. Run\n' \
+                          '"msl authorize --help" for more details.'.format(hms)
                 else:
                     msg = 'Unhandled HTTP error 403. The rate_limit was not reached...'
             else:
@@ -168,20 +160,15 @@ def github(update_cache=False):
         return dict()
 
     # check if the user specified their github authorization credentials in the default file
-    auth_file = os.path.join(os.path.expanduser('~'), '.msl-package-manager-github-auth')
     try:
-        with open(auth_file, 'r') as fp:
+        with open(_GITHUB_AUTH_PATH, 'rb') as fp:
             uname = fp.readline().strip()
             pw = fp.readline().strip()
-    except:
+    except IOError:
         headers = dict()
     else:
-        auth = uname + ':' + pw
-        if IS_PYTHON3:
-            encoded = base64.b64encode(auth.encode('utf-8')).decode('utf-8')
-        else:
-            encoded = base64.b64encode(auth)
-        headers = {'Authorization': 'Basic ' + encoded, 'User-Agent': 'msl-package-manager/Python'}
+        auth = base64.b64encode(uname + b':' + pw).decode('utf-8')
+        headers = {'Authorization': 'Basic ' + auth, 'User-Agent': 'msl-package-manager/Python'}
 
     log.debug('Getting the repositories from GitHub')
     repos = fetch('/orgs/MSLNZ/repos')
@@ -500,7 +487,7 @@ def _create_uninstall_list(names):
 
 
 def _get_input(msg):
-    """Get the input from the user (compatible with Python 2 and 3).
+    """Get input from the user.
 
     Parameters
     ----------
@@ -511,18 +498,11 @@ def _get_input(msg):
     -------
     :class:`str`
         The user's input from :attr:`sys.stdin`.
-
-    Raises
-    ------
-    NotImplementedError
-        If the Python major version is not 2 or 3.
     """
-    if IS_PYTHON2:
-        return raw_input(msg)
-    elif IS_PYTHON3:
+    try:
+        return raw_input(msg)  # Python 2
+    except NameError:
         return input(msg)
-    else:
-        raise NotImplementedError('Python major version is not 2 or 3')
 
 
 def _get_github_zip_name(branch, tag):
@@ -652,7 +632,7 @@ def _sort_packages(pkgs):
     :class:`collections.OrderedDict`
         The packages sorted by name.
     """
-    return OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+    return collections.OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
 
 
 class _ColourStreamHandler(logging.StreamHandler):
