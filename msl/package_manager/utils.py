@@ -397,7 +397,7 @@ def _ask_proceed():
 def _check_kwargs(kwargs, allowed):
     for item in kwargs:
         if item not in allowed:
-            log.warning('Invalid kwarg')
+            log.warning('Invalid kwarg "{}"'.format(item))
 
 
 def _check_msl_prefix(*names):
