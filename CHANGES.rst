@@ -7,20 +7,27 @@ Version 1.5.2 (in development)
 
 - Added
 
+  * ability to make Authorized requests to the GitHub API
+  * use logging instead of print statements
+  * create a 3x additive ``--quiet`` flag (for silencing WARNING, ERROR and CRITICAL logging levels)
   * show a message if the current version of the MSL Package Manager is not the latest release
-  * create a ``quiet`` kwarg
-  * the .pytest_cache/ directory to .gitignore
+  * the ``.pytest_cache/`` and ``junk/`` directories to .gitignore
 
 - Changed
 
-  * the ``--update-github-cache`` and ``--update-pypi-cache`` flags have been replaced with a single
-    ``--update-cache`` flag
-  * use ``pkg_resources.working_set`` instead of ``pip.get_installed_distributions`` to properly get
-    the information about MSL packages that are installed
+  * use ``pkg_resources.working_set`` instead of ``pip.get_installed_distributions`` to get the information
+    about the MSL packages that are installed
+  * the function signature for ``install``, ``uninstall``, ``update`` and ``create``
+  * replace ``--update-github-cache`` and ``--update-pypi-cache`` flags with a single ``--update-cache`` flag
+  * rename function ``print_packages()`` to ``show_packages()``
+  * rename module ``helper.py`` to ``utils.py``
+  * show the detailed info about the GitHub repos in JSON format
 
 - Fixed
 
   * ``ApiDocs`` in ``setup.py`` failed to run with Sphinx >1.7.0
+  * bug if the GitHub repo does not contain text in the Description field
+  * ignore PyPI packages that contain ``msl`` but do not start with ``msl-``
 
 
 Version 1.5.1 (2018.02.23)
