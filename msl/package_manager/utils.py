@@ -125,9 +125,10 @@ def github(update_cache=False):
                     msg = 'The GitHub API rate limit was exceeded. Retry again at {}\n' \
                           'NOTE: If you have a GitHub account then you can create a file at\n' \
                           '      "{}"\n' \
-                          '      (pay attention to the "." in the filename)\n' \
-                          '      and enter your GitHub username on the first line\n' \
-                          '      and password on the second line'.format(hms, auth_file)
+                          '      (pay attention to the "." before the filename)\n' \
+                          '      and enter your GitHub username on the first line and your\n' \
+                          '      GitHub password on the second line to increase the rate limit.'\
+                        .format(hms, auth_file)
                 else:
                     msg = 'Unhandled HTTP error 403. The rate_limit was not reached...'
             else:
@@ -160,6 +161,12 @@ def github(update_cache=False):
             return name, None
         return name, [branch['name'] for branch in reply]
 
+    def reload_cache():
+        cached_pgks, path, cached_msg = _inspect_github_pypi('github', False)
+        if cached_pgks:
+            return cached_pgks
+        return dict()
+
     # check if the user specified their github authorization credentials in the default file
     auth_file = os.path.join(os.path.expanduser('~'), '.msl-package-manager-github-auth')
     try:
@@ -181,10 +188,7 @@ def github(update_cache=False):
     if not repos:
         # even though updating the cache was requested just reload the cached data
         # because github cannot be connected to right now
-        cached_pgks, path, cached_msg = _inspect_github_pypi('github', False)
-        if cached_pgks:
-            return cached_pgks
-        return dict()
+        return reload_cache()
 
     pkgs = dict()
     for repo in repos:
@@ -198,7 +202,7 @@ def github(update_cache=False):
     for key, thread in (('version', version_thread), ('tags', tags_thread), ('branches', branches_thread)):
         for repo_name, value in thread:
             if value is None:  # then there was an error in one of the threads
-                return dict()
+                return reload_cache()
             pkgs[repo_name][key] = value
 
     with open(path, 'w') as fp:
