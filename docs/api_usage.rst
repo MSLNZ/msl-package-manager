@@ -16,17 +16,25 @@ Print a list of all MSL packages that are installed
 
 .. code-block:: pycon
 
-   >>> pm.print_packages()
+   >>> pm.show_packages()
    MSL Package         Version Description
    ------------------- ------- ----------------------------------------------------------------------
    msl-loadlib         0.3.1   Load a shared library (and access a 32-bit library from 64-bit Python)
    msl-package-manager 1.4.0   Install, uninstall, update, list and create MSL packages
 
+.. tip::
+   You can set what information is displayed on the screen by changing the :py:ref:`levels`
+
+   .. code-block:: pycon
+
+      >>> import logging
+      >>> pm.set_log_level(logging.INFO)
+
 Print a list of all MSL repositories_ that are available
 
 .. code-block:: pycon
 
-   >>> pm.print_packages(from_github=True)
+   >>> pm.show_packages(from_github=True)
    MSL Repository      Version Description
    ------------------- ------- ----------------------------------------------------------------------
    msl-equipment       0.1.0   Manage and communicate with equipment in the laboratory
@@ -59,7 +67,7 @@ Get a dictionary of all MSL packages_ on PyPI
 
    >>> pkgs = pm.pypi()
    >>> pkgs['msl-package-manager']
-   {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages'}
+   {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '1.4.0'}
 
 Install the **msl-equipment** and **msl-qt** packages
 
