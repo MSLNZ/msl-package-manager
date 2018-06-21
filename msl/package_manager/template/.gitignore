@@ -39,3 +39,6 @@ htmlcov/
 junit.xml
 coverage.xml
 .pytest_cache/
+
+# ignore all scripts in the junk/ folder
+junk/
