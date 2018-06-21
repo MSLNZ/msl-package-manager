@@ -31,20 +31,20 @@ def install(*names, **kwargs):
         The name(s) of the MSL package(s) to install. If empty then
         install **all** MSL packages.
     **kwargs
-        yes : :class:`bool`, default :obj:`False`
-            If :obj:`True` then don't ask for confirmation before installing.
+        yes : :class:`bool`, default :data:`False`
+            If :data:`True` then don't ask for confirmation before installing.
             The default is to ask before installing.
-        branch : :class:`str`, default :obj:`None`
-            The name of a GitHub branch to use for the installation. If :obj:`None`,
+        branch : :class:`str`, default :data:`None`
+            The name of a GitHub branch to use for the installation. If :data:`None`,
             and no `tag` value has been specified, then installs from the ``master``
             branch.
-        tag : :class:`str`, default :obj:`None`
+        tag : :class:`str`, default :data:`None`
             The name of a GitHub tag to use for the installation.
-        update_cache : :class:`bool`, default :obj:`False`
+        update_cache : :class:`bool`, default :data:`False`
             The information about the MSL packages_ that are available on PyPI_ and about
             the repositories_ that are available on GitHub are cached to use for subsequent
             calls to this function. After 24 hours the cache is automatically updated. Set
-            `update_cache` to be :obj:`True` to force the cache to be updated when you call
+            `update_cache` to be :data:`True` to force the cache to be updated when you call
             this function.
 
         .. attention::

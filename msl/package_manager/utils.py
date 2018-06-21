@@ -51,11 +51,11 @@ def get_email():
 
     If git_ is installed then it returns the ``user.email`` parameter from the user's git_
     account to use as the user's email address. If git_ is not installed then returns
-    :obj:`None`.
+    :data:`None`.
 
     Returns
     -------
-    :class:`str` or :obj:`None`
+    :class:`str` or :data:`None`
         The user's email address.
     """
     try:
@@ -92,7 +92,7 @@ def github(update_cache=False):
     update_cache : :class:`bool`, optional
         The information about the repositories_ that are available on GitHub are
         cached to use for subsequent calls to this function. After 24 hours the
-        cache is automatically updated. Set `update_cache` to be :obj:`True`
+        cache is automatically updated. Set `update_cache` to be :data:`True`
         to force the cache to be updated when you call this function.
 
     Returns
@@ -253,7 +253,7 @@ def show_packages(from_github=False, detailed=False, from_pypi=False, update_cac
     detailed : :class:`bool`, optional
         Whether to show detailed information about the MSL packages that are available
         as GitHub repositories_ (i.e., displays additional information about the
-        branches and tags). Only used if `from_github` is :obj:`True`.
+        branches and tags). Only used if `from_github` is :data:`True`.
     from_pypi : :class:`bool`, optional
         Whether to show the MSL packages_ that are available on PyPI. The default
         action is to show the MSL packages that are installed.
@@ -261,7 +261,7 @@ def show_packages(from_github=False, detailed=False, from_pypi=False, update_cac
         The information about the MSL packages_ that are available on PyPI and about
         the repositories_ that are available on GitHub are cached to use for subsequent
         calls to this function. After 24 hours the cache is automatically updated. Set
-        `update_cache` to be :obj:`True` to force the cache to be updated when you call
+        `update_cache` to be :data:`True` to force the cache to be updated when you call
         this function. If `from_github` is :data:`True` then the cache for the repositories_
         is updated otherwise if `from_pypi` is :data:`True` then the cache for the
         packages_ is updated.
@@ -308,7 +308,7 @@ def pypi(update_cache=False):
     update_cache : :class:`bool`, optional
         The information about the MSL packages_ that are available on PyPI are
         cached to use for subsequent calls to this function. After 24 hours the
-        cache is automatically updated. Set `update_cache` to be :obj:`True`
+        cache is automatically updated. Set `update_cache` to be :data:`True`
         to force the cache to be updated when you call this function.
 
     Returns
@@ -526,15 +526,15 @@ def _get_github_zip_name(branch, tag):
 
     Parameters
     ----------
-    branch : :class:`str` or :obj:`None`
+    branch : :class:`str` or :data:`None`
         The name of a GitHub branch.
-    tag : :class:`str` or :obj:`None`
+    tag : :class:`str` or :data:`None`
         The name of a GitHub tag.
 
     Returns
     -------
-    :class:`str` or :obj:`None`
-        The name of the zip file or :obj:`None` if both `branch`
+    :class:`str` or :data:`None`
+        The name of the zip file or :data:`None` if both `branch`
         and `tag` were specified.
     """
     if branch is not None and tag is not None:
@@ -604,10 +604,10 @@ def _log_install_uninstall_message(packages, action, branch, tag):
         The packages that are affected.
     action : :class:`str`
         The text to show in color and in upper case about what's happening.
-    branch : :class:`str` or :obj:`None`
+    branch : :class:`str` or :data:`None`
         The name of a GitHub branch to use for the ``install``.
         *Only used when installing packages*.
-    tag : :class:`str` or :obj:`None`
+    tag : :class:`str` or :data:`None`
         The name of a GitHub tag to use for the ``install``.
         *Only used when installing packages*.
     """

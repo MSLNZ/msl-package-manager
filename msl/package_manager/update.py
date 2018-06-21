@@ -36,20 +36,20 @@ def update(*names, **kwargs):
         update **all** MSL packages (except for the **MSL Package Manager** --
         in which case use ``pip install -U msl-package-manager``).
     **kwargs
-        yes : :class:`bool`, default :obj:`False`
-            If :obj:`True` then don't ask for confirmation before updating.
+        yes : :class:`bool`, default :data:`False`
+            If :data:`True` then don't ask for confirmation before updating.
             The default is to ask before updating.
-        branch : :class:`str`, default :obj:`None`
-            The name of a GitHub branch to use for the update. If :obj:`None`, and no
+        branch : :class:`str`, default :data:`None`
+            The name of a GitHub branch to use for the update. If :data:`None`, and no
             `tag` value has also been specified, then updates the package using the
             ``master`` branch.
-        tag : :class:`str`, default :obj:`None`
+        tag : :class:`str`, default :data:`None`
             The name of a GitHub tag to use for the update.
-        update_cache : :class:`bool`, default :obj:`False`
+        update_cache : :class:`bool`, default :data:`False`
             The information about the MSL packages_ that are available on PyPI_ and about
             the repositories_ that are available on GitHub are cached to use for subsequent
             calls to this function. After 24 hours the cache is automatically updated. Set
-            `update_cache` to be :obj:`True` to force the cache to be updated when you call
+            `update_cache` to be :data:`True` to force the cache to be updated when you call
             this function.
 
         .. attention::

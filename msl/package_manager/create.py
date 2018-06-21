@@ -15,21 +15,21 @@ def create(*names, **kwargs):
     *names : :class:`tuple` of :class:`str`
         The name(s) of the MSL package(s) to create.
     **kwargs
-        yes : :class:`bool`, default :obj:`False`
-            If :obj:`True` then don't ask for verification for the `author` name
+        yes : :class:`bool`, default :data:`False`
+            If :data:`True` then don't ask for verification for the `author` name
             and for the `email` address. This argument is only used if you do not
             specify the `author` or the `email` value. The verification step allows
             you to change the value that was automatically determined before the
             package is created. The default is to ask for verification before creating
             the package if the `author` or the `email` value was not specified.
-        author : :class:`str`, default :obj:`None`
-            The name of the author to use for the new package. If :obj:`None` then uses
+        author : :class:`str`, default :data:`None`
+            The name of the author to use for the new package. If :data:`None` then uses
             :func:`.utils.get_email` to determine the author's name.
-        email : :class:`str`, default :obj:`None`
-            The author's email address. If :obj:`None` then uses
+        email : :class:`str`, default :data:`None`
+            The author's email address. If :data:`None` then uses
             :func:`.utils.get_email` to determine the author's email address.
-        path : :class:`str`, default :obj:`None`
-            The root path to where to create the new package. If :obj:`None`
+        path : :class:`str`, default :data:`None`
+            The root path to where to create the new package. If :data:`None`
             then creates the new package(s) in the current working directory.
 
     """

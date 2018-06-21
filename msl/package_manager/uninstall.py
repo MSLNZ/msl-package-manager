@@ -18,8 +18,8 @@ def uninstall(*names, **kwargs):
         uninstall **all** MSL packages (except for the **MSL Package Manager** --
         in which case use ``pip uninstall msl-package-manager``).
     **kwargs
-        yes : :class:`bool`, default :obj:`False`
-            If :obj:`True` then don't ask for confirmation before uninstalling.
+        yes : :class:`bool`, default :data:`False`
+            If :data:`True` then don't ask for confirmation before uninstalling.
             The default is to ask before uninstalling.
     """
     # Python 2.7 does not support named arguments after using *args
