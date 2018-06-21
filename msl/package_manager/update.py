@@ -154,8 +154,10 @@ def update(*names, **kwargs):
         options = ['--upgrade', '--force-reinstall', '--no-deps'] + ['--quiet'] * utils._NUM_QUIET
         for pkg in pkgs_to_update:
             if pkgs_to_update[pkg][2]:
-                package = [pkg]  # update from PyPI
+                utils.log.debug('Updating {} from PyPI'.format(pkg))
+                package = [pkg]
             else:
+                utils.log.debug('Updating {} from GitHub/{}'.format(pkg, zip_name))
                 package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
             subprocess.call(exe + options + package)
     else:

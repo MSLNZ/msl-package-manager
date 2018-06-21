@@ -82,8 +82,9 @@ def install(*names, **kwargs):
     github_options = ['--process-dependency-links']
     for pkg in packages:
         if pkg in pkgs_pypi and branch is None and tag is None:
-            # install the package from PyPI
+            utils.log.debug('Installing {} from PyPI'.format(pkg))
             subprocess.call(exe + options + [pkg])
         else:
+            utils.log.debug('Installing {} from GitHub/{}'.format(pkg, zip_name))
             repo = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
             subprocess.call(exe + options + github_options + repo)
