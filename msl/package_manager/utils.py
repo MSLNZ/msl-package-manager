@@ -14,6 +14,7 @@ import os
 import sys
 import json
 import time
+import base64
 import getpass
 import logging
 import tempfile
@@ -36,9 +37,9 @@ from . import IS_PYTHON3
 from . import PKG_NAME
 
 if IS_PYTHON2:
-    from urllib2 import urlopen
+    from urllib2 import urlopen, Request, HTTPError
 elif IS_PYTHON3:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, Request, HTTPError
 else:
     raise NotImplementedError('Python major version is not 2 or 3')
 
@@ -99,79 +100,106 @@ def github(update_cache=False):
     :class:`dict` of :class:`dict`
         The MSL repositories_ that are available on GitHub.
     """
-    def fetch(url_suffix):
-        url = 'https://api.github.com/repos/MSLNZ/' + url_suffix
-        return json.loads(urlopen(url).read().decode('utf-8'))
-
-    def fetch_latest_release(name):
-        try:
-            ret = fetch(name + '/releases/latest')
-            latest = ret['name'] if ret['name'] else ret['tag_name']
-            return name, latest.replace(u'v', u'')
-        except:
-            return name, ''
-
-    def fetch_tags(name):
-        try:
-            return name, [tag['name'] for tag in fetch(name+'/tags')]
-        except:
-            return name, []
-
-    def fetch_branches(name):
-        try:
-            return name, [branch['name'] for branch in fetch(name+'/branches')]
-        except:
-            return name, []
-
     cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache)
     if cached_pgks:
         return cached_pgks
 
-    try:
-        log.debug('Getting repositories from GitHub')
-        repos = json.loads(urlopen('https://api.github.com/orgs/MSLNZ/repos').read().decode('utf-8'))
-    except Exception as err:
-        # it is possible to get an "API rate limit exceeded for" error if you call this
-        # function too often or maybe the user does not have an internet connection
+    def fetch(url_suffix):
+        url = 'https://api.github.com' + url_suffix
         try:
-            r = json.loads(urlopen('https://api.github.com/rate_limit').read().decode('utf-8'))
-            if r['rate']['remaining'] == 0:
-                hms = datetime.fromtimestamp(int(r['rate']['reset'])).strftime('%H:%M:%S')
-                msg = 'The GitHub API rate limit was exceeded. Retry at {}'.format(hms)
+            response = urlopen(Request(url, headers=headers))
+        except HTTPError as err:
+            if err.code == 401:
+                msg = 'You have provided invalid Authorization information'
+            elif err.code == 404:
+                # Could get this error if the URL does not exist.
+                # For example, getting .../releases/latest might not exist
+                # if no releases for the repo are available yet.
+                # This not an error type that we care about.
+                return dict()
+            elif err.code == 403:
+                reply = fetch('/rate_limit')
+                if reply['resources']['core']['remaining'] == 0:
+                    reset = int(reply['resources']['core']['reset'])
+                    hms = datetime.fromtimestamp(reset).strftime('%H:%M:%S')
+                    msg = 'The GitHub API rate limit was exceeded. Retry again at {}\n' \
+                          'NOTE: If you have a GitHub account then you can create a file at\n' \
+                          '      "{}"\n' \
+                          '      (pay attention to the "." in the filename)\n' \
+                          '      and enter your GitHub username on the first line\n' \
+                          '      and password on the second line'.format(hms, auth_file)
+                else:
+                    msg = 'Unhandled HTTP error 403. The rate_limit was not reached...'
             else:
-                msg = 'Unknown error... there are still {} of {} GitHub requests remaining'.format(
-                    r['rate']['remaining'], r['rate']['limit'])
-        except:
-            msg = 'Perhaps the computer does not have internet access'
-        log.error('Cannot connect to GitHub -- {}\n{}'.format(err, msg))
+                msg = 'Unhandled HTTP error...'
 
-        # hide DEBUG messages in the following
-        current_level = log.level
-        if current_level < logging.INFO:
-            set_log_level(logging.INFO)
+            log.error('Error requesting {} from GitHub -- {}\n{}'.format(url, err, msg))
+
+        else:
+            return json.loads(response.read().decode('utf-8'))
+
+    def fetch_latest_release(name):
+        reply = fetch('/repos/MSLNZ/{}/releases/latest'.format(name))
+        if reply is None:
+            return name, None
+        if reply:
+            latest = reply['name'] if reply['name'] else reply['tag_name']
+        else:
+            latest = ''
+        return name, latest.replace('v', '')
+
+    def fetch_tags(name):
+        reply = fetch('/repos/MSLNZ/{}/tags'.format(name))
+        if reply is None:
+            return name, None
+        return name, [tag['name'] for tag in reply]
+
+    def fetch_branches(name):
+        reply = fetch('/repos/MSLNZ/{}/branches'.format(name))
+        if reply is None:
+            return name, None
+        return name, [branch['name'] for branch in reply]
+
+    # check if the user specified their github authorization credentials in the default file
+    auth_file = os.path.join(os.path.expanduser('~'), '.msl-package-manager-github-auth')
+    try:
+        with open(auth_file, 'r') as fp:
+            uname = fp.readline().strip()
+            pw = fp.readline().strip()
+    except:
+        headers = dict()
+    else:
+        auth = uname + ':' + pw
+        if IS_PYTHON3:
+            encoded = base64.b64encode(auth.encode('utf-8')).decode('utf-8')
+        else:
+            encoded = base64.b64encode(auth)
+        headers = {'Authorization': 'Basic ' + encoded, 'User-Agent': 'msl-package-manager/Python'}
+
+    log.debug('Getting the repositories from GitHub')
+    repos = fetch('/orgs/MSLNZ/repos')
+    if not repos:
+        # even though updating the cache was requested just reload the cached data
+        # because github cannot be connected to right now
         cached_pgks, path, cached_msg = _inspect_github_pypi('github', False)
-        set_log_level(current_level)
-
         if cached_pgks:
             return cached_pgks
-
         return dict()
 
     pkgs = dict()
     for repo in repos:
-        if repo['name'].startswith('msl-'):
-            pkgs[repo['name']] = dict()
-            pkgs[repo['name']]['description'] = repo['description']
+        name = repo['name']
+        if name.startswith('msl-'):
+            pkgs[name] = {'description': repo['description']}
 
-    latest_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_latest_release, pkgs)
+    version_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_latest_release, pkgs)
     tags_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_tags, pkgs)
     branches_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_branches, pkgs)
-    for repo_name, value in latest_thread:
-        pkgs[repo_name]['version'] = value
-    for repo_name, value in tags_thread:
-        pkgs[repo_name]['tags'] = value
-    for repo_name, value in branches_thread:
-        pkgs[repo_name]['branches'] = value
+    for key, thread in (('version', version_thread), ('tags', tags_thread), ('branches', branches_thread)):
+        for repo_name, value in thread:
+            if value is None:  # then there was an error in one of the threads
+                return dict()
+            pkgs[repo_name][key] = value
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
@@ -187,7 +215,7 @@ def installed():
     :class:`dict` of :class:`dict`
         The MSL packages that are installed.
     """
-    log.debug('Getting packages from {}'.format(os.path.dirname(sys.executable)))
+    log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
 
     # refresh the working_set
     importlib.reload(pkg_resources)
@@ -234,30 +262,20 @@ def show_packages(from_github=False, detailed=False, from_pypi=False, update_cac
         the repositories_ that are available on GitHub are cached to use for subsequent
         calls to this function. After 24 hours the cache is automatically updated. Set
         `update_cache` to be :obj:`True` to force the cache to be updated when you call
-        this function.
+        this function. If `from_github` is :data:`True` then the cache for the repositories_
+        is updated otherwise if `from_pypi` is :data:`True` then the cache for the
+        packages_ is updated.
     """
-    current_level = log.level
-
-    if update_cache:
-        pypi(update_cache=True)
-        github(update_cache=True)
-
-        # temporarily hide the DEBUG messages below
-        if current_level < logging.INFO:
-            set_log_level(logging.INFO)
-
     if from_github:
-        typ, pkgs = 'Repository', github(update_cache=False)
+        typ, pkgs = 'Repository', github(update_cache=update_cache)
         if not pkgs:
             return
     elif from_pypi:
-        typ, pkgs = 'PyPI Package', pypi(update_cache=False)
+        typ, pkgs = 'PyPI Package', pypi(update_cache=update_cache)
         if not pkgs:
             return
     else:
         typ, pkgs = 'Package', installed()
-
-    set_log_level(current_level)
 
     if detailed and from_github:
         log.info(json.dumps(pkgs, indent=2))
@@ -303,7 +321,7 @@ def pypi(update_cache=False):
         return cached_pgks
 
     try:
-        log.debug('Getting packages from PyPI')
+        log.debug('Getting the packages from PyPI')
         command = [sys.executable, '-m', 'pip', 'search', 'msl-']
         options = ['--quiet'] * _NUM_QUIET
         p2 = subprocess.Popen(command + options, stdout=subprocess.PIPE)
@@ -551,7 +569,6 @@ def _inspect_github_pypi(where, update_cache):
     :class:`str`
         A message about the where the cached data comes from.
     """
-
     if where == 'github':
         filename = 'msl-github-repo-cache.json'
         suffix = 'GitHub repositories'
@@ -639,7 +656,7 @@ class _ColourStreamHandler(logging.StreamHandler):
 
     COLOURS = {
         'DEBUG': Fore.CYAN,
-        'INFO': Fore.WHITE,
+        'INFO': '',
         'WARN': Fore.YELLOW,
         'WARNING': Fore.YELLOW,
         'ERROR': Style.BRIGHT + Fore.RED,
@@ -653,8 +670,6 @@ class _ColourStreamHandler(logging.StreamHandler):
             self.stream.write(self.COLOURS[record.levelname] + message)
             self.stream.write(getattr(self, 'terminator', '\n'))
             self.flush()
-        except (KeyboardInterrupt, SystemExit):
-            raise
         except:
             self.handleError(record)
 
