@@ -75,6 +75,6 @@ def add_parser_create(parser):
 def execute(args, parser):
     """Executes the ``create`` command."""
     if args.names:
-        create(args.names, args.yes, args.author, args.email, args.path)
+        create(*args.names, yes=args.yes, author=args.author, email=args.email, path=args.path)
     else:
         log.error('You must specify the name of the new package')
