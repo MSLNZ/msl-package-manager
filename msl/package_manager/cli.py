@@ -81,7 +81,7 @@ def _main(*args):
     args.func(args, parser)
 
     # check if there is an update for the MSL Package Manager
-    if args.quiet == 0:  # do not log DEBUG messages when checking for the update
+    if utils.log.level < logging.WARNING:  # do not log DEBUG messages when checking for the update
         utils.set_log_level(logging.WARNING)
 
     pkgs = utils.pypi()
