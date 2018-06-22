@@ -46,16 +46,16 @@ def teardown_module(module):
 
 def test_show_packages():
 
-    utils.show_packages()
+    utils.info()
     lines = read_file_logger()
     assert os.path.dirname(sys.executable) in lines[0]
 
-    utils.show_packages(from_github=True)
+    utils.info(from_github=True)
     lines = read_file_logger()
     assert 'cached' in lines[0]
     assert 'GitHub' in lines[0]
 
-    utils.show_packages(from_pypi=True)
+    utils.info(from_pypi=True)
     lines = read_file_logger()
     assert 'cached' in lines[0]
     assert 'PyPI' in lines[0]
