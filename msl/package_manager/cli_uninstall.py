@@ -1,5 +1,5 @@
 """
-Command line interface for the ``uninstall`` command.
+Command line interface for the :ref:`uninstall <uninstall_cli>` command.
 """
 from .cli_argparse import add_argument_all
 from .cli_argparse import add_argument_package_names
@@ -16,7 +16,7 @@ Examples:
 
 
 def add_parser_uninstall(parser, name='uninstall'):
-    """Add an ``uninstall`` command to the parser."""
+    """Add the :ref:`uninstall <uninstall_cli>` command to the parser."""
     if name == 'uninstall':
         p = parser.add_parser(
             name,
@@ -39,6 +39,6 @@ def add_parser_uninstall(parser, name='uninstall'):
 
 
 def execute(args, parser):
-    """Executes the ``uninstall`` command."""
+    """Executes the :ref:`uninstall <uninstall_cli>` command."""
     if parser.contains_package_names():
         uninstall(*args.names, yes=args.yes)

@@ -12,11 +12,11 @@ First, import the **MSL Package Manager**
 
    >>> from msl import package_manager as pm
 
-Print a list of all MSL packages that are installed
+Display the information about the MSL packages that are installed
 
 .. code-block:: pycon
 
-   >>> pm.show_packages()
+   >>> pm.info()
    MSL Package         Version Description
    ------------------- ------- ----------------------------------------------------------------------
    msl-loadlib         0.3.1   Load a shared library (and access a 32-bit library from 64-bit Python)
@@ -30,11 +30,11 @@ Print a list of all MSL packages that are installed
       >>> import logging
       >>> pm.set_log_level(logging.INFO)
 
-Print a list of all MSL repositories_ that are available
+Display the information about the MSL repositories_ that are available
 
 .. code-block:: pycon
 
-   >>> pm.show_packages(from_github=True)
+   >>> pm.info(from_github=True)
    MSL Repository      Version Description
    ------------------- ------- ----------------------------------------------------------------------
    msl-equipment       0.1.0   Manage and communicate with equipment in the laboratory
@@ -79,7 +79,7 @@ Install the **msl-equipment** and **msl-qt** packages
      msl-equipment: 0.1.0
      msl-qt: 0.1.0
 
-   Proceed ([y]/n)? y
+   Proceed ([y]/n)?
 
 Update the **msl-loadlib** package
 
@@ -90,7 +90,7 @@ Update the **msl-loadlib** package
 
      msl-loadlib: 0.3.1 --> 0.3.2
 
-   Proceed ([y]/n)? y
+   Proceed ([y]/n)?
 
 Uninstall the **msl-loadlib** package
 
@@ -101,7 +101,7 @@ Uninstall the **msl-loadlib** package
 
      msl-loadlib: 0.3.1
 
-   Proceed ([y]/n)? n
+   Proceed ([y]/n)?
 
 Create a new **MSL-MyPackage** package
 

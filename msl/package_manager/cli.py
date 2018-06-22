@@ -6,8 +6,7 @@ import sys
 import logging
 from pkg_resources import parse_version
 
-from . import PKG_NAME, __version__
-from . import utils
+from . import utils, __version__, _PKG_NAME
 
 PARSER = None
 
@@ -27,13 +26,14 @@ def configure_parser():
     from .cli_update import add_parser_update
     from .cli_list import add_parser_list
     from .cli_create import add_parser_create
+    from .cli_authorize import add_parser_authorize
 
     PARSER = ArgumentParser(description='Install, uninstall, update, list or create MSL packages.')
 
     PARSER.add_argument(
         '-V', '--version',
         action='version',
-        version='{} {}'.format(PKG_NAME, __version__),
+        version='{} {}'.format(_PKG_NAME, __version__),
         help='Show the MSL Package Manager version number and exit.'
     )
 
@@ -52,6 +52,7 @@ def configure_parser():
     add_parser_update(command_parser, 'upgrade')
     add_parser_list(command_parser)
     add_parser_create(command_parser)
+    add_parser_authorize(command_parser)
 
     return PARSER
 
@@ -85,11 +86,11 @@ def _main(*args):
         utils.set_log_level(logging.WARNING)
 
     pkgs = utils.pypi()
-    latest = pkgs[PKG_NAME]['version']
+    latest = pkgs[_PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
         utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
                           'You should consider upgrading via the \'pip install --upgrade {0}\''
-                          ' command.'.format(PKG_NAME, __version__, latest))
+                          ' command.'.format(_PKG_NAME, __version__, latest))
 
 
 def main(*args):

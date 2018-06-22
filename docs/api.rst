@@ -1,8 +1,7 @@
 .. _api:
 
-=============================
-MSL-LoadLib API Documentation
-=============================
+MSL Package Manager API Documentation
+=====================================
 
 The root package is
 
@@ -16,9 +15,10 @@ which has the following functions
 
    ~msl.package_manager.create.create
    ~msl.package_manager.utils.github
+   ~msl.package_manager.utils.info
    ~msl.package_manager.install.install
    ~msl.package_manager.utils.installed
-   ~msl.package_manager.utils.show_packages
+   ~msl.package_manager.utils.set_log_level
    ~msl.package_manager.utils.pypi
    ~msl.package_manager.uninstall.uninstall
    ~msl.package_manager.update.update
@@ -31,6 +31,7 @@ Package Structure
    msl.package_manager <_api/msl.package_manager>
    msl.package_manager.cli <_api/msl.package_manager.cli>
    msl.package_manager.cli_argparse <_api/msl.package_manager.cli_argparse>
+   msl.package_manager.cli_authorize <_api/msl.package_manager.cli_authorize>
    msl.package_manager.cli_create <_api/msl.package_manager.cli_create>
    msl.package_manager.cli_install <_api/msl.package_manager.cli_install>
    msl.package_manager.cli_list <_api/msl.package_manager.cli_list>
@@ -42,5 +43,5 @@ Package Structure
    msl.package_manager.update <_api/msl.package_manager.update>
    msl.package_manager.utils <_api/msl.package_manager.utils>
 
-.. _GitHub: https://github.com/MSLNZ
-.. _PyPI: https://pypi.org/search/?q=msl-
+.. _repositories: https://github.com/MSLNZ
+.. _packages: https://pypi.org/search/?q=msl-

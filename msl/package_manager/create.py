@@ -24,7 +24,7 @@ def create(*names, **kwargs):
             the package if the `author` or the `email` value was not specified.
         author : :class:`str`, default :data:`None`
             The name of the author to use for the new package. If :data:`None` then uses
-            :func:`.utils.get_email` to determine the author's name.
+            :func:`.utils.get_username` to determine the author's name.
         email : :class:`str`, default :data:`None`
             The author's email address. If :data:`None` then uses
             :func:`.utils.get_email` to determine the author's email address.
@@ -91,7 +91,7 @@ def create(*names, **kwargs):
         author_name = utils.get_username()
         if not yes:
             try:
-                new_name = utils._get_input('You can enter a new author name [default: "{0}"]: '.format(author_name))
+                new_name = utils._get_input('You can enter a new author name [default: {}]: '.format(author_name))
                 if new_name:
                     author_name = new_name
             except:
@@ -108,7 +108,7 @@ def create(*names, **kwargs):
         email_address = utils.get_email()
         if not yes:
             try:
-                new_email = utils._get_input('You can enter a new email address [default: "{0}"]: '.format(email_address))
+                new_email = utils._get_input('You can enter a new email address [default: {}]: '.format(email_address))
                 if new_email:
                     email_address = new_email
             except:

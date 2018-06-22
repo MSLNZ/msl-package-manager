@@ -8,13 +8,13 @@ uninstall, update, list and create MSL packages by using the command line interf
 
 *You can also directly call these functions through the* :ref:`API <api_usage>`.
 
-The ``install``, ``uninstall``, ``update`` and ``list`` commands fetch data from MSL repositories_.
-Some MSL packages_ are also available on PyPI.
+The :ref:`install <install_cli>`, :ref:`update <update_cli>` and :ref:`list <list_cli>` commands
+fetch information about MSL repositories_. Some MSL packages_ are also available on PyPI.
 
 .. attention::
-   Since MSL packages are part of a namespace_, uninstalling MSL packages using ``pip uninstall msl-<packaage name>``
-   will break the namespace_. Therefore, it is recommended to use ``msl uninstall <packaage name>`` to
-   uninstall MSL packages.
+   Since MSL packages are part of a namespace_, uninstalling MSL packages using
+   ``pip uninstall msl-<packaage name>`` will break the namespace_. Therefore, it is
+   recommended to use ``msl uninstall <packaage name>`` to uninstall MSL packages.
 
 .. _cache_note:
 .. note::
@@ -34,6 +34,8 @@ Or for help about a specific command:
 .. code-block:: console
 
    msl install --help
+
+.. _install_cli:
 
 install
 -------
@@ -75,6 +77,8 @@ Install multiple MSL packages:
 
    msl install loadlib equipment qt
 
+.. _uninstall_cli:
+
 uninstall
 ---------
 
@@ -108,10 +112,12 @@ Uninstall multiple MSL packages:
 
    msl uninstall loadlib equipment qt
 
+.. _update_cli:
+
 update
 ------
 
-Update all MSL packages (except for the **msl-package-manager**):
+Update all MSL packages that are installed (except for the **msl-package-manager**):
 
 .. code-block:: console
 
@@ -135,7 +141,7 @@ Update a specific MSL package, for example **msl-loadlib** (you can ignore the *
 
    msl update loadlib
 
-Update a package that was released :ref:`\<24 hours ago <cache_note>`:
+Update to a package that was released :ref:`\<24 hours ago <cache_note>`:
 
 .. code-block:: console
 
@@ -160,6 +166,8 @@ Update multiple MSL packages:
 
    msl update loadlib equipment qt
 
+.. _list_cli:
+
 list
 ----
 
@@ -169,23 +177,29 @@ List all MSL packages that are installed:
 
    msl list
 
-List all MSL repositories_ on GitHub that are available to be installed:
+List all MSL repositories_ that are available on GitHub:
 
 .. code-block:: console
 
    msl list --github
 
-List all MSL packages_ on PyPI that are available to be installed:
+List all MSL packages_ that are available on PyPI:
 
 .. code-block:: console
 
    msl list --pypi
 
-Update the GitHub cache and then list all MSL repositories_ that are available:
+Update the GitHub :ref:`cache <cache_note>` and then list all repositories_ that are available:
 
 .. code-block:: console
 
    msl list --github --update-cache
+
+Update the PyPI :ref:`cache <cache_note>` and then list all packages_ that are available:
+
+.. code-block:: console
+
+   msl list --pypi --update-cache
 
 Print the detailed information about the branches and the tags for the repositories_:
 
@@ -193,7 +207,7 @@ Print the detailed information about the branches and the tags for the repositor
 
    msl list --github --detailed
 
-.. _create:
+.. _create_cli:
 
 create
 ------
@@ -229,8 +243,32 @@ name and **email** address values by adding the ``--yes`` argument:
 
    msl create MyPackage --yes --path D:\create\package\here
 
+.. _authorize_cli:
+
+authorize
+---------
+
+When requesting information about the MSL repositories_ that are available on GitHub there is a limit_ to
+how often you can send requests to the GitHub API (this is the primary reason for :ref:`caching <cache_note>`
+the information). If you have a GitHub account and include your username and password with each request then
+this limit_ is increased. If you do not have a GitHub account then you could `sign up <github_signup_>`_ to
+create an account.
+
+By running this command you will be prompted for your GitHub username and password so that you send
+authorized requests to GitHub.
+
+.. code-block:: console
+
+   msl authorize
+
+.. important::
+   Your GitHub username and password are saved in plain text in the file that is created. You should set
+   the file permissions provided by your operating system to ensure that your GitHub credentials are safe.
+   The file is saved to your ``$HOME`` directory.
+
 .. _git: https://git-scm.com
 .. _repositories: https://github.com/MSLNZ
-.. _rate limit: https://developer.github.com/v3/rate_limit/
 .. _packages: https://pypi.org/search/?q=msl-
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
+.. _limit: https://developer.github.com/v3/#rate-limiting
+.. _github_signup: https://github.com/join?source=header-home

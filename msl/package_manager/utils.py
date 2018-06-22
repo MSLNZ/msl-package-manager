@@ -2,12 +2,8 @@
 Functions for the API.
 
 .. _packages: https://pypi.org/search/?q=msl-
-.. _PyPI: https://pypi.org/search/?q=msl-
 .. _git: https://git-scm.com
 .. _repositories: https://github.com/MSLNZ
-.. _repository: https://github.com/MSLNZ
-.. _GitHub: https://github.com/MSLNZ
-
 """
 import re
 import os
@@ -34,8 +30,7 @@ except ImportError:
 
 from colorama import Fore, Style, Back, init
 
-from . import PKG_NAME
-
+from . import _PKG_NAME
 
 _NUM_QUIET = 0
 
@@ -81,7 +76,7 @@ def get_username():
 
 
 def github(update_cache=False):
-    """Get the MSL repositories that are available on GitHub_.
+    """Get the MSL repositories_ that are available on GitHub.
 
     Parameters
     ----------
@@ -162,13 +157,14 @@ def github(update_cache=False):
     # check if the user specified their github authorization credentials in the default file
     try:
         with open(_GITHUB_AUTH_PATH, 'rb') as fp:
-            uname = fp.readline().strip()
-            pw = fp.readline().strip()
+            auth = fp.readline().strip()
     except IOError:
         headers = dict()
     else:
-        auth = base64.b64encode(uname + b':' + pw).decode('utf-8')
-        headers = {'Authorization': 'Basic ' + auth, 'User-Agent': 'msl-package-manager/Python'}
+        headers = {
+            'Authorization': 'Basic ' + base64.b64encode(auth).decode('utf-8'),
+            'User-Agent': 'msl-package-manager/Python'
+        }
 
     log.debug('Getting the repositories from GitHub')
     repos = fetch('/orgs/MSLNZ/repos')
@@ -198,63 +194,31 @@ def github(update_cache=False):
     return _sort_packages(pkgs)
 
 
-def installed():
-    """Get the MSL packages that are installed.
+def info(from_github=False, detailed=False, from_pypi=False, update_cache=False):
+    """Show the information about MSL packages.
 
-    Returns
-    -------
-    :class:`dict` of :class:`dict`
-        The MSL packages that are installed.
-    """
-    log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
+    The information about the packages can be either those that are installed or
+    those that are available as repositories_ on GitHub or as packages_ on PyPI.
 
-    # refresh the working_set
-    importlib.reload(pkg_resources)
-
-    pkgs = {}
-    for dist in pkg_resources.working_set:
-        if not dist.key.startswith('msl-'):
-            continue
-
-        description = ''
-        if dist.has_metadata(dist.PKG_INFO):
-            for line in dist.get_metadata_lines(dist.PKG_INFO):
-                if line.startswith('Summary:'):
-                    description = line[8:].strip()
-                    break
-
-        pkgs[dist.project_name] = dict()
-        pkgs[dist.project_name]['version'] = dist.version
-        pkgs[dist.project_name]['description'] = description
-
-    return _sort_packages(pkgs)
-
-
-def show_packages(from_github=False, detailed=False, from_pypi=False, update_cache=False):
-    """Show the MSL packages that are available.
-
-    The list of packages can be either those that are installed, are
-    available as repositories_ on GitHub or are available as packages_ on PyPI.
+    The default action is to show the information about the MSL packages that are installed.
 
     Parameters
     ----------
     from_github : :class:`bool`, optional
-        Whether to show the MSL packages that are available as GitHub repositories_.
-        The default action is to show the MSL packages that are installed.
+        Whether to show the MSL repositories_ that are available on GitHub.
     detailed : :class:`bool`, optional
-        Whether to show detailed information about the MSL packages that are available
-        as GitHub repositories_ (i.e., displays additional information about the
-        branches and tags). Only used if `from_github` is :data:`True`.
+        Whether to show **detailed** information about the MSL repositories_
+        (i.e., displays additional information about the branches and tags).
+        Only used if `from_github` is :data:`True`.
     from_pypi : :class:`bool`, optional
-        Whether to show the MSL packages_ that are available on PyPI. The default
-        action is to show the MSL packages that are installed.
+        Whether to show the MSL packages_ that are available on PyPI.
     update_cache : :class:`bool`, optional
         The information about the MSL packages_ that are available on PyPI and about
         the repositories_ that are available on GitHub are cached to use for subsequent
         calls to this function. After 24 hours the cache is automatically updated. Set
         `update_cache` to be :data:`True` to force the cache to be updated when you call
-        this function. If `from_github` is :data:`True` then the cache for the repositories_
-        is updated otherwise if `from_pypi` is :data:`True` then the cache for the
+        this function. If `from_github` is :data:`True` then the cache for the
+        repositories_ is updated. If `from_pypi` is :data:`True` then the cache for the
         packages_ is updated.
     """
     if from_github:
@@ -291,8 +255,40 @@ def show_packages(from_github=False, detailed=False, from_pypi=False, update_cac
         log.info(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
 
 
+def installed():
+    """Get the MSL packages that are installed.
+
+    Returns
+    -------
+    :class:`dict` of :class:`dict`
+        The MSL packages that are installed.
+    """
+    log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
+
+    # refresh the working_set
+    importlib.reload(pkg_resources)
+
+    pkgs = {}
+    for dist in pkg_resources.working_set:
+        if not dist.key.startswith('msl-'):
+            continue
+
+        description = ''
+        if dist.has_metadata(dist.PKG_INFO):
+            for line in dist.get_metadata_lines(dist.PKG_INFO):
+                if line.startswith('Summary:'):
+                    description = line[8:].strip()
+                    break
+
+        pkgs[dist.project_name] = dict()
+        pkgs[dist.project_name]['version'] = dist.version
+        pkgs[dist.project_name]['description'] = description
+
+    return _sort_packages(pkgs)
+
+
 def pypi(update_cache=False):
-    """Get the MSL packages that are available on PyPI_.
+    """Get the MSL packages_ that are available on PyPI.
 
     Parameters
     ----------
@@ -340,7 +336,7 @@ def pypi(update_cache=False):
 
 
 def set_log_level(level):
-    """Set the logging level.
+    """Set the logging :py:ref:`level <levels>`.
 
     Parameters
     ----------
@@ -415,7 +411,7 @@ def _create_install_list(names, branch, tag, update_cache):
     Parameters
     ----------
     names : :class:`tuple` of :class:`str`
-        The name of a single GitHub repository_ or multiple repository_ names.
+        The name of a single GitHub repository or multiple repository names.
     branch : :class:`str`
         The name of a GitHub branch.
     tag : :class:`str`
@@ -437,7 +433,7 @@ def _create_install_list(names, branch, tag, update_cache):
 
     names = _check_msl_prefix(*names)
     if not names:
-        names = [pkg for pkg in pkgs_github if pkg != PKG_NAME]
+        names = [pkg for pkg in pkgs_github if pkg != _PKG_NAME]
 
     pkgs = {}
     for name in names:
@@ -472,13 +468,13 @@ def _create_uninstall_list(names):
 
     names = _check_msl_prefix(*names)
     if not names:
-        names = [pkg for pkg in pkgs_installed if pkg != PKG_NAME]
+        names = [pkg for pkg in pkgs_installed if pkg != _PKG_NAME]
 
     pkgs = {}
     for name in names:
-        if name == PKG_NAME:
+        if name == _PKG_NAME:
             log.warning('The MSL Package Manager cannot uninstall itself. '
-                        'Use "pip uninstall {}"'.format(PKG_NAME))
+                        'Use "pip uninstall {}"'.format(_PKG_NAME))
         elif name not in pkgs_installed:
             log.error('Cannot uninstall {}: package not installed'.format(name))
         else:
@@ -670,4 +666,4 @@ def _getLogger(name=None, fmt='%(message)s'):
     return logger
 
 
-log = _getLogger(PKG_NAME)
+log = _getLogger(_PKG_NAME)

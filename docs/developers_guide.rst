@@ -177,7 +177,7 @@ on how to use git.
 Use the setup.py and test_envs.py scripts
 -----------------------------------------
 MSL packages come with two scripts to help make development easier: **setup.py** and **test_envs.py**. See the
-:ref:`"Create" ReadMe <create-readme>` page for an overview on how to use these scripts.
+:ref:`"Create" ReadMe <create_readme>` page for an overview on how to use these scripts.
 
 .. _Edit the source code using the style guide:
 

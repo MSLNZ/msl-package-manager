@@ -94,11 +94,11 @@ needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs', 'build_sphinx'}.intersection
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
 setup(
-    name=fetch_init('PKG_NAME'),
+    name=fetch_init('_PKG_NAME'),
     version=fetch_init('__version__'),
     author=fetch_init('__author__'),
     author_email='joseph.borbely@measurement.govt.nz',
-    url='https://github.com/MSLNZ/'+fetch_init('PKG_NAME'),
+    url='https://github.com/MSLNZ/' + fetch_init('_PKG_NAME'),
     description='Install, uninstall, update, list and create MSL packages',
     long_description=read('README.rst'),
     platforms='any',

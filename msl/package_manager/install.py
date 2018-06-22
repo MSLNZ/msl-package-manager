@@ -11,18 +11,17 @@ def install(*names, **kwargs):
     """Install MSL packages.
 
     MSL packages can be installed from PyPI packages_ (only if a release has been
-    uploaded to PyPI_) or from GitHub repositories_.
+    uploaded to PyPI) or from GitHub repositories_.
 
     .. note::
-       If the MSL packages_ are available on PyPI_ then PyPI_ is used as the default
+       If the MSL packages_ are available on PyPI then PyPI is used as the default
        URI_ to install the package. If you want to force the installation to occur
        from the ``master`` branch of the GitHub `repository <https://github.com/MSLNZ>`_
-       then set ``branch='master'``. If the package is not available on PyPI_
+       then set ``branch='master'``. If the package is not available on PyPI
        then the ``master`` branch is used as the default installation URI_.
 
     .. _repositories: https://github.com/MSLNZ
     .. _packages: https://pypi.org/search/?q=msl-
-    .. _PyPI: https://pypi.org/
     .. _URI: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 
     Parameters
@@ -41,7 +40,7 @@ def install(*names, **kwargs):
         tag : :class:`str`, default :data:`None`
             The name of a GitHub tag to use for the installation.
         update_cache : :class:`bool`, default :data:`False`
-            The information about the MSL packages_ that are available on PyPI_ and about
+            The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
             calls to this function. After 24 hours the cache is automatically updated. Set
             `update_cache` to be :data:`True` to force the cache to be updated when you call

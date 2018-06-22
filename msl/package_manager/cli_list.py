@@ -1,9 +1,9 @@
 """
-Command line interface for the ``list`` command.
+Command line interface for the :ref:`list <list_cli>` command.
 """
 from .cli_argparse import add_argument_update_cache
 from .cli_argparse import add_argument_quiet
-from .utils import show_packages
+from .utils import info
 
 HELP = 'Show the information about MSL packages.'
 
@@ -23,7 +23,7 @@ Examples:
 
 
 def add_parser_list(parser):
-    """Add a ``list`` command to the parser."""
+    """Add the :ref:`list <list_cli>` command to the parser."""
     p = parser.add_parser(
         'list',
         help=HELP,
@@ -56,5 +56,5 @@ def add_parser_list(parser):
 
 
 def execute(args, parser):
-    """Executes the ``list`` command."""
-    show_packages(args.github, args.detailed, args.pypi, args.update_cache)
+    """Executes the :ref:`list <list_cli>` command."""
+    info(args.github, args.detailed, args.pypi, args.update_cache)

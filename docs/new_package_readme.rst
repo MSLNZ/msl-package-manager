@@ -1,15 +1,15 @@
-.. _create-readme:
+.. _create_readme:
 
 "create" ReadMe
 ===============
 
-The MSL package that is created by running the :ref:`msl create <create>` command contains two scripts
+The MSL package that is created by running the :ref:`msl create <create_cli>` command contains two scripts
 to help make development easier: **setup.py** and **test_envs.py**.
 
 setup.py commands
 -----------------
 
-The **setup.py** file (that is created by running :ref:`msl create <create>`) can be run with various arguments
+The **setup.py** file (that is created by running :ref:`msl create <create_cli>`) can be run with various arguments
 in order to perform unit tests, to create the documentation, and to distribute/install your MSL package.
 
 .. note::
@@ -63,7 +63,7 @@ test_envs.py commands
 .. attention::
    The following assumes that you are using conda_ as your Python package manager.
 
-Additionally, there is a **test_envs.py** file that is created from running :ref:`msl create <create>`. At the time
+Additionally, there is a **test_envs.py** file that is created from running :ref:`msl create <create_cli>`. At the time
 of writing this script, tox_ and conda_ did not "play nice" together, see here_ , and so this script provided a way
 around this issue. This script simulates tox_ by finding all of the specified conda environment_\'s
 (ignores the **root** environment_) and runs the unit tests with each environment_.
