@@ -247,12 +247,13 @@ def info(from_github=False, detailed=False, from_pypi=False, update_cache=False)
         ]
 
     # log the results
-    log.info('')
-    log.info(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
-    log.info(' '.join('-' * w for w in w))
+    msg = ['']
+    msg.append(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
+    msg.append(' '.join('-' * width for width in w))
     for p in sorted(pkgs):
         description = pkgs[p]['description'] if pkgs[p]['description'] else ''
-        log.info(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
+        msg.append(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
+    log.info('\n'.join(msg))
 
 
 def installed():
