@@ -3,19 +3,19 @@ from msl.package_manager import utils, install, uninstall
 
 def test_install_then_uninstall():
 
-    # make sure that MSL-LoadLib is NOT installed
+    # make sure that MSL-IO is not installed
     pkgs = utils.installed()
-    assert 'msl-loadlib' not in pkgs
+    assert 'msl-io' not in pkgs
 
     # install from PyPI
-    install('loadlib', yes=True)
+    install('io', yes=True)
 
-    # make sure that MSL-LoadLib IS installed
+    # make sure that MSL-IO is installed
     pkgs = utils.installed()
-    assert 'msl-loadlib' in pkgs
+    assert 'msl-io' in pkgs
 
-    uninstall('loadlib', yes=True)
+    uninstall('io', yes=True)
 
-    # make sure that MSL-LoadLib is NOT installed
+    # make sure that MSL-IO is not installed
     pkgs = utils.installed()
-    assert 'msl-loadlib' not in pkgs
+    assert 'msl-io' not in pkgs
