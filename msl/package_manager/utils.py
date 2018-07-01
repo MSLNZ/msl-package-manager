@@ -20,9 +20,9 @@ import collections
 import pkg_resources
 from multiprocessing.pool import ThreadPool
 try:
-    import imp as importlib
+    from importlib import reload
 except ImportError:
-    import importlib
+    from imp import reload  # Python 2
 try:
     from urllib2 import urlopen, Request, HTTPError  # Python 2
 except ImportError:
@@ -267,7 +267,7 @@ def installed():
     log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
 
     # refresh the working_set
-    importlib.reload(pkg_resources)
+    reload(pkg_resources)
 
     pkgs = {}
     for dist in pkg_resources.working_set:
