@@ -26,7 +26,7 @@ def install(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`tuple` of :class:`str`, optional
+    *names : :class:`tuple` of :class:`str`
         The name(s) of the MSL package(s) to install. If empty then
         install **all** MSL packages.
     **kwargs
