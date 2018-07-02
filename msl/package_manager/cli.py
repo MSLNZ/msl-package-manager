@@ -1,6 +1,7 @@
 """
-Main entry point to either install, uninstall, update, list or create MSL packages
-using the command-line interface (CLI).
+Main entry point to either :ref:`install <install_cli>`, :ref:`uninstall <uninstall_cli>`,
+:ref:`update <update_cli>`, :ref:`list <list_cli>` or :ref:`create <create_cli>`
+MSL packages using the command-line interface (CLI).
 """
 import sys
 import logging
@@ -58,10 +59,6 @@ def configure_parser():
 
 
 def _main(*args):
-    """
-    Main entry point to either install, uninstall, update, list or create MSL packages using the CLI.
-    """
-
     # parse the input
     if not args:
         args = sys.argv[1:]
@@ -94,6 +91,11 @@ def _main(*args):
 
 
 def main(*args):
+    """
+    Main entry point to either :ref:`install <install_cli>`, :ref:`uninstall <uninstall_cli>`,
+    :ref:`update <update_cli>`, :ref:`list <list_cli>` or :ref:`create <create_cli>`
+    MSL packages using the CLI.
+    """
     sys.exit(_main(*args))
 
 
