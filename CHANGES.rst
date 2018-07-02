@@ -2,8 +2,8 @@
 Release Notes
 =============
 
-Version 1.5.2 (in development)
-==============================
+Version 2.0.0 (2018.07.02)
+==========================
 
 - Added
 
@@ -32,7 +32,7 @@ Version 1.5.2 (in development)
 
 - Removed
 
-  * the constants IS_PYTHON2, IS_PYTHON3 and PKG_NAME
+  * the constants ``IS_PYTHON2``, ``IS_PYTHON3`` and ``PKG_NAME``
 
 Version 1.5.1 (2018.02.23)
 ==========================
