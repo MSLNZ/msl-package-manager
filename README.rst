@@ -21,7 +21,7 @@ To install the **MSL Package Manager** run:
 
 Dependencies
 ++++++++++++
-* Python 2.7, 3.3+
+* Python 2.7, 3.4+
 * pip_
 * setuptools_
 * colorama_
