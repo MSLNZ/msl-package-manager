@@ -168,6 +168,8 @@ def update(*names, **kwargs):
             utils.log.debug('Updating msl-package-manager from PyPI')
             cmd = exe + options + ['msl-package-manager']
             subprocess.Popen(cmd, close_fds=True, creationflags=subprocess.DETACHED_PROCESS)
+
+        if _PKG_NAME in pkgs_to_update:
             return 'updated_msl_package_manager'
 
     else:
