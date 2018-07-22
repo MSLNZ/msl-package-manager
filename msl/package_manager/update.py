@@ -31,8 +31,7 @@ def update(*names, **kwargs):
     ----------
     *names : :class:`tuple` of :class:`str`
         The name(s) of the MSL package(s) to update. If empty then
-        update **all** MSL packages (except for the **MSL Package Manager** --
-        in which case use ``pip install -U msl-package-manager``).
+        update **all** MSL packages.
     **kwargs
         yes : :class:`bool`, default :data:`False`
             If :data:`True` then don't ask for confirmation before updating.
@@ -79,10 +78,7 @@ def update(*names, **kwargs):
 
     names = utils._check_msl_prefix(*names)
     if not names:
-        names = [pkg for pkg in pkgs_installed if pkg != _PKG_NAME]
-    elif _PKG_NAME in names:
-        utils.log.warning('Use "pip install -U {}" to update the MSL Package Manager'.format(_PKG_NAME))
-        del names[names.index(utils._PKG_NAME)]
+        names = pkgs_installed
 
     w = [0, 0]
     pkgs_to_update = {}
@@ -148,9 +144,16 @@ def update(*names, **kwargs):
 
         utils.log.info('')
 
+        update_package_manager_on_windows = False
+        is_windows = sys.platform in ['win32', 'cygwin']
+
         exe = [sys.executable, '-m', 'pip', 'install']
         options = ['--upgrade', '--force-reinstall', '--no-deps'] + ['--quiet'] * utils._NUM_QUIET
         for pkg in pkgs_to_update:
+            if is_windows and pkg == _PKG_NAME:
+                update_package_manager_on_windows = True
+                continue
+
             if pkgs_to_update[pkg][2]:
                 utils.log.debug('Updating {} from PyPI'.format(pkg))
                 package = [pkg]
@@ -158,5 +161,14 @@ def update(*names, **kwargs):
                 utils.log.debug('Updating {} from GitHub/{}'.format(pkg, zip_name))
                 package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
             subprocess.call(exe + options + package)
+
+        # on Windows an exe cannot update itself while it is running
+        # this is a workaround to install it last by running Popen without waiting for it to finish
+        if update_package_manager_on_windows:
+            utils.log.debug('Updating msl-package-manager from PyPI')
+            cmd = exe + options + ['msl-package-manager']
+            subprocess.Popen(cmd, close_fds=True, creationflags=subprocess.DETACHED_PROCESS)
+            return 'updated_msl_package_manager'
+
     else:
         utils.log.info('No MSL packages to update')

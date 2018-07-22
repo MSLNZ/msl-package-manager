@@ -76,7 +76,9 @@ def _main(*args):
         utils.set_log_level(logging.CRITICAL + 1)
 
     # execute the command
-    args.func(args, parser)
+    ret = args.func(args, parser)
+    if ret == 'updated_msl_package_manager':
+        return
 
     # check if there is an update for the MSL Package Manager
     if utils.log.level < logging.WARNING:  # do not log DEBUG messages when checking for the update
@@ -86,7 +88,7 @@ def _main(*args):
     latest = pkgs[_PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
         utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
-                          'You should consider upgrading via the \'pip install --upgrade {0}\''
+                          'You should consider upgrading via the \'msl update package-manager\''
                           ' command.'.format(_PKG_NAME, __version__, latest))
 
 

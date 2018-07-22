@@ -51,4 +51,4 @@ def add_parser_update(parser, name='update'):
 def execute(args, parser):
     """Executes the :ref:`update <update_cli>` command."""
     if parser.contains_package_names():
-        update(*args.names, yes=args.yes, branch=args.branch, tag=args.tag, update_cache=args.update_cache)
+        return update(*args.names, yes=args.yes, branch=args.branch, tag=args.tag, update_cache=args.update_cache)

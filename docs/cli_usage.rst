@@ -117,7 +117,7 @@ Uninstall multiple MSL packages:
 update
 ------
 
-Update all MSL packages that are installed (except for the **msl-package-manager**):
+Update all MSL packages that are installed:
 
 .. code-block:: console
 
@@ -125,9 +125,6 @@ Update all MSL packages that are installed (except for the **msl-package-manager
 
 .. tip::
    You can also use ``upgrade`` as an alias for ``update``, e.g., ``msl upgrade --all``
-
-.. note::
-   To update the MSL Package Manager run ``pip install -U msl-package-manager``
 
 Update all MSL packages without asking for confirmation:
 
