@@ -3,6 +3,7 @@ Main entry point to either :ref:`install <install_cli>`, :ref:`uninstall <uninst
 :ref:`update <update_cli>`, :ref:`list <list_cli>` or :ref:`create <create_cli>`
 MSL packages using the command-line interface (CLI).
 """
+import os
 import sys
 import logging
 from pkg_resources import parse_version
@@ -75,9 +76,14 @@ def _main(*args):
     elif args.quiet == 3:
         utils.set_log_level(logging.CRITICAL + 1)
 
+    # when the msl-package-manager gets updated a msl.exe.old file gets created
+    old = sys.exec_prefix + '/Scripts/msl.exe.old'
+    if os.path.isfile(old):
+        os.remove(old)
+
     # execute the command
     ret = args.func(args, parser)
-    if ret == 'updated_msl_package_manager':
+    if ret == 'updating_msl_package_manager':
         return
 
     # check if there is an update for the MSL Package Manager

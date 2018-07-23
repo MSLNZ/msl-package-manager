@@ -1,6 +1,7 @@
 """
 Update MSL packages.
 """
+import os
 import sys
 import subprocess
 from pkg_resources import parse_version
@@ -78,10 +79,10 @@ def update(*names, **kwargs):
 
     names = utils._check_msl_prefix(*names)
     if not names:
-        names = pkgs_installed
+        names = pkgs_installed  # update all installed packages
 
     w = [0, 0]
-    pkgs_to_update = {}
+    pkgs_to_update = dict()
     for name in names:
 
         err_msg = 'Cannot update {}: '.format(name)
@@ -144,33 +145,35 @@ def update(*names, **kwargs):
 
         utils.log.info('')
 
-        update_package_manager_on_windows = False
-        is_windows = sys.platform in ['win32', 'cygwin']
+        # If updating the msl-package-manager then update it last
+        updating_msl_package_manager = _PKG_NAME in pkgs_to_update
+        if updating_msl_package_manager:
+            value = pkgs_to_update.pop(_PKG_NAME)
+            pkgs_to_update[_PKG_NAME] = value  # using an OrderedDict so this item will be last
+
+        is_windows = sys.platform in {'win32', 'cygwin'}
 
         exe = [sys.executable, '-m', 'pip', 'install']
         options = ['--upgrade', '--force-reinstall', '--no-deps'] + ['--quiet'] * utils._NUM_QUIET
         for pkg in pkgs_to_update:
-            if is_windows and pkg == _PKG_NAME:
-                update_package_manager_on_windows = True
-                continue
-
             if pkgs_to_update[pkg][2]:
                 utils.log.debug('Updating {} from PyPI'.format(pkg))
                 package = [pkg]
             else:
                 utils.log.debug('Updating {} from GitHub/{}'.format(pkg, zip_name))
                 package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
+
+            if is_windows and pkg == _PKG_NAME:
+                # On Windows, an executable cannot replace itself while it is running. However,
+                # an executable can be renamed while it is running. Therefore, we rename msl.exe
+                # to msl.exe.old and then a new msl.exe file can be created during the update
+                filename = sys.exec_prefix + '/Scripts/msl.exe'
+                os.rename(filename, filename + '.old')
+
             subprocess.call(exe + options + package)
 
-        # on Windows an exe cannot update itself while it is running
-        # this is a workaround to install it last by running Popen without waiting for it to finish
-        if update_package_manager_on_windows:
-            utils.log.debug('Updating msl-package-manager from PyPI')
-            cmd = exe + options + ['msl-package-manager']
-            subprocess.Popen(cmd, close_fds=True, creationflags=subprocess.DETACHED_PROCESS)
-
-        if _PKG_NAME in pkgs_to_update:
-            return 'updated_msl_package_manager'
+        if updating_msl_package_manager:
+            return 'updating_msl_package_manager'
 
     else:
         utils.log.info('No MSL packages to update')
