@@ -92,7 +92,9 @@ Uninstall all MSL packages (except for the **msl-package-manager**):
    You can also use ``remove`` as an alias for ``uninstall``, e.g., ``msl remove --all``
 
 .. note::
-   To uninstall the MSL Package Manager run ``pip uninstall msl-package-manager``
+   To uninstall the MSL Package Manager run ``pip uninstall msl-package-manager``.
+   Use with caution. If you uninstall the MSL Package Manager and you still have
+   other MSL packages installed then you may break the MSL namespace_.
 
 Uninstall all MSL packages without asking for confirmation:
 
