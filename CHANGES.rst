@@ -2,8 +2,20 @@
 Release Notes
 =============
 
-Version 2.0.1.dev0
+Version 2.1.0.dev0
 ==================
+
+- Added
+
+  * can now update the MSL Package Manager using `msl update package-manager`
+
+- Changed
+
+  * updates to the documentation
+
+- Removed
+
+  * Python 3.3 support
 
 
 Version 2.0.0 (2018.07.02)
