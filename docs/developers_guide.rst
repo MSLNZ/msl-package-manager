@@ -3,15 +3,15 @@ MSL Developers Guide
 ====================
 This guide shows you how to:
 
-* `Install and set up Python, Git and PyCharm`_
-* `Commit changes to a repository`_
-* `Use the setup.py and test_envs.py scripts`_
-* `Edit the source code using the style guide`_
+* :ref:`set up`
+* :ref:`commit changes`
+* :ref:`setup and test_envs scripts`
+* :ref:`style guide`
 
 This guide describes *one way* to set up a Python environment and it does not intend to imply that the following
 is the *best way* to develop programs in the Python language [#f1]_.
 
-.. _Install and set up Python, Git and PyCharm:
+.. _set up:
 
 Install and set up Python, Git and PyCharm
 ------------------------------------------
@@ -130,7 +130,7 @@ set-up steps below.
 
 10. The **MSL-LoadLib** project is now shown in the **Project** window and you can begin to modify the code.
 
-.. _Commit changes to a repository:
+.. _commit changes:
 
 Commit changes to a repository
 --------------------------------
@@ -139,7 +139,7 @@ The following is only a very basic example of how to upload changes to the sourc
 on how to use git.
 
 .. note::
-   This section assumes that you followed the instructions from `Install and set up Python, Git and PyCharm`_.
+   This section assumes that you followed the instructions from :ref:`set up`.
 
 1. Make sure that the git Branch_ you are working on is up to date by performing a Pull_.
 
@@ -172,14 +172,14 @@ on how to use git.
    
       .. image:: _static/pycharm_github_commit3.png
 
-.. _Use the setup.py and test_envs.py scripts:
+.. _setup and test_envs scripts:
 
 Use the setup.py and test_envs.py scripts
 -----------------------------------------
 MSL packages come with two scripts to help make development easier: **setup.py** and **test_envs.py**. See the
 :ref:`"Create" ReadMe <create_readme>` page for an overview on how to use these scripts.
 
-.. _Edit the source code using the style guide:
+.. _style guide:
 
 Edit the source code using the style guide
 ------------------------------------------
@@ -187,7 +187,7 @@ Please adhere to the following style guides when contributing to **MSL** package
 to the code base it will be easier to understand if there is a coherent structure to how the code is written:
 
 .. note::
-   This section assumes that you followed the instructions from `Install and set up Python, Git and PyCharm`_.
+   This section assumes that you followed the instructions from :ref:`set up`.
 
 * Follow the :pep:`8` style guide when possible *(by default, PyCharm will notify you if you do not)*.
 * Docstrings must be provided for all public classes, methods and functions.
