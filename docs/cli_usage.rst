@@ -6,7 +6,7 @@ Command Line Interface
 Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install,
 uninstall, update, list and create MSL packages by using the command line interface.
 
-*You can also directly call these functions through the* :ref:`API <api_usage>`.
+*You can also directly call these functions through the* :ref:`API <pm-api-usage>`.
 
 The :ref:`install <install_cli>`, :ref:`update <update_cli>` and :ref:`list <list_cli>` commands
 fetch information about MSL repositories_. Some MSL packages_ are also available on PyPI.

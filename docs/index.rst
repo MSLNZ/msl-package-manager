@@ -1,3 +1,5 @@
+.. _msl-package-manager-welcome:
+
 MSL Package Manager
 ===================
 

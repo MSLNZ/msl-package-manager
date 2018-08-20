@@ -1,3 +1,5 @@
+.. _pm-develop-guide:
+
 ====================
 MSL Developers Guide
 ====================

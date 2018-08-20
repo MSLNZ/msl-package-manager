@@ -1,4 +1,4 @@
-.. _api:
+.. _pm-api:
 
 MSL Package Manager API Documentation
 =====================================

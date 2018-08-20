@@ -1,9 +1,9 @@
-.. _api_usage:
+.. _pm-api-usage:
 
 API Usage
 =========
 
-In cases where using the :ref:`command-line interface <cli-usage>` is not desired, you can use the :ref:`API <api>`
+In cases where using the :ref:`command-line interface <cli-usage>` is not desired, you can use the :ref:`API <pm-api>`
 functions directly to install, uninstall, update, list and create MSL packages.
 
 First, import the **MSL Package Manager**
