@@ -29,7 +29,7 @@ classes, functions and methods are being tested and not tested:
 
    python setup.py tests
 
-Create the documentation files (uses `sphinx-build <http://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_),
+Create the documentation files (uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_),
 which can be viewed by opening **docs/_build/html/index.html**:
 
 .. code-block:: console
@@ -37,7 +37,7 @@ which can be viewed by opening **docs/_build/html/index.html**:
    python setup.py docs
 
 Automatically create the API documentation from the docstrings in the source code (uses
-`sphinx-apidoc <http://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_), which are saved to
+`sphinx-apidoc <https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_), which are saved to
 **docs/_autosummary**:
 
 .. code-block:: console
@@ -113,12 +113,12 @@ Show the conda environment_\'s that include **py** in the environment_ name then
    python test_envs.py -i py -s
 
 .. _here: https://bitbucket.org/hpk42/tox/issues/273/support-conda-envs-when-using-miniconda
-.. _pytest: http://doc.pytest.org/en/latest/
-.. _sphinx: http://www.sphinx-doc.org/en/latest/#
-.. _wheel: http://pythonwheels.com/
-.. _coverage: http://coverage.readthedocs.io/en/latest/index.html
+.. _pytest: https://doc.pytest.org/en/latest/
+.. _sphinx: https://www.sphinx-doc.org/en/latest/#
+.. _wheel: https://pythonwheels.com/
+.. _coverage: https://coverage.readthedocs.io/en/latest/index.html
 .. _git: https://git-scm.com
 .. _environment: https://conda.io/docs/using/envs.html
 .. _tox: https://tox.readthedocs.io/en/latest/
-.. _conda: http://conda.readthedocs.io/en/latest/
+.. _conda: https://conda.readthedocs.io/en/latest/
 .. _pipe: https://en.wikipedia.org/wiki/Pipeline_(Unix)

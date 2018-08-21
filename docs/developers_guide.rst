@@ -205,9 +205,9 @@ to the code base it will be easier to understand if there is a coherent structur
   which are filtered and you can also easily redirect all messages, for example, to a GUI widget or to a file. The
   `django project`_ has a nice overview on how to use Python's builtin logging module.
 
-.. _Miniconda: http://conda.pydata.org/miniconda.html
-.. _Windows Command Prompt: http://www.computerhope.com/issues/chusedos.htm
-.. _virtual environment: http://conda.pydata.org/docs/using/envs.html
+.. _Miniconda: https://conda.pydata.org/miniconda.html
+.. _Windows Command Prompt: https://www.computerhope.com/issues/chusedos.htm
+.. _virtual environment: https://conda.pydata.org/docs/using/envs.html
 .. _MSL-LoadLib repository: https://github.com/MSLNZ/msl-loadlib
 .. _git: https://git-scm.com/downloads
 .. _GitHub: https://github.com/join?source=header-home
@@ -215,13 +215,13 @@ to the code base it will be easier to understand if there is a coherent structur
 .. _version control system: https://en.wikipedia.org/wiki/Version_control
 .. _Community Edition of PyCharm: https://www.jetbrains.com/pycharm/download/#section=windows
 .. _IDE: https://en.wikipedia.org/wiki/Integrated_development_environment
-.. _pytest: http://doc.pytest.org/en/latest/
-.. _sphinx: http://www.sphinx-doc.org/en/latest/#
-.. _sphinx-apidoc: http://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html
-.. _wheel: http://pythonwheels.com/
-.. _coverage: http://coverage.readthedocs.io/en/latest/index.html
-.. _build_sphinx: http://www.sphinx-doc.org/en/latest/invocation.html#invocation-of-sphinx-build
-.. _Google Style: http://www.sphinx-doc.org/en/latest/ext/example_google.html
+.. _pytest: https://doc.pytest.org/en/latest/
+.. _sphinx: https://www.sphinx-doc.org/en/latest/#
+.. _sphinx-apidoc: https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html
+.. _wheel: https://pythonwheels.com/
+.. _coverage: https://coverage.readthedocs.io/en/latest/index.html
+.. _build_sphinx: https://www.sphinx-doc.org/en/latest/invocation.html#invocation-of-sphinx-build
+.. _Google Style: https://www.sphinx-doc.org/en/latest/ext/example_google.html
 .. _NumPy Style: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 .. _logging levels: https://docs.python.org/3/library/logging.html#logging-levels
 .. _clone: https://git-scm.com/docs/git-clone
