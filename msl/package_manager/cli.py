@@ -43,8 +43,8 @@ def configure_parser():
         metavar='command',
         dest='cmd',
     )
-    # http://bugs.python.org/issue9253
-    # http://stackoverflow.com/a/18283730/1599393
+    # https://bugs.python.org/issue9253
+    # https://stackoverflow.com/a/18283730/1599393
     command_parser.required = True
 
     add_parser_install(command_parser)
