@@ -1,3 +1,5 @@
+.. _msl-${msl-package-lower}-welcome:
+
 MSL-${msl-package}
 ${=}
 
