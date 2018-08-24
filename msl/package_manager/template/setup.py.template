@@ -95,7 +95,7 @@ sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
 setup(
     name='msl-${msl-package-lower}',
-    version=fetch_init('__version__').split('.')[:3],
+    version='{}.{}.{}'.format(*fetch_init('__version__').split('.')[:3]),
     author=fetch_init('__author__'),
     author_email='${email}',
     url='https://github.com/MSLNZ/msl-${msl-package-lower}',
