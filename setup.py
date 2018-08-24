@@ -95,7 +95,7 @@ sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
 setup(
     name=fetch_init('_PKG_NAME'),
-    version=fetch_init('__version__'),
+    version=fetch_init('__version__').split('.')[:3],
     author=fetch_init('__author__'),
     author_email='joseph.borbely@measurement.govt.nz',
     url='https://github.com/MSLNZ/' + fetch_init('_PKG_NAME'),
