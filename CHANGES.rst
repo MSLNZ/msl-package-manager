@@ -2,16 +2,16 @@
 Release Notes
 =============
 
-Version 2.1.0.dev0
-==================
+Version 2.1.0 (2018.08.24)
+==========================
 
 - Added
 
+  * *autodoc_default_options* to conf.py for Sphinx 1.8 support
+  * *nitpicky* to conf.py
+  * the ``version_info`` named tuple now includes a *releaselevel*
   * can now update the MSL Package Manager using `msl update package-manager`
-
-- Changed
-
-  * updates to the documentation
+  * Python 3.7 support
 
 - Removed
 
