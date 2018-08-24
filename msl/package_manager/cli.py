@@ -8,7 +8,7 @@ import sys
 import logging
 from pkg_resources import parse_version
 
-from . import utils, __version__, _PKG_NAME
+from . import utils, version_info, _PKG_NAME
 
 PARSER = None
 
@@ -35,7 +35,7 @@ def configure_parser():
     PARSER.add_argument(
         '-V', '--version',
         action='version',
-        version='{} {}'.format(_PKG_NAME, __version__),
+        version='{} {}.{}.{}'.format(_PKG_NAME, *version_info),
         help='Show the MSL Package Manager version number and exit.'
     )
 
@@ -92,10 +92,11 @@ def _main(*args):
 
     pkgs = utils.pypi()
     latest = pkgs[_PKG_NAME]['version']
-    if parse_version(latest) > parse_version(__version__):
+    if parse_version(latest) > parse_version('{}.{}.{}'.format(*version_info)):
+        v = '{}.{}.{}'.format(*version_info)
         utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
                           'You should consider upgrading via the \'msl update package-manager\''
-                          ' command.'.format(_PKG_NAME, __version__, latest))
+                          ' command.'.format(_PKG_NAME, v, latest))
 
 
 def main(*args):
