@@ -4,6 +4,7 @@ Functions for the API.
 .. _packages: https://pypi.org/search/?q=msl-
 .. _git: https://git-scm.com
 .. _repositories: https://github.com/MSLNZ
+.. _JSON: https://www.json.org/
 """
 import re
 import os
@@ -194,7 +195,7 @@ def github(update_cache=False):
     return _sort_packages(pkgs)
 
 
-def info(from_github=False, detailed=False, from_pypi=False, update_cache=False):
+def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     """Show the information about MSL packages.
 
     The information about the packages can be either those that are installed or
@@ -206,10 +207,6 @@ def info(from_github=False, detailed=False, from_pypi=False, update_cache=False)
     ----------
     from_github : :class:`bool`, optional
         Whether to show the MSL repositories_ that are available on GitHub.
-    detailed : :class:`bool`, optional
-        Whether to show **detailed** information about the MSL repositories_
-        (i.e., displays additional information about the branches and tags).
-        Only used if `from_github` is :data:`True`.
     from_pypi : :class:`bool`, optional
         Whether to show the MSL packages_ that are available on PyPI.
     update_cache : :class:`bool`, optional
@@ -220,6 +217,10 @@ def info(from_github=False, detailed=False, from_pypi=False, update_cache=False)
         this function. If `from_github` is :data:`True` then the cache for the
         repositories_ is updated. If `from_pypi` is :data:`True` then the cache for the
         packages_ is updated.
+    as_json : :class:`bool`, optional
+        Whether to show the information in JSON_ format. If enabled then the information
+        about the MSL repositories_ includes additional information about the branches
+        and tags.
     """
     if from_github:
         typ, pkgs = 'Repository', github(update_cache=update_cache)
@@ -232,7 +233,7 @@ def info(from_github=False, detailed=False, from_pypi=False, update_cache=False)
     else:
         typ, pkgs = 'Package', installed()
 
-    if detailed and from_github:
+    if as_json:
         log.info(Fore.RESET)
         log.info(json.dumps(pkgs, indent=2))
         return

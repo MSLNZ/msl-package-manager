@@ -17,7 +17,7 @@ packages available on PyPI.
 EXAMPLE = """
 Examples:
     msl list
-    msl list --github --detailed
+    msl list --github --json
     msl list --pypi
 """
 
@@ -43,12 +43,12 @@ def add_parser_list(parser):
         help='Show the information about the GitHub repositories.'
     )
     p.add_argument(
-        '-d', '--detailed',
+        '-j', '--json',
         action='store_true',
         default=False,
-        help='Show the detailed information, includes information\n'
-             'about the branches and tags, for the GitHub\n'
-             'repositories in JSON format.'
+        help='Show the information in JSON format.\n'
+             'For the GitHub repositories this includes additional\n'
+             'information about the branches and tags.'
     )
     add_argument_quiet(p)
     add_argument_update_cache(p)
@@ -57,4 +57,4 @@ def add_parser_list(parser):
 
 def execute(args, parser):
     """Executes the :ref:`list <list_cli>` command."""
-    info(args.github, args.detailed, args.pypi, args.update_cache)
+    info(args.github, args.pypi, args.update_cache, args.json)
