@@ -92,7 +92,7 @@ def add_argument_tag(parser):
 def add_argument_update_cache(parser):
     """Add an ``--update-cache`` argument to the parser."""
     parser.add_argument(
-        '--update-cache',
+        '-uc', '--update-cache',
         action='store_true',
         default=False,
         help='Force the GitHub and PyPI caches to be updated.\n'
