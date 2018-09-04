@@ -233,6 +233,7 @@ def info(from_github=False, detailed=False, from_pypi=False, update_cache=False)
         typ, pkgs = 'Package', installed()
 
     if detailed and from_github:
+        log.info(Fore.RESET)
         log.info(json.dumps(pkgs, indent=2))
         return
 
@@ -247,7 +248,7 @@ def info(from_github=False, detailed=False, from_pypi=False, update_cache=False)
         ]
 
     # log the results
-    msg = ['']
+    msg = [Fore.RESET]
     msg.append(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
     msg.append(' '.join('-' * width for width in w))
     for p in sorted(pkgs):
@@ -601,7 +602,7 @@ def _log_install_uninstall_message(packages, action, branch, tag):
         if not has_version_info:
             has_version_info = len(pkgs[p]['version']) > 0
 
-    msg = '\nThe following MSL packages will be {}{}{}:\n'.format(Fore.CYAN, action, Fore.RESET)
+    msg = '\n{}The following MSL packages will be {}{}{}:\n'.format(Fore.RESET, Fore.CYAN, action, Fore.RESET)
     for pkg, values in pkgs.items():
         if has_version_info or branch or tag:
             pkg += ':'

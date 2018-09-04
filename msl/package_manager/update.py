@@ -133,7 +133,7 @@ def update(*names, **kwargs):
     if pkgs_to_update:
         pkgs_to_update = utils._sort_packages(pkgs_to_update)
 
-        msg = '\nThe following MSL packages will be {}UPDATED{}:\n'.format(Fore.CYAN, Fore.RESET)
+        msg = '\n{}The following MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
         for pkg in pkgs_to_update:
             local, remote, _ = pkgs_to_update[pkg]
             pkg += ': '
