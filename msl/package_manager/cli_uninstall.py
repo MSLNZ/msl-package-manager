@@ -5,6 +5,7 @@ from .cli_argparse import add_argument_all
 from .cli_argparse import add_argument_package_names
 from .cli_argparse import add_argument_yes
 from .cli_argparse import add_argument_quiet
+from .cli_argparse import add_argument_disable_mslpm_version_check
 from .uninstall import uninstall
 
 DESCRIPTION = '{} MSL packages.'
@@ -35,6 +36,7 @@ def add_parser_uninstall(parser, name='uninstall'):
     add_argument_all(p)
     add_argument_yes(p)
     add_argument_quiet(p)
+    add_argument_disable_mslpm_version_check(p)
     p.set_defaults(func=execute)
 
 

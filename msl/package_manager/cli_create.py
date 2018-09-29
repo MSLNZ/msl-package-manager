@@ -6,7 +6,7 @@ from .create import create
 from .cli_argparse import add_argument_package_names
 from .cli_argparse import add_argument_yes
 from .cli_argparse import add_argument_quiet
-
+from .cli_argparse import add_argument_disable_mslpm_version_check
 
 HELP = 'Create a new MSL package.'
 
@@ -69,6 +69,7 @@ def add_parser_create(parser):
              'in the current working directory.'
     )
     add_argument_quiet(p)
+    add_argument_disable_mslpm_version_check(p)
     p.set_defaults(func=execute)
 
 

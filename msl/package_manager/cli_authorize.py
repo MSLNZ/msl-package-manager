@@ -5,6 +5,7 @@ import getpass
 
 from .utils import log, get_username, _get_input, _GITHUB_AUTH_PATH
 from .cli_argparse import add_argument_quiet
+from .cli_argparse import add_argument_disable_mslpm_version_check
 
 WARNING_MESSAGE = """
 Your username and password are saved in plain text in the file that
@@ -46,6 +47,7 @@ def add_parser_authorize(parser):
         epilog=EXAMPLE,
     )
     add_argument_quiet(p)
+    add_argument_disable_mslpm_version_check(p)
     p.set_defaults(func=execute)
 
 

@@ -8,6 +8,7 @@ from .cli_argparse import add_argument_tag
 from .cli_argparse import add_argument_update_cache
 from .cli_argparse import add_argument_yes
 from .cli_argparse import add_argument_quiet
+from .cli_argparse import add_argument_disable_mslpm_version_check
 from .update import update
 
 DESCRIPTION = """{} MSL packages.
@@ -45,6 +46,7 @@ def add_parser_update(parser, name='update'):
     add_argument_branch(p)
     add_argument_quiet(p)
     add_argument_update_cache(p)
+    add_argument_disable_mslpm_version_check(p)
     p.set_defaults(func=execute)
 
 

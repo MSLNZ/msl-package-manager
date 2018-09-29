@@ -52,7 +52,7 @@ def add_argument_branch(parser):
         '-b', '--branch',
         help='The GitHub branch to use to {} the package.\n'
              'Cannot specify both the branch and the tag.'
-            .format(parser.get_command_name()),
+             .format(parser.get_command_name()),
     )
 
 
@@ -63,7 +63,7 @@ def add_argument_package_names(parser):
         nargs='*',
         help='The name(s) of the MSL package(s) to {}.\n'
              'The "msl-" prefix can be omitted.'
-            .format(parser.get_command_name())
+             .format(parser.get_command_name())
     )
 
 
@@ -85,7 +85,7 @@ def add_argument_tag(parser):
         '-t', '--tag',
         help='The GitHub tag to use to {} the package.\n'
              'Cannot specify both the tag and the branch.'
-            .format(parser.get_command_name()),
+             .format(parser.get_command_name()),
     )
 
 
@@ -100,7 +100,7 @@ def add_argument_update_cache(parser):
              'for subsequent calls to the {} command. After 24\n'
              'hours the cache is automatically updated. Include\n'
              'this argument to force the cache to be updated now.'
-            .format(parser.get_command_name()),
+             .format(parser.get_command_name()),
     )
 
 
@@ -111,5 +111,16 @@ def add_argument_yes(parser):
         action='store_true',
         default=False,
         help='Don\'t ask for confirmation to {} the package(s).'
-            .format(parser.get_command_name()),
+             .format(parser.get_command_name()),
+    )
+
+
+def add_argument_disable_mslpm_version_check(parser):
+    """Add a ``--disable-mslpm-version-check`` argument to the parser."""
+    parser.add_argument(
+        '--disable-mslpm-version-check',
+        action='store_true',
+        default=False,
+        help='Don\'t check if there is a new version of the\n'
+             'MSL-Package-Manager available.',
     )
