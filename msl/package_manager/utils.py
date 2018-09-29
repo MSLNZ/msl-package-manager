@@ -313,7 +313,7 @@ def pypi(update_cache=False):
     try:
         log.debug('Getting the packages from PyPI')
         command = [sys.executable, '-m', 'pip', 'search', 'msl-']
-        options = ['--quiet'] * _NUM_QUIET
+        options = ['--disable-pip-version-check'] + ['--quiet'] * _NUM_QUIET
         p2 = subprocess.Popen(command + options, stdout=subprocess.PIPE)
         stdout = p2.communicate()[0].decode('utf-8').strip()
     except Exception as err:

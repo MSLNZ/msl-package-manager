@@ -61,10 +61,9 @@ def uninstall(*names, **kwargs):
     utils.log.info('')
 
     exe = [sys.executable, '-m', 'pip', 'uninstall']
-    options = ['--yes'] + ['--quiet'] * utils._NUM_QUIET
+    options = ['--disable-pip-version-check', '--yes'] + ['--quiet'] * utils._NUM_QUIET
     for pkg in packages:
         subprocess.call(exe + options + [pkg])
-
         with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'w') as fp:
             fp.writelines(msl_init)
         with open(os.path.join(os.path.dirname(__file__), '..', 'examples', '__init__.py'), 'w') as fp:

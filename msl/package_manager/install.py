@@ -77,7 +77,7 @@ def install(*names, **kwargs):
     utils.log.info('')
 
     exe = [sys.executable, '-m', 'pip', 'install']
-    options = ['--quiet'] * utils._NUM_QUIET
+    options = ['--disable-pip-version-check'] + ['--quiet'] * utils._NUM_QUIET
     github_options = ['--process-dependency-links']
     for pkg in packages:
         if pkg in pkgs_pypi and branch is None and tag is None:

@@ -154,7 +154,8 @@ def update(*names, **kwargs):
         is_windows = sys.platform in {'win32', 'cygwin'}
 
         exe = [sys.executable, '-m', 'pip', 'install']
-        options = ['--upgrade', '--force-reinstall', '--no-deps'] + ['--quiet'] * utils._NUM_QUIET
+        options = ['--disable-pip-version-check', '--upgrade', '--force-reinstall', '--no-deps']
+        options += ['--quiet'] * utils._NUM_QUIET
         for pkg in pkgs_to_update:
             if pkgs_to_update[pkg][2]:
                 utils.log.debug('Updating {} from PyPI'.format(pkg))
