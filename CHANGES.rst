@@ -7,15 +7,17 @@ Version 2.2.0-dev0
 
 - Added
 
-  * ``-uc`` alias for `--upgrade-cache``
+  * a ``--disable-mslpm-version-check`` flag
+  * ``-uc`` alias for ``--upgrade-cache``
 
 - Changed
 
+  * disable pip from checking for version updates by using the ``--disable-pip-version-check`` flag
   * rename the ``--detailed`` flag to be ``--json``
 
 - Fixed
 
-  * reset colorama after being notified about a pip upgrade
+  * bug where colorama was not resetting properly
 
 Version 2.1.0 (2018.08.24)
 ==========================
