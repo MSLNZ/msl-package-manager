@@ -128,7 +128,7 @@ Run the tests with all conda environment_\s and exclude those that contain "py26
 
 .. code-block:: console
 
-   python envstest.py -e py26 py33
+   python envstest.py -x py26 py33
 
 .. tip::
 

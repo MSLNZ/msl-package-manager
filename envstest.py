@@ -77,12 +77,12 @@ def ini_parser():
 
 
 def cli_parser(args):
-    p = argparse.ArgumentParser()
+    p = argparse.ArgumentParser(description='Run the tests in conda environments.')
     p.add_argument('-l', '--list', action='store_true', help='list the conda environments and then exit')
     p.add_argument('-s', '--show', action='store_true', help='alias for --list')
-    p.add_argument('-i', '--include', default=[], nargs='+', help='the conda environments to include')
-    p.add_argument('-e', '--exclude', default=[], nargs='+', help='the conda environments to exclude')
-    p.add_argument('-c', '--command', default='setup.py test', help='the command to execute with each environment')
+    p.add_argument('-i', '--include', default=[], nargs='+', help='the conda environments to include (supports regex)')
+    p.add_argument('-x', '--exclude', default=[], nargs='+', help='the conda environments to exclude (supports regex)')
+    p.add_argument('-c', '--command', default='setup.py tests', help='the command to execute with each environment')
     return p.parse_args(args)
 
 
@@ -109,7 +109,9 @@ def main(*args):
     bin = 'bin' if (sys.platform.startswith('linux') or sys.platform == 'darwin') else ''
 
     for env in envs.values():
-        if subprocess.call([os.path.join(env, bin, 'python')] + command):
+        cmd = [os.path.join(env, bin, 'python')] + command
+        print('\nTesting with: ' + ' '.join(cmd))
+        if subprocess.call(cmd):
             return
 
     print('\nAll tests passed with the following conda environments:')
