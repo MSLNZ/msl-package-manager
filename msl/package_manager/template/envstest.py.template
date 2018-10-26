@@ -78,11 +78,11 @@ def ini_parser():
 
 def cli_parser(args):
     p = argparse.ArgumentParser()
-    p.add_argument('-l', '--list', action='store_true', help='list the conda envs that will be used then exit')
+    p.add_argument('-l', '--list', action='store_true', help='list the conda environments and then exit')
     p.add_argument('-s', '--show', action='store_true', help='alias for --list')
-    p.add_argument('-i', '--include', default=[], nargs='+', help='the conda envs to include')
-    p.add_argument('-e', '--exclude', default=[], nargs='+', help='the conda envs to exclude')
-    p.add_argument('-c', '--command', default=['setup.py', 'test'], nargs='+', help='the command to execute in each env')
+    p.add_argument('-i', '--include', default=[], nargs='+', help='the conda environments to include')
+    p.add_argument('-e', '--exclude', default=[], nargs='+', help='the conda environments to exclude')
+    p.add_argument('-c', '--command', default='setup.py test', help='the command to execute with each environment')
     return p.parse_args(args)
 
 
@@ -101,16 +101,15 @@ def main(*args):
         print_envs(envs)
         return
 
-    if len(args.command) == 1:
-        args.command = args.command[0].split()
+    command = args.command.split()
+    typ = command[0]
+    if typ.startswith('pytest') or typ.startswith('unittest') or typ.startswith('nose'):
+        command.insert(0, '-m')
 
     bin = 'bin' if (sys.platform.startswith('linux') or sys.platform == 'darwin') else ''
-    for env in envs.values():
-        typ = args.command[0]
-        if typ.startswith('pytest') or typ.startswith('unittest') or typ.startswith('nose'):
-            args.command.insert(0, '-m')
 
-        if subprocess.call([os.path.join(env, bin, 'python')] + args.command):
+    for env in envs.values():
+        if subprocess.call([os.path.join(env, bin, 'python')] + command):
             return
 
     print('\nAll tests passed with the following conda environments:')
