@@ -7,7 +7,7 @@ This guide shows you how to:
 
 * :ref:`set up`
 * :ref:`commit changes`
-* :ref:`setup and test_envs scripts`
+* :ref:`setup and envstest scripts`
 * :ref:`style guide`
 
 This guide describes *one way* to set up a Python environment and it does not intend to imply that the following
@@ -174,12 +174,12 @@ on how to use git.
    
       .. image:: _static/pycharm_github_commit3.png
 
-.. _setup and test_envs scripts:
+.. _setup and envstest scripts:
 
-Use the setup.py and test_envs.py scripts
+Use the setup.py and envstest.py scripts
 -----------------------------------------
-MSL packages come with two scripts to help make development easier: **setup.py** and **test_envs.py**. See the
-:ref:`"Create" ReadMe <create_readme>` page for an overview on how to use these scripts.
+MSL packages come with two scripts to help make development easier: :ref:`create_readme_setup` and
+:ref:`create_readme_envstest`. See the :ref:`create_readme` page for an overview on how to use these scripts.
 
 .. _style guide:
 
