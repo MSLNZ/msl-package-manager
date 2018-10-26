@@ -24,8 +24,9 @@ that can be used to run unit tests and to create the documentation for your MSL 
    your package manager then replace ``conda`` with ``pip``.
 
 The following command will run all test modules that pytest_ finds as well as testing all the example code that is
-located within the docstrings of the source code. A coverage_ report is created in the **htmlcov/index.html** file.
-This report provides an overview of which functions, classes, and methods are being tested and not tested.
+located within the docstrings of the source code. To modify the options that pytest_ will use to run the tests you
+can edit the **[tool:pytest]** section in **setup.cfg**. A coverage_ report is created in the **htmlcov/index.html**
+file. This report provides an overview of which parts of the code have been executed during the tests.
 
 .. code-block:: console
 
