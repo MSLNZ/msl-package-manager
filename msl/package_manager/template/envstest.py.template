@@ -2,7 +2,7 @@
 Run the tests in conda environments.
 
 For more information see:
-  https://msl-package-manager.readthedocs.io/en/latest/new_package_readme.html#envstest-py
+  https://msl-package-manager.readthedocs.io/en/latest/new_package_readme.html#create-readme-envstest
 """
 import os
 import re
