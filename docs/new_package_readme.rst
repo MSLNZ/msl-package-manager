@@ -60,6 +60,12 @@ You can view additional help for **setup.py** by running
 
    python setup.py --help
 
+or
+
+.. code-block:: console
+
+   python setup.py --help-commands
+
 .. _create_readme_envstest:
 
 envstest.py
