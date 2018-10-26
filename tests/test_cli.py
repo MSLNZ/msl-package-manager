@@ -117,61 +117,61 @@ def test_list_args():
 
     args = get_args('list')
     assert not args.github
-    assert not args.detailed
+    assert not args.json
     assert not args.pypi
     assert not args.update_cache
 
     args = get_args('list -g')
     assert args.github
-    assert not args.detailed
+    assert not args.json
     assert not args.pypi
     assert not args.update_cache
 
     args = get_args('list --github')
     assert args.github
-    assert not args.detailed
+    assert not args.json
     assert not args.pypi
     assert not args.update_cache
 
     args = get_args('list -g')
     assert args.github
-    assert not args.detailed
+    assert not args.json
     assert not args.pypi
     assert not args.update_cache
 
     args = get_args('list --update-cache')
     assert not args.github
-    assert not args.detailed
+    assert not args.json
     assert not args.pypi
     assert args.update_cache
 
-    args = get_args('list -d')
+    args = get_args('list -j')
     assert not args.github
-    assert args.detailed
+    assert args.json
     assert not args.pypi
     assert not args.update_cache
 
-    args = get_args('list --detailed')
+    args = get_args('list --json')
     assert not args.github
-    assert args.detailed
+    assert args.json
     assert not args.pypi
     assert not args.update_cache
 
-    args = get_args('list -d -g --update-cache')
+    args = get_args('list -j -g --update-cache')
     assert args.github
-    assert args.detailed
+    assert args.json
     assert not args.pypi
     assert args.update_cache
 
     args = get_args('list -p --update-cache')
     assert not args.github
-    assert not args.detailed
+    assert not args.json
     assert args.pypi
     assert args.update_cache
 
     args = get_args('list --pypi --update-cache')
     assert not args.github
-    assert not args.detailed
+    assert not args.json
     assert args.pypi
     assert args.update_cache
 
