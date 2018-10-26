@@ -12,6 +12,7 @@ Version 2.2.0-dev0
 
 - Changed
 
+  * renamed ``test_envs.py`` to ``envstest.py`` and made it compatible with an optional **envstest.ini** file
   * disable pip from checking for version updates by using the ``--disable-pip-version-check`` flag
   * rename the ``--detailed`` flag to be ``--json``
 
