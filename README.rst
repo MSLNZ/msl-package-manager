@@ -1,4 +1,4 @@
-MSL Package Manager
+MSL-Package-Manager
 ===================
 
 |docs| |pypi|
