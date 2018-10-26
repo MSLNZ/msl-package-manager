@@ -101,13 +101,16 @@ def main(*args):
         print_envs(envs)
         return
 
+    if len(args.command) == 1:
+        args.command = args.command[0].split()
+
     bin = 'bin' if (sys.platform.startswith('linux') or sys.platform == 'darwin') else ''
     for env in envs.values():
-        cmd = ' '.join(args.command)
-        if cmd.startswith('pytest') or cmd.startswith('unittest') or cmd.startswith('nose'):
-            cmd = '-m ' + cmd
+        typ = args.command[0]
+        if typ.startswith('pytest') or typ.startswith('unittest') or typ.startswith('nose'):
+            args.command.insert(0, '-m')
 
-        if subprocess.call(os.path.join(env, bin, 'python') + ' ' + cmd):
+        if subprocess.call([os.path.join(env, bin, 'python')] + args.command):
             return
 
     print('\nAll tests passed with the following conda environments:')
