@@ -32,15 +32,26 @@ file. This report provides an overview of which parts of the code have been exec
 
    python setup.py tests
 
-Create the documentation files (uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_),
+.. warning::
+
+   pytest_ can only load one configuration file and uses the following search order to find that file:
+
+      1. *pytest.ini* - used even if it does not contain a **[pytest]** section
+      2. *tox.ini* - must contain a **[pytest]** section to be used
+      3. *setup.cfg* - must contain a **[tool:pytest]** section to be used
+
+   See the :ref:`envstest-ini` section for an example if you want to run pytest_ with custom options without
+   modifying any of these configuration files.
+
+Create the documentation files, uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_,
 which can be viewed by opening **docs/_build/html/index.html**
 
 .. code-block:: console
 
    python setup.py docs
 
-Automatically create the API documentation from the docstrings in the source code (uses
-`sphinx-apidoc <https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_), which are saved to
+Automatically create the API documentation from the docstrings in the source code, uses
+`sphinx-apidoc <https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_, which are saved to
 **docs/_autosummary**
 
 .. code-block:: console
@@ -80,16 +91,20 @@ conda_ were not compatible_ and so this script provided a way around this issue.
 
 You can either pass options from the :ref:`envstest-cli` or by creating a :ref:`envstest-ini`. If you do not specify
 any command-line arguments to **envstest.py** then the configuration file will automatically be used; however, if no
-configuration file exists then the tests will be run with the default settings, which are to run *setup.py test*
+configuration file exists then the tests will be run with the default settings, which are to run ``setup.py tests``
 (see :ref:`create_readme_setup`) with all conda environment_\s.
+
+.. note::
+
+   A regex search is performed when filtering environment_ names for the ``--include`` and ``--exclude`` options.
 
 .. _envstest-cli:
 
 command line
 ++++++++++++
 
-Run the tests with all conda environment_\'s using the *setup.py test* command (see :ref:`create_readme_setup`).
-This assumes that a :ref:`envstest-ini` does not exist.
+Run the tests with all conda environment_\'s using the ``setup.py tests`` command (see :ref:`create_readme_setup`).
+This assumes that a :ref:`envstest-ini` does not exist (which could change the default options).
 
 .. code-block:: console
 
@@ -117,32 +132,33 @@ Run the tests with all conda environment_\s and exclude those that contain "py26
 
 .. tip::
 
-   The environment_ names following the ``--include`` and ``--exclude`` arguments support regex. Therefore,
-   the above command could be replaced with ``python envstest.py --exclude "py(26|33)"``. Using ``"``
-   is necessary so that the *OR*, ``|``, regex symbol is not mistaken for a pipe_ symbol.
+   Since a regex search is used to filter the environment_ names that follow the ``--exclude``
+   (and also the ``--include``) option, the above command could be replaced with
+   ``--exclude "py(26|33)"``. Surrounding the regex pattern with a ``"`` is necessary so that the
+   *OR*, ``|``, regex symbol is not mistaken for a pipe_ symbol.
 
-Run the tests with all conda environment_\s that include "dev" in the environment_ name and exclude those with
-"dev33" in the environment_ name
+Run the tests with all conda environment_\s that include "dev" in the environment_ name and exclude
+those with "dev33" in the environment_ name
 
 .. code-block:: console
 
    python envstest.py --include dev --exclude dev33
 
-Run the tests with all conda environment_\s using the command *pytest*
+Run the tests with all conda environment_\s using the command ``nosetests``
 
 .. code-block:: console
 
-   python envstest.py --command pytest
+   python envstest.py --command nosetests
 
 .. code-block:: console
 
-   python envstest.py -c pytest
+   python envstest.py --c nosetests
 
-Run the tests with all conda environment_\s using the command *pytest --verbose*
+Run the tests with all conda environment_\s using the command ``unittest discover -s tests/``
 
 .. code-block:: console
 
-   python envstest.py --command "pytest --verbose"
+   python envstest.py --command "unittest discover -s tests/"
 
 List all conda environment_\s that are available and then exit
 
@@ -171,36 +187,30 @@ You can view the help for **envstest.py** by running
 configuration file
 ++++++++++++++++++
 
-To read the options to use when running the tests, instead of passing the options by the :ref:`envstest-cli`, create
-a file called **envstest.ini** in the same directory as the **envstest.py** file and then run
+In addition to passing :ref:`envstest-cli` options, you can also save the options in an **envstest.ini**
+configuration file, which must be saved to the same directory as the **envstest.py** file. This is a standard
+ini-style configuration file with the options (e.g., *include*, *exclude*, *command*) specified under the
+**[envs]** section. This configuration file is loaded when the following command is executed
 
 .. code-block:: console
 
    python envstest.py
 
-Since every developer who is running the tests can have different environment_\s available the **envstest.ini**
-file is automatically included in the **.gitignore** file.
+Since every developer can name their environment_\s to be anything that they want the **envstest.ini**
+file is included in **.gitignore**.
 
 The following are example **envstest.ini** files.
 
-**Example 1**: Run *pytest* with all conda environment_\s
+**Example 1**: Run the tests with all conda environment_\s except for the "base" environment_
 
 .. code-block:: ini
 
    [envs]
-   command=pytest
+   exclude=base
 
-**Example 2**: Run *unittest*, for all modules in the **tests** directory, with all conda environment_\s
-that include the text ``dev`` in the environment_ name
-
-.. code-block:: ini
-
-   [envs]
-   include=dev
-   command=unittest discover -s tests/
-
-**Example 3**: Run *setup.py test* (see :ref:`create_readme_setup`) with all conda environment_\s that include the
-text "py" in the name of the environment_ and exclude the environment_ that contains "py33" in the name
+**Example 2**: Run the tests with all conda environment_\s that include the text "py" in the name of the environment_
+and exclude the environment_\s that contain "py33" in the name (recall that a regex search is used to filter the
+environment_ names)
 
 .. code-block:: ini
 
@@ -208,13 +218,28 @@ text "py" in the name of the environment_ and exclude the environment_ that cont
    include=py
    exclude=py33
 
-**Example 4**: Run *pytest --verbose -x*  in the specified conda environment_\s
+**Example 3**: Run ``unittest``, for all modules in the **tests** directory, with all conda environment_\s
+that include the text "dev" in the environment_ name
+
+.. code-block:: ini
+
+   [envs]
+   include=dev
+   command=unittest discover -s tests/
+
+**Example 4**: Run pytest_ with customized options (i.e., ignoring any *pytest.ini*, *tox.ini* or *setup.cfg*
+files that might exist) with the specified conda environment_\s.
 
 .. code-block:: ini
 
    [envs]
    include=dev27, myenvironment, py37
-   command=pytest --verbose -x
+   command=pytest -c envstest.ini
+
+   [pytest]
+   addopts =
+      -x
+     --verbose
 
 .. _compatible: https://github.com/tox-dev/tox/issues/273
 .. _pytest: https://doc.pytest.org/en/latest/
