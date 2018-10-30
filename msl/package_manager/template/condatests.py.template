@@ -2,7 +2,7 @@
 Run the tests in conda environments.
 
 For more information see:
-  https://msl-package-manager.readthedocs.io/en/latest/new_package_readme.html#create-readme-envstest
+  https://msl-package-manager.readthedocs.io/en/latest/new_package_readme.html#create-readme-condatests
 """
 import os
 import re
@@ -79,7 +79,7 @@ def get_executable(env):
 
 def ini_parser():
     ini = configparser.ConfigParser()
-    ini.read('envstest.ini')
+    ini.read('condatests.ini')
 
     section = 'envs'
     if not ini.has_section(section):

@@ -4,7 +4,7 @@
 ===============
 
 The MSL package that is created by running the :ref:`msl create <create_cli>` command contains two scripts
-to help make development easier: :ref:`create_readme_setup` and :ref:`create_readme_envstest`.
+to help make development easier: :ref:`create_readme_setup` and :ref:`create_readme_condatests`.
 
 .. _create_readme_setup:
 
@@ -40,7 +40,7 @@ file. This report provides an overview of which parts of the code have been exec
       2. *tox.ini* - must contain a **[pytest]** section to be used
       3. *setup.cfg* - must contain a **[tool:pytest]** section to be used
 
-   See the :ref:`envstest-ini` section for an example if you want to run pytest_ with custom options without
+   See the :ref:`condatests-ini` section for an example if you want to run pytest_ with custom options without
    modifying any of these configuration files.
 
 Create the documentation files, uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_,
@@ -77,20 +77,20 @@ or
 
    python setup.py --help-commands
 
-.. _create_readme_envstest:
+.. _create_readme_condatests:
 
-envstest.py
+condatests.py
 -----------
 
 .. important::
    The following assumes that you are using conda_ as your environment_ manager.
 
-Additionally, there is a **envstest.py** file that is created by running :ref:`msl create <create_cli>`. This
+Additionally, there is a **condatests.py** file that is created by running :ref:`msl create <create_cli>`. This
 script will run your tests in all specified conda environment_\s. At the time of writing this script, tox_ and
 conda_ were not compatible_ and so this script provided a way around this issue.
 
-You can either pass options from the :ref:`envstest-cli` or by creating a :ref:`envstest-ini`. If you do not specify
-any command-line arguments to **envstest.py** then the configuration file will automatically be used; however, if no
+You can either pass options from the :ref:`condatests-cli` or by creating a :ref:`condatests-ini`. If you do not specify
+any command-line arguments to **condatests.py** then the configuration file will automatically be used; however, if no
 configuration file exists then the tests will be run with the default settings, which are to run ``setup.py tests``
 (see :ref:`create_readme_setup`) with all conda environment_\s.
 
@@ -98,37 +98,37 @@ configuration file exists then the tests will be run with the default settings, 
 
    A regex search is performed when filtering environment_ names for the ``--include`` and ``--exclude`` options.
 
-.. _envstest-cli:
+.. _condatests-cli:
 
 command line
 ++++++++++++
 
 Run the tests with all conda environment_\'s using the ``setup.py tests`` command (see :ref:`create_readme_setup`).
-This assumes that a :ref:`envstest-ini` does not exist (which could change the default options).
+This assumes that a :ref:`condatests-ini` does not exist (which could change the default options).
 
 .. code-block:: console
 
-   python envstest.py
+   python condatests.py
 
 Run the tests with all conda environment_\s that include "py" in the environment_ name
 
 .. code-block:: console
 
-   python envstest.py --include py
+   python condatests.py --include py
 
 .. code-block:: console
 
-   python envstest.py -i py
+   python condatests.py -i py
 
 Run the tests with all conda environment_\s and exclude those that contain "py26" and "py33" in the environment_ name
 
 .. code-block:: console
 
-   python envstest.py --exclude py26 py33
+   python condatests.py --exclude py26 py33
 
 .. code-block:: console
 
-   python envstest.py -x py26 py33
+   python condatests.py -x py26 py33
 
 .. tip::
 
@@ -142,64 +142,64 @@ those with "dev33" in the environment_ name
 
 .. code-block:: console
 
-   python envstest.py --include dev --exclude dev33
+   python condatests.py --include dev --exclude dev33
 
 Run the tests with all conda environment_\s using the command ``nosetests``
 
 .. code-block:: console
 
-   python envstest.py --command nosetests
+   python condatests.py --command nosetests
 
 .. code-block:: console
 
-   python envstest.py --c nosetests
+   python condatests.py --c nosetests
 
 Run the tests with all conda environment_\s using the command ``unittest discover -s tests/``
 
 .. code-block:: console
 
-   python envstest.py --command "unittest discover -s tests/"
+   python condatests.py --command "unittest discover -s tests/"
 
 List all conda environment_\s that are available and then exit
 
 .. code-block:: console
 
-   python envstest.py --list
+   python condatests.py --list
 
 .. code-block:: console
 
-   python envstest.py -l
+   python condatests.py -l
 
 List the conda environment_\s that include "dev" in the environment_ name and then exit
 
 .. code-block:: console
 
-   python envstest.py --include dev --list
+   python condatests.py --include dev --list
 
-You can view the help for **envstest.py** by running
+You can view the help for **condatests.py** by running
 
 .. code-block:: console
 
-   python envstest.py --help
+   python condatests.py --help
 
-.. _envstest-ini:
+.. _condatests-ini:
 
 configuration file
 ++++++++++++++++++
 
-In addition to passing :ref:`envstest-cli` options, you can also save the options in an **envstest.ini**
-configuration file, which must be saved to the same directory as the **envstest.py** file. This is a standard
+In addition to passing :ref:`condatests-cli` options, you can also save the options in an **condatests.ini**
+configuration file, which must be saved to the same directory as the **condatests.py** file. This is a standard
 ini-style configuration file with the options (e.g., *include*, *exclude*, *command*) specified under the
 **[envs]** section. This configuration file is loaded when the following command is executed
 
 .. code-block:: console
 
-   python envstest.py
+   python condatests.py
 
-Since every developer can name their environment_\s to be anything that they want the **envstest.ini**
+Since every developer can name their environment_\s to be anything that they want the **condatests.ini**
 file is included in **.gitignore**.
 
-The following are example **envstest.ini** files.
+The following are example **condatests.ini** files.
 
 **Example 1**: Run the tests with all conda environment_\s except for the "base" environment_
 
@@ -234,7 +234,7 @@ files that might exist) with the specified conda environment_\s.
 
    [envs]
    include=dev27, myenvironment, py37
-   command=pytest -c envstest.ini
+   command=pytest -c condatests.ini
 
    [pytest]
    addopts =
