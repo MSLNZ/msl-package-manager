@@ -220,7 +220,6 @@ to the code base it will be easier to understand if there is a coherent structur
 .. _sphinx-apidoc: https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html
 .. _wheel: https://pythonwheels.com/
 .. _coverage: https://coverage.readthedocs.io/en/latest/index.html
-.. _build_sphinx: https://www.sphinx-doc.org/en/latest/invocation.html#invocation-of-sphinx-build
 .. _Google Style: https://www.sphinx-doc.org/en/latest/ext/example_google.html
 .. _NumPy Style: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 .. _logging levels: https://docs.python.org/3/library/logging.html#logging-levels
