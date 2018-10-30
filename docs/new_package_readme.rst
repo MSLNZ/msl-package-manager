@@ -80,7 +80,7 @@ or
 .. _create_readme_condatests:
 
 condatests.py
------------
+-------------
 
 .. important::
    The following assumes that you are using conda_ as your environment_ manager.

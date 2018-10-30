@@ -135,7 +135,7 @@ set-up steps below.
 .. _commit changes:
 
 Commit changes to a repository
---------------------------------
+------------------------------
 The following is only a very basic example of how to upload changes to the source code to the
 `MSL-LoadLib repository`_ by using PyCharm. See `this <githelp_>`_ link for a much more detailed overview
 on how to use git.
@@ -177,7 +177,7 @@ on how to use git.
 .. _setup and condatests scripts:
 
 Use the setup.py and condatests.py scripts
------------------------------------------
+------------------------------------------
 MSL packages come with two scripts to help make development easier: :ref:`create_readme_setup` and
 :ref:`create_readme_condatests`. See the :ref:`create_readme` page for an overview on how to use these scripts.
 
