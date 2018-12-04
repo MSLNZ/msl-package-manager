@@ -16,10 +16,10 @@ import getpass
 import logging
 import datetime
 import tempfile
+import threading
 import subprocess
 import collections
 import pkg_resources
-from multiprocessing.pool import ThreadPool
 try:
     from importlib import reload
 except ImportError:
@@ -127,27 +127,32 @@ def github(update_cache=False):
         else:
             return json.loads(response.read().decode('utf-8'))
 
-    def fetch_latest_release(name):
-        reply = fetch('/repos/MSLNZ/{}/releases/latest'.format(name))
+    def fetch_latest_release(repo_name):
+        reply = fetch('/repos/MSLNZ/{}/releases/latest'.format(repo_name))
         if reply is None:
-            return name, None
-        if reply:
-            latest = reply['name'] if reply['name'] else reply['tag_name']
+            val = None
+        elif reply:
+            val = reply['name'] if reply['name'] else reply['tag_name']
+            val = val.replace('v', '')
         else:
-            latest = ''
-        return name, latest.replace('v', '')
+            val = ''
+        pkgs[repo_name]['version'] = val
 
-    def fetch_tags(name):
-        reply = fetch('/repos/MSLNZ/{}/tags'.format(name))
+    def fetch_tags(repo_name):
+        reply = fetch('/repos/MSLNZ/{}/tags'.format(repo_name))
         if reply is None:
-            return name, None
-        return name, [tag['name'] for tag in reply]
+            val = None
+        else:
+            val = [tag['name'] for tag in reply]
+        pkgs[repo_name]['tags'] = val
 
-    def fetch_branches(name):
-        reply = fetch('/repos/MSLNZ/{}/branches'.format(name))
+    def fetch_branches(repo_name):
+        reply = fetch('/repos/MSLNZ/{}/branches'.format(repo_name))
         if reply is None:
-            return name, None
-        return name, [branch['name'] for branch in reply]
+            val = None
+        else:
+            val = [branch['name'] for branch in reply]
+        pkgs[repo_name]['branches'] = val
 
     def reload_cache():
         cached_pgks, path, cached_msg = _inspect_github_pypi('github', False)
@@ -180,14 +185,22 @@ def github(update_cache=False):
         if name.startswith('msl-'):
             pkgs[name] = {'description': repo['description']}
 
-    version_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_latest_release, pkgs)
-    tags_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_tags, pkgs)
-    branches_thread = ThreadPool(len(pkgs)).imap_unordered(fetch_branches, pkgs)
-    for key, thread in (('version', version_thread), ('tags', tags_thread), ('branches', branches_thread)):
-        for repo_name, value in thread:
-            if value is None:  # then there was an error in one of the threads
+    threads = [
+        threading.Thread(target=fcn, args=(repo_name,))
+        for fcn in [fetch_latest_release, fetch_tags, fetch_branches]
+        for repo_name in pkgs
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    # check if there was an error in one of the threads
+    for repo_name, sub_dict in pkgs.items():
+        for key, value in sub_dict.items():
+            if value is None:
+                log.warning('Error getting the {} for {}'.format(key, repo_name))
                 return reload_cache()
-            pkgs[repo_name][key] = value
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
