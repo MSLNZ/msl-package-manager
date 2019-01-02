@@ -94,6 +94,9 @@ def _main(*args):
         utils.set_log_level(logging.WARNING)
 
     pkgs = utils.pypi()
+    if not pkgs:
+        return
+
     latest = pkgs[_PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
         utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'

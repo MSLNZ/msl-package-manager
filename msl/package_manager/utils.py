@@ -121,9 +121,9 @@ def github(update_cache=False):
                     msg = 'Unhandled HTTP error 403. The rate_limit was not reached...'
             else:
                 msg = 'Unhandled HTTP error...'
-
             log.error('Error requesting {} from GitHub -- {}\n{}'.format(url, err, msg))
-
+        except IOError as err:
+            log.error('Error requesting {} from GitHub -- {}'.format(url, err))
         else:
             return json.loads(response.read().decode('utf-8'))
 
@@ -323,18 +323,22 @@ def pypi(update_cache=False):
     if cached_pgks:
         return cached_pgks
 
+    log.debug('Getting the packages from PyPI')
+    command = [sys.executable, '-m', 'pip', 'search', 'msl-']
+    options = ['--disable-pip-version-check'] + ['--quiet'] * _NUM_QUIET
     try:
-        log.debug('Getting the packages from PyPI')
-        command = [sys.executable, '-m', 'pip', 'search', 'msl-']
-        options = ['--disable-pip-version-check'] + ['--quiet'] * _NUM_QUIET
-        p2 = subprocess.Popen(command + options, stdout=subprocess.PIPE)
-        stdout = p2.communicate()[0].decode('utf-8').strip()
-    except Exception as err:
-        log.error('Cannot connect to PyPI -- {}'.format(err))
-        if cached_pgks is not None:
+        p2 = subprocess.Popen(command + options, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p2.communicate()
+        if err:
+            raise Exception(err.splitlines()[-1].decode())
+    except Exception as e:
+        log.error('Cannot connect to PyPI -- {}'.format(e))
+        if cached_pgks:
             log.info(cached_msg)
             return cached_pgks
         return dict()
+    else:
+        stdout = out.decode('utf-8').strip()
 
     pkgs = dict()
     for line in stdout.splitlines():
