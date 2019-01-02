@@ -7,18 +7,23 @@ Version 2.2.0-dev0
 
 - Added
 
+  * the ``--doctest-glob='*.rst'`` and ``doctest_optionflags = NORMALIZE_WHITESPACE`` options to the
+    `setup.cfg` file that is generated when a new package is created
   * a ``--disable-mslpm-version-check`` flag
-  * ``-uc`` alias for ``--upgrade-cache``
+  * a ``-uc`` alias for ``--upgrade-cache``
 
 - Changed
 
-  * renamed ``test_envs.py`` to ``condatests.py`` and made it compatible with an optional **condatests.ini** file
+  * renamed ``test_envs.py`` to ``condatests.py`` and made it compatible with an optional `condatests.ini` file
   * disable pip from checking for version updates by using the ``--disable-pip-version-check`` flag
   * rename the ``--detailed`` flag to be ``--json``
 
 - Fixed
 
-  * bug where colorama was not resetting properly
+  * improved error handling if there is no internet connection
+  * use ``threading.Thread`` instead of ``multiprocessing.pool.ThreadPool`` when fetching info from GitHub
+    since using ``ThreadPool`` would cause some Python versions to hang (see https://bugs.python.org/issue34172)
+  * colorama was not resetting properly
 
 Version 2.1.0 (2018.08.24)
 ==========================
