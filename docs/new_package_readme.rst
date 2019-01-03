@@ -233,13 +233,19 @@ files that might exist) with the specified conda environment_\s.
 .. code-block:: ini
 
    [envs]
-   include=dev27, myenvironment, py37
+   include=dev27 myenvironment py37
    command=pytest -c condatests.ini
 
    [pytest]
    addopts =
       -x
      --verbose
+
+.. note::
+
+   The environment_ names specified in the `include` and `exclude` option can be separated by a
+   comma, by whitespace or both. So, ``include=py27,py36,py37``, ``include=py27 py36 py37`` and
+   ``include=py27, py36, py37`` are all equivalent.
 
 .. _compatible: https://github.com/tox-dev/tox/issues/273
 .. _pytest: https://doc.pytest.org/en/latest/
