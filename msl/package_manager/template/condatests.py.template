@@ -125,12 +125,13 @@ def main(*args):
     if typ.startswith('pytest') or typ.startswith('unittest') or typ.startswith('nose'):
         command.insert(0, '-m')
 
+    executable = None if IS_WINDOWS else '/bin/bash'
     for name, path in envs.items():
         activate = [] if IS_WINDOWS else ['source']
         activate.extend(['activate', name, '&&'])
         cmd = activate + get_executable(path) + command
-        print('\nTesting with the {!r} environment'.format(name))
-        if subprocess.call(cmd, shell=True):
+        print('\nTesting with the "{}" environment'.format(name))
+        if subprocess.call(' '.join(cmd), shell=True, executable=executable) != 0:
             return
 
     print('\nAll tests passed with the following conda environments:')
