@@ -35,7 +35,10 @@ from . import _PKG_NAME
 
 _NUM_QUIET = 0
 
-_GITHUB_AUTH_PATH = os.path.join(os.path.expanduser('~'), '.msl-package-manager-github-auth')
+if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.msl')):
+    os.mkdir(os.path.join(os.path.expanduser('~'), '.msl'))
+
+_GITHUB_AUTH_PATH = os.path.join(os.path.expanduser('~'), '.msl', '.mslpm-github-auth')
 
 
 def get_email():

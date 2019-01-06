@@ -54,13 +54,23 @@ def add_parser_authorize(parser):
 def execute(args, parser):
     """Executes the :ref:`authorize <authorize_cli>` command."""
     default = get_username()
-    username = _get_input('Enter your GitHub username [default: {}]: '.format(default))
+    try:
+        username = _get_input('Enter your GitHub username [default: {}]: '.format(default))
+    except KeyboardInterrupt:
+        log.warning('\nDid not create GitHub authorization file.')
+        return
+
     if not username:
         username = default
 
-    password = getpass.getpass('Enter your GitHub password: ')
+    try:
+        password = getpass.getpass('Enter your GitHub password: ')
+    except KeyboardInterrupt:
+        log.warning('\nDid not create GitHub authorization file.')
+        return
+
     if not password:
-        log.error('You must enter a password')
+        log.warning('You must enter a password. Did not create GitHub authorization file.')
         return
 
     with open(_GITHUB_AUTH_PATH, 'w') as fp:
