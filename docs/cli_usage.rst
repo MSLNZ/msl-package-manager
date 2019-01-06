@@ -23,13 +23,13 @@ fetch information about MSL repositories_. Some MSL packages_ are also available
    request will automatically update the GitHub or PyPI cache. To force the cache to be updated immediately
    include the ``--update-cache`` flag.
 
-To read the help documentation from the command line, run:
+To read the help documentation from the command line, run
 
 .. code-block:: console
 
    msl --help
 
-Or for help about a specific command:
+or, for help about a specific command (for example, the *install* command), run
 
 .. code-block:: console
 
@@ -200,11 +200,12 @@ Update the PyPI :ref:`cache <cache_note>` and then list all packages_ that are a
 
    msl list --pypi --update-cache
 
-Print the detailed information about the branches and the tags for the repositories_:
+Show the information about the repositories_ (includes information about the branches and the tags)
+in JSON_ format:
 
 .. code-block:: console
 
-   msl list --github --detailed
+   msl list --github --json
 
 .. _create_cli:
 
@@ -271,3 +272,4 @@ authorized requests to GitHub.
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
 .. _limit: https://developer.github.com/v3/#rate-limiting
 .. _github_signup: https://github.com/join?source=header-home
+.. _JSON: https://www.json.org/

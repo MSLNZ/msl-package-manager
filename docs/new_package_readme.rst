@@ -24,9 +24,10 @@ that can be used to run unit tests and to create the documentation for your MSL 
    your package manager then replace ``conda`` with ``pip``.
 
 The following command will run all test modules that pytest_ finds as well as testing all the example code that is
-located within the docstrings of the source code. To modify the options that pytest_ will use to run the tests you
-can edit the **[tool:pytest]** section in **setup.cfg**. A coverage_ report is created in the **htmlcov/index.html**
-file. This report provides an overview of which parts of the code have been executed during the tests.
+located within the docstrings of the source code and in the **.rst** files in the **docs/** directory. To modify the
+options that pytest_ will use to run the tests you can edit the **[tool:pytest]** section in **setup.cfg**.
+A coverage_ report is created in the **htmlcov/index.html** file. This report provides an overview of which parts
+of the code have been executed during the tests.
 
 .. code-block:: console
 
@@ -43,15 +44,15 @@ file. This report provides an overview of which parts of the code have been exec
    See the :ref:`condatests-ini` section for an example if you want to run pytest_ with custom options without
    modifying any of these configuration files.
 
-Create the documentation files, uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_,
-which can be viewed by opening **docs/_build/html/index.html**
+Create the documentation files, uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_.
+The documentation can be viewed by opening **docs/_build/html/index.html**
 
 .. code-block:: console
 
    python setup.py docs
 
 Automatically create the API documentation from the docstrings in the source code, uses
-`sphinx-apidoc <https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_, which are saved to
+`sphinx-apidoc <https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_. The files are saved to
 **docs/_autosummary**
 
 .. code-block:: console
@@ -86,7 +87,7 @@ condatests.py
    The following assumes that you are using conda_ as your environment_ manager.
 
 Additionally, there is a **condatests.py** file that is created by running :ref:`msl create <create_cli>`. This
-script will run your tests in all specified conda environment_\s. At the time of writing this script, tox_ and
+script will run the tests in all specified conda environment_\s. At the time of writing this script, tox_ and
 conda_ were not compatible_ and so this script provided a way around this issue.
 
 You can either pass options from the :ref:`condatests-cli` or by creating a :ref:`condatests-ini`. If you do not specify
@@ -110,7 +111,7 @@ This assumes that a :ref:`condatests-ini` does not exist (which could change the
 
    python condatests.py
 
-Run the tests with all conda environment_\s that include "py" in the environment_ name
+Run the tests with all conda environment_\s that include *py* in the environment_ name
 
 .. code-block:: console
 
@@ -120,7 +121,7 @@ Run the tests with all conda environment_\s that include "py" in the environment
 
    python condatests.py -i py
 
-Run the tests with all conda environment_\s and exclude those that contain "py26" and "py33" in the environment_ name
+Run the tests with all conda environment_\s but exclude those that contain *py26* and *py33* in the environment_ name
 
 .. code-block:: console
 
@@ -137,8 +138,8 @@ Run the tests with all conda environment_\s and exclude those that contain "py26
    ``--exclude "py(26|33)"``. Surrounding the regex pattern with a ``"`` is necessary so that the
    *OR*, ``|``, regex symbol is not mistaken for a pipe_ symbol.
 
-Run the tests with all conda environment_\s that include "dev" in the environment_ name and exclude
-those with "dev33" in the environment_ name
+Run the tests with all conda environment_\s that include *dev* in the environment_ name but exclude
+those with *dev33* in the environment_ name
 
 .. code-block:: console
 
@@ -170,7 +171,7 @@ List all conda environment_\s that are available and then exit
 
    python condatests.py -l
 
-List the conda environment_\s that include "dev" in the environment_ name and then exit
+List the conda environment_\s that include *dev* in the environment_ name and then exit
 
 .. code-block:: console
 
@@ -201,15 +202,15 @@ file is included in **.gitignore**.
 
 The following are example **condatests.ini** files.
 
-**Example 1**: Run the tests with all conda environment_\s except for the "base" environment_
+**Example 1**: Run the tests with all conda environment_\s except for the *base* environment_
 
 .. code-block:: ini
 
    [envs]
    exclude=base
 
-**Example 2**: Run the tests with all conda environment_\s that include the text "py" in the name of the environment_
-and exclude the environment_\s that contain "py33" in the name (recall that a regex search is used to filter the
+**Example 2**: Run the tests with all conda environment_\s that include the text *py* in the name of the environment_
+but exclude the environment_\s that contain *py33* in the name (recall that a regex search is used to filter the
 environment_ names)
 
 .. code-block:: ini
@@ -219,7 +220,7 @@ environment_ names)
    exclude=py33
 
 **Example 3**: Run ``unittest``, for all modules in the **tests** directory, with all conda environment_\s
-that include the text "dev" in the environment_ name
+that include the text *dev* in the environment_ name
 
 .. code-block:: ini
 

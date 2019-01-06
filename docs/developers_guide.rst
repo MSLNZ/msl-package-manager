@@ -27,8 +27,8 @@ The following instructions are written for a Windows x64 operating system. To in
 
    #!/bin/bash
    sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
-   sudo apt-get update
-   sudo apt-get install git default-jre ubuntu-make -y
+   sudo apt update
+   sudo apt install git default-jre ubuntu-make -y
    umake ide pycharm
    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
    bash Miniconda*
@@ -207,7 +207,7 @@ to the code base it will be easier to understand if there is a coherent structur
 
 .. _Miniconda: https://conda.pydata.org/miniconda.html
 .. _Windows Command Prompt: https://www.computerhope.com/issues/chusedos.htm
-.. _virtual environment: https://conda.pydata.org/docs/using/envs.html
+.. _virtual environment: https://conda.io/docs/user-guide/tasks/manage-environments.html
 .. _MSL-LoadLib repository: https://github.com/MSLNZ/msl-loadlib
 .. _git: https://git-scm.com/downloads
 .. _GitHub: https://github.com/join?source=header-home
@@ -221,7 +221,7 @@ to the code base it will be easier to understand if there is a coherent structur
 .. _wheel: https://pythonwheels.com/
 .. _coverage: https://coverage.readthedocs.io/en/latest/index.html
 .. _Google Style: https://www.sphinx-doc.org/en/latest/ext/example_google.html
-.. _NumPy Style: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
+.. _NumPy Style: https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard
 .. _logging levels: https://docs.python.org/3/library/logging.html#logging-levels
 .. _clone: https://git-scm.com/docs/git-clone
 .. _Branch: https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell
