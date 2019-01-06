@@ -2,21 +2,22 @@
 Release Notes
 =============
 
-Version 2.2.0-dev0
-==================
+Version 2.2.0 (2019.01.06)
+==========================
 
 - Added
 
   * the ``--doctest-glob='*.rst'`` and ``doctest_optionflags = NORMALIZE_WHITESPACE`` options to the
-    `setup.cfg` file that is generated when a new package is created
+    *setup.cfg* file that is generated when a new package is created
   * a ``--disable-mslpm-version-check`` flag
   * a ``-uc`` alias for ``--upgrade-cache``
 
 - Changed
 
-  * renamed ``test_envs.py`` to ``condatests.py`` and made it compatible with an optional `condatests.ini` file
+  * renamed ``test_envs.py`` to ``condatests.py`` and made it compatible with an optional *condatests.ini* file
   * disable pip from checking for version updates by using the ``--disable-pip-version-check`` flag
   * rename the ``--detailed`` flag to be ``--json``
+  * moved the GitHub authorization file to the *.msl* directory and renamed the file to be *.mslpm-github-auth*
 
 - Fixed
 
