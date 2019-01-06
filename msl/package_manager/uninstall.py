@@ -13,14 +13,14 @@ def uninstall(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`tuple` of :class:`str`
-        The name(s) of MSL package(s) to uninstall. If empty then
-        uninstall **all** MSL packages (except for the **MSL Package Manager** --
+    *names : :class:`str`
+        The name(s) of the MSL package(s) to uninstall. If not specified then
+        uninstall all MSL packages (except for the **MSL Package Manager** --
         in which case use ``pip uninstall msl-package-manager``).
     **kwargs
-        yes : :class:`bool`, default :data:`False`
+        * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before uninstalling.
-            The default is to ask before uninstalling.
+            The default is :data:`False` (ask before uninstalling).
     """
     # Python 2.7 does not support named arguments after using *args
     # we can define yes=False in the function signature

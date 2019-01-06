@@ -30,25 +30,25 @@ def update(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`tuple` of :class:`str`
-        The name(s) of the MSL package(s) to update. If empty then
-        update **all** MSL packages.
+    *names : :class:`str`
+        The name(s) of the MSL package(s) to update. If not specified then
+        update all MSL packages.
     **kwargs
-        yes : :class:`bool`, default :data:`False`
+        * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before updating.
-            The default is to ask before updating.
-        branch : :class:`str`, default :data:`None`
+            The default is :data:`False` (ask before updating).
+        * branch : :class:`str`
             The name of a GitHub branch to use for the update. If :data:`None`, and no
             `tag` value has also been specified, then updates the package using the
-            ``master`` branch.
-        tag : :class:`str`, default :data:`None`
-            The name of a GitHub tag to use for the update.
-        update_cache : :class:`bool`, default :data:`False`
+            ``master`` branch. Default is :data:`None`.
+        * tag : :class:`str`
+            The name of a GitHub tag to use for the update. Default is :data:`None`.
+        * update_cache : :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
             calls to this function. After 24 hours the cache is automatically updated. Set
             `update_cache` to be :data:`True` to force the cache to be updated when you call
-            this function.
+            this function. Default is :data:`False`.
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
