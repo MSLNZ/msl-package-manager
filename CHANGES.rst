@@ -2,8 +2,18 @@
 Release Notes
 =============
 
-Version 2.2.1.dev0
+Version 2.3.0.dev0
 ==================
+
+- Added
+
+  * ability to install, update and uninstall MSL packages that do not start with ``msl-``
+  * use of a shell-style wildcard when specifying the package name(s)
+
+- Fixed
+
+  * removed the ``--process-dependency-links`` flag when installing packages
+    (for compatibility with pip v19.0)
 
 Version 2.2.0 (2019.01.06)
 ==========================
