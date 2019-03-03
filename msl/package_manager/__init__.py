@@ -8,7 +8,7 @@ from collections import namedtuple
 
 __author__ = 'Joseph Borbely'
 __copyright__ = '\xa9 2017 - 2019, ' + __author__
-__version__ = '2.2.1.dev0'
+__version__ = '2.3.0.dev0'
 
 _v = re.search(r'(\d+)\.(\d+)\.(\d+)[.-]?(.*)', __version__).groups()
 
