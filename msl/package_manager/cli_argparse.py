@@ -50,7 +50,7 @@ def add_argument_branch(parser):
     """Add a ``--branch`` argument to the parser."""
     parser.add_argument(
         '-b', '--branch',
-        help='The GitHub branch to use to {} the package.\n'
+        help='The GitHub branch to use to {} the package(s).\n'
              'Cannot specify both the branch and the tag.'
              .format(parser.get_command_name()),
     )
@@ -62,8 +62,9 @@ def add_argument_package_names(parser):
         'names',
         nargs='*',
         help='The name(s) of the MSL package(s) to {}.\n'
-             'The "msl-" prefix can be omitted.'
-             .format(parser.get_command_name())
+             'The "msl-" prefix can be omitted (e.g., loadlib is\n'
+             'equivalent to msl-loadlib). Also accepts shell-style\n'
+             'wildcards (e.g., pr-*).'.format(parser.get_command_name())
     )
 
 
@@ -83,7 +84,7 @@ def add_argument_tag(parser):
     """Add a ``--tag`` argument to the parser."""
     parser.add_argument(
         '-t', '--tag',
-        help='The GitHub tag to use to {} the package.\n'
+        help='The GitHub tag to use to {} the package(s).\n'
              'Cannot specify both the tag and the branch.'
              .format(parser.get_command_name()),
     )

@@ -12,6 +12,7 @@ import sys
 import json
 import time
 import base64
+import fnmatch
 import getpass
 import logging
 import datetime
@@ -34,6 +35,7 @@ from colorama import Fore, Style, Back, init
 from . import _PKG_NAME
 
 _NUM_QUIET = 0
+_IS_WINDOWS = sys.platform in {'win32', 'cygwin'}
 
 if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.msl')):
     os.mkdir(os.path.join(os.path.expanduser('~'), '.msl'))
@@ -184,9 +186,8 @@ def github(update_cache=False):
 
     pkgs = dict()
     for repo in repos:
-        name = repo['name']
-        if name.startswith('msl-'):
-            pkgs[name] = {'description': repo['description']}
+        if repo['language'] == 'Python':
+            pkgs[repo['name']] = {'description': repo['description']}
 
     threads = [
         threading.Thread(target=fcn, args=(repo_name,))
@@ -202,8 +203,7 @@ def github(update_cache=False):
     for repo_name, sub_dict in pkgs.items():
         for key, value in sub_dict.items():
             if value is None:
-                log.warning('Error getting the {} for {}'.format(key, repo_name))
-                return reload_cache()
+                log.warning('The {!r} repository does not have a {!r}'.format(repo_name, key))
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
@@ -284,24 +284,40 @@ def installed():
     """
     log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
 
+    log.disabled = True
+    gh = github(update_cache=False)
+    log.disabled = False
+
     # refresh the working_set
     reload(pkg_resources)
 
     pkgs = {}
     for dist in pkg_resources.working_set:
-        if not dist.key.startswith('msl-'):
-            continue
+        repo_name = None
+        if dist.project_name in gh:  # the installed name might be different than the repo name
+            repo_name = dist.project_name
 
         description = ''
         if dist.has_metadata(dist.PKG_INFO):
             for line in dist.get_metadata_lines(dist.PKG_INFO):
                 if line.startswith('Summary:'):
-                    description = line[8:].strip()
-                    break
+                    description = line[8:].strip()  # can be UNKNOWN
+                elif line.startswith('Home-page:') and 'github.com/MSLNZ' in line:
+                    repo_name = line.split('/')[-1]
+                    if description:
+                        break
 
-        pkgs[dist.project_name] = dict()
-        pkgs[dist.project_name]['version'] = dist.version
-        pkgs[dist.project_name]['description'] = description
+        if repo_name is None:
+            continue
+
+        if description == 'UNKNOWN':
+            description = gh[repo_name]['description']
+
+        pkgs[dist.project_name] = {
+            'version': dist.version,
+            'description': description,
+            'repo_name': repo_name
+        }
 
     return _sort_packages(pkgs)
 
@@ -403,28 +419,32 @@ def _ask_proceed():
 def _check_kwargs(kwargs, allowed):
     for item in kwargs:
         if item not in allowed:
-            log.warning('Invalid kwarg "{}"'.format(item))
+            log.warning('Invalid kwarg {!r}'.format(item))
 
 
-def _check_msl_prefix(*names):
-    """Ensures that the package names start with ``msl-``.
+def _check_wildcards_and_prefix(names, pkgs):
+    """Check if a Unix shell-style wildcard was used or if the package
+    name starts with the msl- prefix.
 
-     Parameters
-     ----------
-     names : :class:`tuple` of :class:`str`
-        The package names.
+    Parameters
+    ----------
+    names : :class:`tuple` of :class:`str`
+       The package names.
+    pkgs : :class:`dict`
+       The GitHub repositories or the installed packages.
 
-     Returns
-     -------
-     :class:`list` of :class:`str`
-        A list of package names with the ``msl-`` prefix.
+    Returns
+    -------
+    :class:`set` of :class:`str`
+       A set of package names.
     """
-    _names = []
+    _names = set()
+    pkgs_map = dict((p.lower(), p) for p in pkgs)
     for name in names:
-        if name.startswith('msl-'):
-            _names.append(name)
-        else:
-            _names.append('msl-' + name)
+        name = name.lower()
+        for prefix in ['', 'msl-']:
+            for match in fnmatch.filter(pkgs_map, prefix+name):
+                _names.add(pkgs_map[match])
     return _names
 
 
@@ -435,9 +455,9 @@ def _create_install_list(names, branch, tag, update_cache):
     ----------
     names : :class:`tuple` of :class:`str`
         The name of a single GitHub repository or multiple repository names.
-    branch : :class:`str`
+    branch : :class:`str` or :data:`None`
         The name of a GitHub branch.
-    tag : :class:`str`
+    tag : :class:`str` or :data:`None`
         The name of a GitHub tag.
     update_cache : :class:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
@@ -452,22 +472,26 @@ def _create_install_list(names, branch, tag, update_cache):
         return
 
     pkgs_installed = installed()
-    pkgs_github = github(update_cache)
+    pkgs_github = github(update_cache=update_cache)
 
-    names = _check_msl_prefix(*names)
-    if not names:
-        names = [pkg for pkg in pkgs_github if pkg != _PKG_NAME]
+    if not names:  # e.g., the --all flag
+        names = [pkg for pkg in pkgs_github if pkg != _PKG_NAME and pkg.startswith('msl-')]
+    else:
+        names = _check_wildcards_and_prefix(names, pkgs_github)
+
+    # the name of an installed package can be different than the repo name
+    repo_names = [p['repo_name'] for p in pkgs_installed.values()]
 
     pkgs = {}
     for name in names:
-        if name in pkgs_installed:
-            log.warning('The {} package is already installed'.format(name))
+        if name in pkgs_installed or name in repo_names:
+            log.warning('The {!r} package is already installed.'.format(name))
         elif name not in pkgs_github:
-            log.error('Cannot install {}: package not found'.format(name))
+            log.error('Cannot install {!r}. The package is not found.'.format(name))
         elif branch is not None and branch not in pkgs_github[name]['branches']:
-            log.error('Cannot install {}: a "{}" branch does not exist'.format(name, branch))
+            log.error('Cannot install {!r}. A {!r} branch does not exist.'.format(name, branch))
         elif tag is not None and tag not in pkgs_github[name]['tags']:
-            log.error('Cannot install {}: a "{}" tag does not exist'.format(name, tag))
+            log.error('Cannot install {!r}. A {!r} tag does not exist.'.format(name, tag))
         else:
             pkgs[name] = pkgs_github[name]
     return pkgs
@@ -489,9 +513,10 @@ def _create_uninstall_list(names):
 
     pkgs_installed = installed()
 
-    names = _check_msl_prefix(*names)
     if not names:
         names = [pkg for pkg in pkgs_installed if pkg != _PKG_NAME]
+    else:
+        names = _check_wildcards_and_prefix(names, pkgs_installed)
 
     pkgs = {}
     for name in names:
@@ -499,7 +524,7 @@ def _create_uninstall_list(names):
             log.warning('The MSL Package Manager cannot uninstall itself. '
                         'Use "pip uninstall {}"'.format(_PKG_NAME))
         elif name not in pkgs_installed:
-            log.error('Cannot uninstall {}: package not installed'.format(name))
+            log.error('Cannot uninstall {!r}: The package is not installed.'.format(name))
         else:
             pkgs[name] = pkgs_installed[name]
     return pkgs
@@ -541,7 +566,7 @@ def _get_github_zip_name(branch, tag):
         and `tag` were specified.
     """
     if branch is not None and tag is not None:
-        log.error('Cannot specify both a branch ({}) and a tag ({})'.format(branch, tag))
+        log.error('Cannot specify both a branch ({}) and a tag ({}).'.format(branch, tag))
         return None
     elif branch is None and tag is None:
         return 'master'
@@ -625,8 +650,6 @@ def _log_install_uninstall_message(packages, action, branch, tag):
 
     msg = '\n{}The following MSL packages will be {}{}{}:\n'.format(Fore.RESET, Fore.CYAN, action, Fore.RESET)
     for pkg, values in pkgs.items():
-        if has_version_info or branch or tag:
-            pkg += ':'
         msg += '\n  ' + pkg.ljust(w + 1)
         if branch is not None:
             msg += ' [branch:{}]'.format(branch)

@@ -16,7 +16,9 @@ def uninstall(*names, **kwargs):
     *names : :class:`str`
         The name(s) of the MSL package(s) to uninstall. If not specified then
         uninstall all MSL packages (except for the **MSL Package Manager** --
-        in which case use ``pip uninstall msl-package-manager``).
+        in which case use ``pip uninstall msl-package-manager``). The
+        ``msl-`` prefix can be omitted (e.g., ``'loadlib'`` is equivalent to
+        ``'msl-loadlib'``). Also accepts shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
         * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before uninstalling.
@@ -31,7 +33,7 @@ def uninstall(*names, **kwargs):
 
     packages = utils._create_uninstall_list(names)
     if not packages:
-        utils.log.info('No MSL packages to uninstall')
+        utils.log.info('No MSL packages to uninstall.')
         return
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do
@@ -39,7 +41,7 @@ def uninstall(*names, **kwargs):
     if not (yes or utils._ask_proceed()):
         return
 
-    # After the MSL package gets uninstalled the "msl" namespace gets destroyed.
+    # After a MSL package gets uninstalled the "msl" namespace gets destroyed.
     # This is a known issue:
     #   https://github.com/pypa/sample-namespace-packages/issues/5
     #   https://github.com/pypa/python-packaging-user-guide/issues/314
@@ -64,7 +66,8 @@ def uninstall(*names, **kwargs):
     options = ['--disable-pip-version-check', '--yes'] + ['--quiet'] * utils._NUM_QUIET
     for pkg in packages:
         subprocess.call(exe + options + [pkg])
-        with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'w') as fp:
-            fp.writelines(msl_init)
-        with open(os.path.join(os.path.dirname(__file__), '..', 'examples', '__init__.py'), 'w') as fp:
-            fp.writelines(msl_examples_init)
+        if pkg.startswith('msl-'):
+            with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'w') as fp:
+                fp.writelines(msl_init)
+            with open(os.path.join(os.path.dirname(__file__), '..', 'examples', '__init__.py'), 'w') as fp:
+                fp.writelines(msl_examples_init)

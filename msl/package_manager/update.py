@@ -32,7 +32,9 @@ def update(*names, **kwargs):
     ----------
     *names : :class:`str`
         The name(s) of the MSL package(s) to update. If not specified then
-        update all MSL packages.
+        update all MSL packages. The ``msl-`` prefix can be omitted (e.g.,
+        ``'loadlib'`` is equivalent to ``'msl-loadlib'``). Also accepts
+        shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
         * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before updating.
@@ -71,61 +73,58 @@ def update(*names, **kwargs):
         return
 
     pkgs_installed = utils.installed()
-
-    pkgs_github = utils.github(update_cache)
-    pkgs_pypi = utils.pypi(update_cache)
+    pkgs_github = utils.github(update_cache=update_cache)
+    pkgs_pypi = utils.pypi(update_cache=update_cache)
     if not pkgs_github and not pkgs_pypi:
         return
 
-    names = utils._check_msl_prefix(*names)
     if not names:
-        names = pkgs_installed  # update all installed packages
+        names = pkgs_installed.keys()  # update all installed packages
+    else:
+        names = utils._check_wildcards_and_prefix(names, pkgs_installed)
 
     w = [0, 0]
     pkgs_to_update = dict()
     for name in names:
 
-        err_msg = 'Cannot update {}: '.format(name)
+        err_msg = 'Cannot update {!r}. '.format(name)
 
         if name not in pkgs_installed:
-            utils.log.error(err_msg + 'package not installed')
-            continue
-
-        if name not in pkgs_github and name not in pkgs_pypi:
-            utils.log.error(err_msg + 'package not found on GitHub or PyPI')
+            utils.log.error(err_msg + 'The package is not installed.')
             continue
 
         installed_version = pkgs_installed[name]['version']
 
         # use PyPI to update the package (only if the package is available on PyPI)
         using_pypi = name in pkgs_pypi and tag is None and branch is None
+        repo_name = pkgs_installed[name]['repo_name']
 
         if tag is not None:
-            if tag in pkgs_github[name]['tags']:
+            if tag in pkgs_github[repo_name]['tags']:
                 pkgs_to_update[name] = (installed_version, '[tag:{}]'.format(tag), using_pypi)
             else:
-                utils.log.error(err_msg + 'a "{}" tag does not exist'.format(tag))
+                utils.log.error(err_msg + 'A {!r} tag does not exist.'.format(tag))
                 continue
         elif branch is not None:
-            if branch in pkgs_github[name]['branches']:
+            if branch in pkgs_github[repo_name]['branches']:
                 pkgs_to_update[name] = (installed_version, '[branch:{}]'.format(branch), using_pypi)
             else:
-                utils.log.error(err_msg + 'a "{}" branch does not exist'.format(branch))
+                utils.log.error(err_msg + 'A {!r} branch does not exist.'.format(branch))
                 continue
         else:
             if using_pypi:
                 version = pkgs_pypi[name]['version']
             else:
-                version = pkgs_github[name]['version']
+                version = pkgs_github[repo_name]['version']
 
             if not version:
                 # a version number must exist on PyPI, so if this occurs it must be for a github repo
-                utils.log.error(err_msg + 'the github repository does not contain a release')
+                utils.log.error(err_msg + 'The GitHub repository does not contain a release.')
                 continue
             elif parse_version(version) > parse_version(installed_version):
                 pkgs_to_update[name] = (installed_version, version, using_pypi)
             else:
-                utils.log.warning('The {} package is already the latest [{}]'.format(name, installed_version))
+                utils.log.warning('The {!r} package is already the latest [{}]'.format(name, installed_version))
                 continue
 
         w = [max(w[0], len(name)), max(w[1], len(installed_version))]
@@ -151,20 +150,18 @@ def update(*names, **kwargs):
             value = pkgs_to_update.pop(_PKG_NAME)
             pkgs_to_update[_PKG_NAME] = value  # using an OrderedDict so this item will be last
 
-        is_windows = sys.platform in {'win32', 'cygwin'}
-
         exe = [sys.executable, '-m', 'pip', 'install']
         options = ['--disable-pip-version-check', '--upgrade', '--force-reinstall', '--no-deps']
         options += ['--quiet'] * utils._NUM_QUIET
         for pkg in pkgs_to_update:
             if pkgs_to_update[pkg][2]:
-                utils.log.debug('Updating {} from PyPI'.format(pkg))
+                utils.log.debug('Updating {!r} from PyPI'.format(pkg))
                 package = [pkg]
             else:
-                utils.log.debug('Updating {} from GitHub/{}'.format(pkg, zip_name))
+                utils.log.debug('Updating {!r} from GitHub/{}'.format(pkg, zip_name))
                 package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
 
-            if is_windows and pkg == _PKG_NAME:
+            if utils._IS_WINDOWS and pkg == _PKG_NAME:
                 # On Windows, an executable cannot replace itself while it is running. However,
                 # an executable can be renamed while it is running. Therefore, we rename msl.exe
                 # to msl.exe.old and then a new msl.exe file can be created during the update
@@ -177,4 +174,4 @@ def update(*names, **kwargs):
             return 'updating_msl_package_manager'
 
     else:
-        utils.log.info('No MSL packages to update')
+        utils.log.info('No MSL packages to update.')

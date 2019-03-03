@@ -77,6 +77,12 @@ Install multiple MSL packages:
 
    msl install loadlib equipment qt
 
+You can also use a wildcard, for example, to install all packages that start with ``pr-``:
+
+.. code-block:: console
+
+   msl install pr-*
+
 .. _uninstall_cli:
 
 uninstall

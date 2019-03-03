@@ -28,7 +28,9 @@ def install(*names, **kwargs):
     ----------
     *names : :class:`str`
         The name(s) of the MSL package(s) to install. If not specified then
-        install all MSL packages.
+        install all MSL packages that begin with the ``msl-`` prefix. The
+        ``msl-`` prefix can be omitted (e.g., ``'loadlib'`` is equivalent to
+        ``'msl-loadlib'``). Also accepts shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
         * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before installing.
@@ -65,7 +67,7 @@ def install(*names, **kwargs):
 
     packages = utils._create_install_list(names, branch, tag, update_cache)
     if not packages:
-        utils.log.info('No MSL packages to install')
+        utils.log.info('No MSL packages to install.')
         return
 
     pkgs_pypi = utils.pypi(update_cache)
@@ -76,14 +78,14 @@ def install(*names, **kwargs):
 
     utils.log.info('')
 
+    zip_extn = 'zip' if utils._IS_WINDOWS else 'tar.gz'
     exe = [sys.executable, '-m', 'pip', 'install']
     options = ['--disable-pip-version-check'] + ['--quiet'] * utils._NUM_QUIET
-    github_options = ['--process-dependency-links']
     for pkg in packages:
         if pkg in pkgs_pypi and branch is None and tag is None:
-            utils.log.debug('Installing {} from PyPI'.format(pkg))
+            utils.log.debug('Installing {!r} from PyPI'.format(pkg))
             subprocess.call(exe + options + [pkg])
         else:
-            utils.log.debug('Installing {} from GitHub/{}'.format(pkg, zip_name))
-            repo = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
-            subprocess.call(exe + options + github_options + repo)
+            utils.log.debug('Installing {!r} from GitHub/{}'.format(pkg, zip_name))
+            repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(pkg, zip_name, zip_extn)
+            subprocess.call(exe + options + [repo])

@@ -50,8 +50,8 @@ Get a dictionary of all MSL packages that are installed
    >>> for pkg, info in pkgs.items():
    ...     print(pkg, info)
    ...
-   msl-loadlib {'version': '0.3.1', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)'}
-   msl-package-manager {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages'}
+   msl-loadlib {'version': '0.3.1', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)', 'repo_name': 'msl-loadlib'}
+   msl-package-manager {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages', 'repo_name': 'msl-package-manager'}
 
 Get a dictionary of all MSL repositories_ on GitHub
 
