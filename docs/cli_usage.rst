@@ -242,12 +242,12 @@ name to use for the **author** and the **email** address by passing additional a
    msl create MyPackage --author Firstname Lastname --email my.email@address.com
 
 You can also specify where to create the package (instead of the default location which is in the current working
-directory) by specifying a value for the ``--path`` argument and to automatically accept the default **author**
+directory) by specifying a value for the ``--dir`` argument and to automatically accept the default **author**
 name and **email** address values by adding the ``--yes`` argument:
 
 .. code-block:: console
 
-   msl create MyPackage --yes --path D:\create\package\here
+   msl create MyPackage --yes --dir D:\create\package\here
 
 .. _authorize_cli:
 

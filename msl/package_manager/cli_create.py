@@ -63,9 +63,9 @@ def add_parser_create(parser):
         help='The email address of the author to use for the new package.'
     )
     p.add_argument(
-        '--path',
-        help='The path to where to create the new package.\n'
-             'If not specified then the new package will be created\n'
+        '-d', '--dir',
+        help='The directory to create the new package(s) in.\n'
+             'If not specified then the package(s) will be created\n'
              'in the current working directory.'
     )
     add_argument_quiet(p)
@@ -76,6 +76,6 @@ def add_parser_create(parser):
 def execute(args, parser):
     """Executes the :ref:`create <create_cli>` command."""
     if args.names:
-        create(*args.names, yes=args.yes, author=args.author, email=args.email, path=args.path)
+        create(*args.names, yes=args.yes, author=args.author, email=args.email, directory=args.dir)
     else:
         log.error('You must specify the name of the new package')

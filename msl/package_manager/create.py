@@ -31,28 +31,28 @@ def create(*names, **kwargs):
             The author's email address. If :data:`None` then uses
             :func:`.utils.get_email` to determine the author's email address.
             Default is :data:`None`.
-        * path : :class:`str`
-            The root path to where to create the new package. If :data:`None`
+        * directory : :class:`str`
+            The directory to create the new package(s) in. If :data:`None`
             then creates the new package(s) in the current working directory.
             Default is :data:`None`.
 
     """
     # Python 2.7 does not support named arguments after using *args
-    # we can define yes=False, author=None, email=None, path=None in the function signature
+    # we can define yes=False, author=None, email=None, directory=None in the function signature
     # if we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'author', 'email', 'path'})
+    utils._check_kwargs(kwargs, {'yes', 'author', 'email', 'directory'})
 
     yes = kwargs.get('yes', False)
     author = kwargs.get('author', None)
     email = kwargs.get('email', None)
-    path = kwargs.get('path', None)
+    directory = kwargs.get('directory', None)
 
     # ensure that the names contain valid characters for a python package
     # and that the folder does not already exist in the current working directory
     _names = [n.replace(' ', '_') for n in names]
 
-    if path is None:
-        path = os.getcwd()
+    if directory is None:
+        directory = os.getcwd()
 
     roots, pkg_names = [], []
     for name in _names:
@@ -73,7 +73,7 @@ def create(*names, **kwargs):
 
         if keep:
             msl_name = 'msl-' + name.lower()
-            root = os.path.join(path, msl_name)
+            root = os.path.join(directory, msl_name)
             if os.path.isdir(root):
                 utils.log.warning('A {} folder already exists: ignored "{}"'.format(root, name))
             else:

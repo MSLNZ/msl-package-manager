@@ -107,7 +107,7 @@ Create a new **MSL-MyPackage** package
 
 .. code-block:: pycon
 
-   >>> pm.create('MyPackage', author='my name', email='my@email.com', path='D:\\create\\here')
+   >>> pm.create('MyPackage', author='my name', email='my@email.com', directory='D:/create/here')
    Created MSL-MyPackage in D:\create\here\msl-mypackage
 
 .. _repositories: https://github.com/MSLNZ
