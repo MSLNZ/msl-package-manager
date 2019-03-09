@@ -93,14 +93,14 @@ def add_argument_tag(parser):
 def add_argument_update_cache(parser):
     """Add an ``--update-cache`` argument to the parser."""
     parser.add_argument(
-        '-uc', '--update-cache',
+        '-u', '--update-cache',
         action='store_true',
         default=False,
         help='Force the GitHub and PyPI caches to be updated.\n'
              'The information about MSL packages are cached\n'
              'for subsequent calls to the {} command. After 24\n'
              'hours the cache is automatically updated. Include\n'
-             'this argument to force the cache to be updated now.'
+             'this flag to force the cache to be updated now.'
              .format(parser.get_command_name()),
     )
 
