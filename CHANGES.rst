@@ -7,11 +7,19 @@ Version 2.3.0.dev0
 
 - Added
 
+  * the shorter ``-D`` flag for ``--disable-mslpm-version-check``
   * ability to install, update and uninstall MSL packages that do not start with ``msl-``
   * use of a shell-style wildcard when specifying the package name(s)
 
+- Changed
+
+  * renamed the optional ``--path`` argument to ``--dir`` in the `create` command
+  * renamed the ``path`` kwarg to ``directory`` in the `create` method
+  * renamed the ``-uc`` flag to ``-u`` for the ``--update-cache`` flag
+
 - Fixed
 
+  * removed the ``--quiet`` flag in the `pip search msl-` query
   * removed the ``--process-dependency-links`` flag when installing packages
     (for compatibility with pip v19.0)
 
