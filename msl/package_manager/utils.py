@@ -343,21 +343,22 @@ def pypi(update_cache=False):
         return cached_pgks
 
     log.debug('Getting the packages from PyPI')
-    command = [sys.executable, '-m', 'pip', 'search', 'msl-']
-    options = ['--disable-pip-version-check'] + ['--quiet'] * _NUM_QUIET
+    cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', '--disable-pip-version-check']
     try:
-        p2 = subprocess.Popen(command + options, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p2.communicate()
-        if err:
-            raise Exception(err.splitlines()[-1].decode())
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if err and not err.startswith('DEPRECATION: Python 2.7 will reach the end of its life'):
+            raise Exception(err.splitlines()[-1].decode('utf-8'))
     except Exception as e:
         log.error('Cannot connect to PyPI -- {}'.format(e))
-        if cached_pgks:
-            log.info(cached_msg)
-            return cached_pgks
-        return dict()
+        log.info(cached_msg)
+        return cached_pgks
     else:
         stdout = out.decode('utf-8').strip()
+        if not stdout:
+            log.error('PyPI did not return any "msl-" packages')
+            log.info(cached_msg)
+            return cached_pgks
 
     pkgs = dict()
     for line in stdout.splitlines():
@@ -367,6 +368,11 @@ def pypi(update_cache=False):
                 'version': match.group(2),
                 'description': match.group(3),
             }
+
+    if not pkgs:
+        log.critical('The regex pattern for the PyPI packages is no longer valid')
+        log.info(cached_msg)
+        return cached_pgks
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
