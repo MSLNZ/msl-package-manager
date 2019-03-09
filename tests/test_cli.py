@@ -18,6 +18,20 @@ def test_install_update_args():
         assert args.branch is None
         assert args.tag is None
 
+        args = get_args(cmd + '-u')
+        assert not args.names
+        assert not args.all
+        assert args.update_cache
+        assert args.branch is None
+        assert args.tag is None
+
+        args = get_args(cmd + '--update-cache')
+        assert not args.names
+        assert not args.all
+        assert args.update_cache
+        assert args.branch is None
+        assert args.tag is None
+
         args = get_args(cmd + '-b thebranch')
         assert not args.names
         assert not args.all
@@ -145,6 +159,12 @@ def test_list_args():
     assert not args.pypi
     assert args.update_cache
 
+    args = get_args('list -u')
+    assert not args.github
+    assert not args.json
+    assert not args.pypi
+    assert args.update_cache
+
     args = get_args('list -j')
     assert not args.github
     assert args.json
@@ -158,6 +178,12 @@ def test_list_args():
     assert not args.update_cache
 
     args = get_args('list -j -g --update-cache')
+    assert args.github
+    assert args.json
+    assert not args.pypi
+    assert args.update_cache
+
+    args = get_args('list -jgu')
     assert args.github
     assert args.json
     assert not args.pypi
