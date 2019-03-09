@@ -227,6 +227,9 @@ def test_quiet():
     args = get_args('list -q -q -q')
     assert args.quiet == 3
 
+    args = get_args('list -qqq')
+    assert args.quiet == 3
+
     cli._main(*('list', ))
     assert utils._NUM_QUIET == 0
 
@@ -234,6 +237,9 @@ def test_quiet():
     assert utils._NUM_QUIET == 1
 
     cli._main(*('list', '-q', '-q'))
+    assert utils._NUM_QUIET == 2
+
+    cli._main(*('list', '-qq'))
     assert utils._NUM_QUIET == 2
 
     cli._main(*('list', '-q', '-q', '-q'))
