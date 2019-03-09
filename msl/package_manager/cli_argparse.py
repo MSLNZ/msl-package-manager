@@ -119,7 +119,7 @@ def add_argument_yes(parser):
 def add_argument_disable_mslpm_version_check(parser):
     """Add a ``--disable-mslpm-version-check`` argument to the parser."""
     parser.add_argument(
-        '--disable-mslpm-version-check',
+        '-D', '--disable-mslpm-version-check',
         action='store_true',
         default=False,
         help='Don\'t check if there is a new version of the\n'
