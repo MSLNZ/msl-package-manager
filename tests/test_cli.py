@@ -209,6 +209,7 @@ def test_create_args():
     assert args.author is None
     assert args.email is None
     assert args.dir is None
+    assert args.namespace is None
 
     args = get_args('create -a first m. last -e my@email.com')
     assert not args.names
@@ -218,12 +219,14 @@ def test_create_args():
     assert args.author[2] == 'last'
     assert args.email == 'my@email.com'
     assert args.dir is None
+    assert args.namespace is None
 
     args = get_args('create --dir D:\\')
     assert not args.names
     assert args.author is None
     assert args.email is None
     assert args.dir == 'D:\\'
+    assert args.namespace is None
 
     args = get_args('create -a first m. last -e my@email.com --dir the/folder p1 pkg2 package3 d')
     assert len(args.names) == 4
@@ -237,6 +240,21 @@ def test_create_args():
     assert args.author[2] == 'last'
     assert args.email == 'my@email.com'
     assert args.dir == 'the/folder'
+    assert args.namespace is None
+
+    args = get_args('create --namespace pr')
+    assert not args.names
+    assert args.author is None
+    assert args.email is None
+    assert args.dir is None
+    assert args.namespace == 'pr'
+
+    args = get_args('create -n pr')
+    assert not args.names
+    assert args.author is None
+    assert args.email is None
+    assert args.dir is None
+    assert args.namespace == 'pr'
 
 
 def test_quiet():

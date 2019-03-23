@@ -8,7 +8,7 @@ import sphinx
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
 
-from msl import ${msl-package-lower}
+from ${namespace-lower} import ${msl-package-lower}
 
 # -- General configuration ------------------------------------------------
 
@@ -73,7 +73,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'MSL-${msl-package}'
+project = '${namespace}-${msl-package}'
 copyright = ${msl-package-lower}.__copyright__[1:]
 author = ${msl-package-lower}.__author__
 
@@ -131,7 +131,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'MSL-${msl-package}doc'
+htmlhelp_basename = '${namespace}-${msl-package}doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -158,7 +158,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'MSL-${msl-package}.tex', 'MSL-${msl-package} Documentation',
+    (master_doc, '${namespace}-${msl-package}.tex', '${namespace}-${msl-package} Documentation',
      'Measurement Standards Laboratory', 'manual'),
 ]
 
@@ -168,7 +168,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'MSL-${msl-package}', 'MSL-${msl-package} Documentation',
+    (master_doc, '${namespace}-${msl-package}', '${namespace}-${msl-package} Documentation',
      [author], 1)
 ]
 
@@ -179,8 +179,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'MSL-${msl-package}', 'MSL-${msl-package} Documentation',
-     author, 'MSL-${msl-package}', 'MSL-${msl-package}',
+    (master_doc, '${namespace}-${msl-package}', '${namespace}-${msl-package} Documentation',
+     author, '${namespace}-${msl-package}', '${namespace}-${msl-package}',
      'Miscellaneous'),
 ]
 

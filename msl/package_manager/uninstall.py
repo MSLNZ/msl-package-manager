@@ -4,6 +4,7 @@ Uninstall MSL packages.
 import os
 import sys
 import subprocess
+import pkg_resources
 
 from . import utils
 
@@ -54,20 +55,42 @@ def uninstall(*names, **kwargs):
     #      MSL Package Manager and then re-create the __init__.py files after a
     #      package is uninstalled.
 
-    template_dir = os.path.join(os.path.dirname(__file__), 'template', 'msl')
-    with open(os.path.join(template_dir, '__init__.py.template'), 'r') as fp:
-        msl_init = fp.readlines()
-    with open(os.path.join(template_dir, 'examples', '__init__.py.template'), 'r') as fp:
-        msl_examples_init = fp.readlines()
+    def check_if_namespace_package(package_name):
+        for dist in pkg_resources.working_set:
+            if dist.project_name in package_name:
+                split = package_name.split('-')
+                if len(split) != 2:
+                    break
+
+                examples_init_file = os.path.join(dist.module_path, split[0], 'examples', '__init__.py')
+                if not os.path.isfile(examples_init_file):
+                    break
+
+                with open(examples_init_file, 'rt') as fp:
+                    examples_init = fp.readlines()
+
+                init_file = os.path.join(dist.module_path, split[0], '__init__.py')
+                if not os.path.isfile(init_file):
+                    break
+
+                with open(init_file, 'rt') as fp:
+                    init = fp.readlines()
+
+                for line in init:
+                    if '__path__' in line and 'pkgutil' in line:
+                        return True, os.path.dirname(init_file), init, examples_init
+
+        return False, None, None, None
 
     utils.log.info('')
 
     exe = [sys.executable, '-m', 'pip', 'uninstall']
     options = ['--disable-pip-version-check', '--yes'] + ['--quiet'] * utils._NUM_QUIET
     for pkg in packages:
+        is_namespace, path, init, examples_init = check_if_namespace_package(pkg)
         subprocess.call(exe + options + [pkg])
-        if pkg.startswith('msl-'):
-            with open(os.path.join(os.path.dirname(__file__), '..', '__init__.py'), 'w') as fp:
-                fp.writelines(msl_init)
-            with open(os.path.join(os.path.dirname(__file__), '..', 'examples', '__init__.py'), 'w') as fp:
-                fp.writelines(msl_examples_init)
+        if is_namespace and os.path.isdir(path):
+            with open(os.path.join(path, '__init__.py'), 'wt') as fp:
+                fp.writelines(init)
+            with open(os.path.join(path, 'examples', '__init__.py'), 'wt') as fp:
+                fp.writelines(examples_init)

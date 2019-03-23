@@ -25,7 +25,7 @@ class ApiDocs(Command):
             '--module-first',  # put module documentation before submodule documentation
             '--separate',  # put documentation for each module on its own page
             '-o', './docs/_autosummary',  # where to save the output files
-            'msl',  # the path to the Python package to document
+            '${namespace-lower}',  # the path to the Python package to document
         ]
 
         import sphinx
@@ -83,7 +83,7 @@ def read(filename):
 
 def fetch_init(key):
     # open the __init__.py file to determine the value instead of importing the package to get the value
-    init_text = read('msl/${msl-package-lower}/__init__.py')
+    init_text = read('${namespace-lower}/${msl-package-lower}/__init__.py')
     return re.compile(r'{}\s*=\s*(.*)'.format(key)).search(init_text).group(1)[1:-1]
 
 
@@ -94,20 +94,20 @@ needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
 setup(
-    name='msl-${msl-package-lower}',
+    name='${namespace-lower}-${msl-package-lower}',
     version=fetch_init('__version__'),
     author=fetch_init('__author__'),
     author_email='${email}',
-    url='https://github.com/MSLNZ/msl-${msl-package-lower}',
-    description='Write a short description about msl-${msl-package-lower} here',
+    url='https://github.com/MSLNZ/${namespace-lower}-${msl-package-lower}',
+    description='Write a short description about ${namespace-lower}-${msl-package-lower} here',
     long_description=read('README.rst'),
     platforms='any',
     license='MIT',
     classifiers=[],  # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest'],
-    install_requires=[],  # specify the packages that ${msl-package-lower} depends on
+    install_requires=[],  # specify the packages that ${namespace-lower}-${msl-package-lower} depends on
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
-    packages=find_packages(include=('msl*',)),
+    packages=find_packages(include=('${namespace-lower}*',)),
     include_package_data=True,  # includes all files specified in MANIFEST.in when building the distribution
 )

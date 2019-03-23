@@ -249,6 +249,19 @@ name and **email** address values by adding the ``--yes`` argument:
 
    msl create MyPackage --yes --dir D:\create\package\here
 
+To create a new package that is not part of the **MSL** namespace_, but, for example,
+the Photometry and Radiometry namespace_ you can run,
+
+.. code-block:: console
+
+   msl create Monochromator --namespace pr
+
+then to import the **PR-Monochromator** package you would use:
+
+.. code-block:: pycon
+
+   >>> from pr import monochromator
+
 .. _authorize_cli:
 
 authorize

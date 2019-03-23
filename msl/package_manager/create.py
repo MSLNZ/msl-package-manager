@@ -35,17 +35,27 @@ def create(*names, **kwargs):
             The directory to create the new package(s) in. If :data:`None`
             then creates the new package(s) in the current working directory.
             Default is :data:`None`.
+        * namespace : :class:`str`
+            The namespace that the package belongs to, for example `namespace`=``'pr'``
+            will create a new package for the Photometry and Radiometry `namespace`.
+            Default is the ``'msl'`` namespace.'
 
     """
     # Python 2.7 does not support named arguments after using *args
     # we can define yes=False, author=None, email=None, directory=None in the function signature
     # if we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'author', 'email', 'directory'})
+    utils._check_kwargs(kwargs, {'yes', 'author', 'email', 'directory', 'namespace'})
 
     yes = kwargs.get('yes', False)
     author = kwargs.get('author', None)
     email = kwargs.get('email', None)
     directory = kwargs.get('directory', None)
+    namespace = kwargs.get('namespace', None)
+    if namespace is None:
+        namespace = 'MSL'
+    else:
+        namespace = namespace.upper().rstrip('-')
+    namespace_lower = namespace.lower()
 
     # ensure that the names contain valid characters for a python package
     # and that the folder does not already exist in the current working directory
@@ -56,23 +66,23 @@ def create(*names, **kwargs):
 
     roots, pkg_names = [], []
     for name in _names:
-        if name.lower().startswith('msl-'):
-            name = name[4:]
+        if name.lower().startswith(namespace_lower+'-'):
+            name = name[len(namespace_lower)+1:]
 
         if name[0].isdigit():
-            utils.log.warning('A package name cannot start with a number: ignored "{}"'.format(name))
+            utils.log.warning('A package name cannot start with a number: ignored {!r}'.format(name))
             continue
 
         keep = True
         for c in name:
             if not (c.isalnum() or c == '_'):
                 utils.log.warning('A package name can only contain letters, numbers and underscores: '
-                                  'ignored "{}"'.format(name))
+                                  'ignored {!r}'.format(name))
                 keep = False
                 break
 
         if keep:
-            msl_name = 'msl-' + name.lower()
+            msl_name = namespace_lower + '-' + name.lower()
             root = os.path.join(directory, msl_name)
             if os.path.isdir(root):
                 utils.log.warning('A {} folder already exists: ignored "{}"'.format(root, name))
@@ -123,17 +133,21 @@ def create(*names, **kwargs):
     template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'template'))
     for msl_root, msl_pkg in zip(roots, pkg_names):
 
-        aliases = {'${msl-package}': msl_pkg,
-                   '${msl-package-lower}': msl_pkg.lower(),
-                   '${author}': author_name,
-                   '${year}': time.strftime('%Y'),
-                   '${email}': email_address,
-                   '${=}': '='*(len(os.path.basename(msl_root))),  # used to underline the header in a *.rst file
-                   }
+        aliases = {
+            '${msl-package}': msl_pkg,
+            '${msl-package-lower}': msl_pkg.lower(),
+            '${author}': author_name,
+            '${year}': time.strftime('%Y'),
+            '${email}': str(email_address),
+            '${=}': '='*(len(os.path.basename(msl_root))),  # used to underline the header in a *.rst file
+            '${namespace}': namespace,
+            '${namespace-lower}': namespace_lower,
+        }
 
         for root, dirs, files in os.walk(template_dir):
 
             new_dir = msl_root + root.split(template_dir)[1]
+            new_dir = new_dir.replace('${namespace-lower}', aliases['${namespace-lower}'])
             new_dir = new_dir.replace('${msl-package-lower}', aliases['${msl-package-lower}'])
             if not os.path.isdir(new_dir):
                 os.makedirs(new_dir)
@@ -147,6 +161,6 @@ def create(*names, **kwargs):
                     fp.write(lines)
 
         if os.path.isdir(msl_root):
-            utils.log.info('Created MSL-{} in {}'.format(msl_pkg, msl_root))
+            utils.log.info('Created {}-{} in {}'.format(namespace, msl_pkg, msl_root))
         else:
-            utils.log.error('Error creating MSL-' + msl_pkg)
+            utils.log.error('Error creating {}-{}'.format(namespace, msl_pkg))
