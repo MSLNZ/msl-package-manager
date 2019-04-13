@@ -118,7 +118,7 @@ setup(
     ],
     setup_requires=sphinx + pytest_runner,
     tests_require=['pytest-cov', 'pytest', 'colorama'],
-    install_requires=['pip', 'setuptools', 'colorama'],
+    install_requires=['setuptools', 'colorama'],
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     entry_points={
         'console_scripts': [
