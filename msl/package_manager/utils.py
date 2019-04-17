@@ -11,10 +11,13 @@ import os
 import sys
 import json
 import time
+import shlex
 import base64
+import struct
 import fnmatch
 import getpass
 import logging
+import platform
 import datetime
 import tempfile
 import threading
@@ -264,13 +267,31 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
             max(w[2], len(pkgs[p]['description']) if pkgs[p]['description'] else 0)
         ]
 
+    # want the description to spill over to the next line in a justified manner
+    # to start where the description on the previous line started
+    term_w, term_h = _get_terminal_size()
+    max_description_width = term_w - (w[0] + w[1])
+    if w[2] > max_description_width:
+        w[2] = max_description_width
+
     # log the results
     msg = [Fore.RESET]
     msg.append(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
     msg.append(' '.join('-' * width for width in w))
     for p in sorted(pkgs):
         description = pkgs[p]['description'] if pkgs[p]['description'] else ''
-        msg.append(p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' ' + description.ljust(w[2]))
+        name_version = p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' '
+        msg.append(name_version + description[:w[2]].ljust(w[2]))
+        i = w[2]
+        while i < len(description):
+            # remove leading whitespace
+            desc = description[i:i+w[2]]
+            n = len(desc) - len(desc.lstrip())
+            if n > 0:
+                i += n
+            msg.append(' ' * len(name_version) + description[i:i+w[2]].ljust(w[2]))
+            i += w[2]
+
     log.info('\n'.join(msg))
 
 
@@ -719,3 +740,82 @@ def _getLogger(name=None, fmt='%(message)s'):
 
 
 log = _getLogger(_PKG_NAME)
+
+
+def _get_terminal_size():
+    """
+    Taken from https://gist.github.com/jtriley/1108174
+
+    getTerminalSize()
+     - get width and height of console
+     - works on linux,os x,windows,cygwin(windows)
+     originally retrieved from:
+     http://stackoverflow.com/questions/566746/how-to-get-console-window-width-in-python
+    """
+    current_os = platform.system()
+    tuple_xy = None
+    if current_os == 'Windows':
+        tuple_xy = _get_terminal_size_windows()
+        if tuple_xy is None:
+            tuple_xy = _get_terminal_size_tput()
+            # needed for window's python in cygwin's xterm!
+    if current_os in ['Linux', 'Darwin'] or current_os.startswith('CYGWIN'):
+        tuple_xy = _get_terminal_size_linux()
+    if tuple_xy is None:
+        tuple_xy = (80, 25)  # default value
+    return tuple_xy
+
+
+def _get_terminal_size_windows():
+    try:
+        from ctypes import windll, create_string_buffer
+        # stdin handle is -10
+        # stdout handle is -11
+        # stderr handle is -12
+        h = windll.kernel32.GetStdHandle(-12)
+        csbi = create_string_buffer(22)
+        res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
+        if res:
+            (bufx, bufy, curx, cury, wattr,
+             left, top, right, bottom,
+             maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
+            return right - left - 1, bottom - top
+    except:
+        pass
+
+
+def _get_terminal_size_tput():
+    # get terminal width
+    # src: http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
+    try:
+        cols = int(subprocess.check_call(shlex.split('tput cols')))
+        rows = int(subprocess.check_call(shlex.split('tput lines')))
+        return cols, rows
+    except:
+        pass
+
+
+def _get_terminal_size_linux():
+    def ioctl_GWINSZ(fd):
+        try:
+            import fcntl
+            import termios
+            cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
+            return cr
+        except:
+            pass
+
+    cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+    if not cr:
+        try:
+            fd = os.open(os.ctermid(), os.O_RDONLY)
+            cr = ioctl_GWINSZ(fd)
+            os.close(fd)
+        except:
+            pass
+    if not cr:
+        try:
+            cr = (os.environ['LINES'], os.environ['COLUMNS'])
+        except:
+            return None
+    return int(cr[1]), int(cr[0])
