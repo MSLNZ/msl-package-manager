@@ -270,7 +270,7 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     # want the description to spill over to the next line in a justified manner
     # to start where the description on the previous line started
     term_w, term_h = _get_terminal_size()
-    max_description_width = term_w - (w[0] + w[1])
+    max_description_width = term_w - (w[0] + w[1]) - 2
     if w[2] > max_description_width:
         w[2] = max_description_width
 
@@ -783,7 +783,7 @@ def _get_terminal_size_windows():
             (bufx, bufy, curx, cury, wattr,
              left, top, right, bottom,
              maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
-            return right - left - 1, bottom - top
+            return right - left, bottom - top
     except:
         pass
 
