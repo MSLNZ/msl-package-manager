@@ -72,7 +72,7 @@ def install(*names, **kwargs):
 
     pkgs_pypi = utils.pypi(update_cache)
 
-    utils._log_install_uninstall_message(packages, 'INSTALLED', branch, tag)
+    utils._log_install_uninstall_message(packages, 'INSTALLED', branch, tag, pkgs_pypi)
     if not (yes or utils._ask_proceed()):
         return
 

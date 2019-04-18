@@ -650,7 +650,7 @@ def _inspect_github_pypi(where, update_cache):
     return dict(), path, cached_msg
 
 
-def _log_install_uninstall_message(packages, action, branch, tag):
+def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None):
     """Print the ``install`` or ``uninstall`` summary for what is going to happen.
 
     Parameters
@@ -665,25 +665,29 @@ def _log_install_uninstall_message(packages, action, branch, tag):
     tag : :class:`str` or :data:`None`
         The name of a GitHub tag to use for the ``install``.
         *Only used when installing packages*.
+    pkgs_pypi : :class:`dict`
+        Packages that are on PyPI. Only used when installing.
     """
     pkgs = _sort_packages(packages)
 
-    w = 0
-    has_version_info = False
+    w = [0, 0]
     for p in pkgs:
-        w = max(w, len(p))
-        if not has_version_info:
-            has_version_info = len(pkgs[p]['version']) > 0
+        w[0] = max(w[0], len(p))
+        w[1] = max(w[1], len(pkgs[p]['version']))
 
     msg = '\n{}The following MSL packages will be {}{}{}:\n'.format(Fore.RESET, Fore.CYAN, action, Fore.RESET)
     for pkg, values in pkgs.items():
-        msg += '\n  ' + pkg.ljust(w + 1)
+        msg += '\n  {}  {} '.format(pkg.ljust(w[0]), values['version'].ljust(w[1]))
+        if action == 'REMOVED':
+            continue
         if branch is not None:
             msg += ' [branch:{}]'.format(branch)
         elif tag is not None:
             msg += ' [tag:{}]'.format(tag)
-        elif has_version_info:
-            msg += ' ' + values['version']
+        elif pkg in pkgs_pypi:
+            msg += ' [PyPI]'
+        else:
+            msg += ' [GitHub]'
 
     log.info(msg)
 
