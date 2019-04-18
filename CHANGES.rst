@@ -7,8 +7,8 @@ Version 2.3.0.dev0
 
 - Added
 
+  * ability to install, update, create and uninstall MSL packages that do not start with ``msl-``
   * the shorter ``-D`` flag for ``--disable-mslpm-version-check``
-  * ability to install, update and uninstall MSL packages that do not start with ``msl-``
   * use of a shell-style wildcard when specifying the package name(s)
 
 - Changed
@@ -19,6 +19,7 @@ Version 2.3.0.dev0
 
 - Fixed
 
+  * running the ``list`` command did not align the Description text if the text continued on the next line
   * removed the ``--quiet`` flag in the `pip search msl-` query
   * removed the ``--process-dependency-links`` flag when installing packages
     (for compatibility with pip v19.0)
