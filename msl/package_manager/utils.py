@@ -364,7 +364,7 @@ def pypi(update_cache=False):
         return cached_pgks
 
     log.debug('Getting the packages from PyPI')
-    cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', '--disable-pip-version-check']
+    cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', 'gtc', '--disable-pip-version-check']
     try:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
@@ -384,7 +384,7 @@ def pypi(update_cache=False):
     pkgs = dict()
     for line in stdout.splitlines():
         match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
-        if match and match.group(1).lower().startswith('msl-'):
+        if match and (match.group(1).lower().startswith('msl-') or match.group(1) == 'GTC'):
             pkgs[match.group(1)] = {
                 'version': match.group(2),
                 'description': match.group(3),
