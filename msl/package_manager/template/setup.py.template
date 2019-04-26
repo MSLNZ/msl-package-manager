@@ -96,8 +96,8 @@ sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 setup(
     name='${namespace-lower}-${msl-package-lower}',
     version=fetch_init('__version__'),
-    author=fetch_init('__author__'),
-    author_email='${email}',
+    author='Measurement Standards Laboratory of New Zealand',
+    author_email='info@measurement.govt.nz',
     url='https://github.com/MSLNZ/${namespace-lower}-${msl-package-lower}',
     description='Write a short description about ${namespace-lower}-${msl-package-lower} here',
     long_description=read('README.rst'),
