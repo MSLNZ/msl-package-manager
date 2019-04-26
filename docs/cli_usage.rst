@@ -8,9 +8,6 @@ uninstall, update, list and create MSL packages by using the command line interf
 
 *You can also directly call these functions through the* :ref:`API <pm-api-usage>`.
 
-The :ref:`install <install_cli>`, :ref:`update <update_cli>` and :ref:`list <list_cli>` commands
-fetch information about MSL repositories_. Some MSL packages_ are also available on PyPI.
-
 .. attention::
    Since MSL packages are part of a namespace_, uninstalling MSL packages using
    ``pip uninstall msl-<packaage name>`` will break the namespace_. Therefore, it is

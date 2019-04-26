@@ -10,6 +10,8 @@ All MSL packages that start with ``msl-`` are part of the **msl** namespace_. Th
 split sub-packages and modules across multiple, separate distribution packages while still
 maintaining a single, unifying package structure.
 
+All MSL packages are available as GitHub repositories_ and some have been published as PyPI packages_.
+
 Contents
 ========
 
@@ -34,3 +36,5 @@ Indices and tables
 
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
 .. _Measurement Standards Laboratory of New Zealand: https://measurement.govt.nz/
+.. _repositories: https://github.com/MSLNZ
+.. _packages: https://pypi.org/search/?q=msl-
