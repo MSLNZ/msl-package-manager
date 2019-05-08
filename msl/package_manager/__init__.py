@@ -6,7 +6,7 @@ The following constants are available.
 import re
 from collections import namedtuple
 
-__author__ = 'Joseph Borbely'
+__author__ = 'Measurement Standards Laboratory of New Zealand'
 __copyright__ = '\xa9 2017 - 2019, ' + __author__
 __version__ = '2.3.0.dev0'
 
