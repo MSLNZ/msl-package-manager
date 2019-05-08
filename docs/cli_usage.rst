@@ -284,7 +284,7 @@ authorized requests to GitHub.
 
 .. _git: https://git-scm.com
 .. _repositories: https://github.com/MSLNZ
-.. _packages: https://pypi.org/search/?q=msl-
+.. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
 .. _limit: https://developer.github.com/v3/#rate-limiting
 .. _github_signup: https://github.com/join?source=header-home

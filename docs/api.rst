@@ -13,6 +13,7 @@ which has the following functions
 
 .. autosummary::
 
+   ~msl.package_manager.authorize.authorize
    ~msl.package_manager.create.create
    ~msl.package_manager.utils.github
    ~msl.package_manager.utils.info
@@ -29,6 +30,7 @@ Package Structure
 .. toctree::
 
    msl.package_manager <_api/msl.package_manager>
+   msl.package_manager.authorize <_api/msl.package_manager.authorize>
    msl.package_manager.cli <_api/msl.package_manager.cli>
    msl.package_manager.cli_argparse <_api/msl.package_manager.cli_argparse>
    msl.package_manager.cli_authorize <_api/msl.package_manager.cli_authorize>
@@ -44,4 +46,4 @@ Package Structure
    msl.package_manager.utils <_api/msl.package_manager.utils>
 
 .. _repositories: https://github.com/MSLNZ
-.. _packages: https://pypi.org/search/?q=msl-
+.. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
