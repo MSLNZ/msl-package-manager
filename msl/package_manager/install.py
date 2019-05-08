@@ -21,7 +21,7 @@ def install(*names, **kwargs):
        then the ``master`` branch is used as the default installation URI_.
 
     .. _repositories: https://github.com/MSLNZ
-    .. _packages: https://pypi.org/search/?q=msl-
+    .. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
     .. _URI: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 
     Parameters
@@ -32,9 +32,6 @@ def install(*names, **kwargs):
         ``msl-`` prefix can be omitted (e.g., ``'loadlib'`` is equivalent to
         ``'msl-loadlib'``). Also accepts shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
-        * yes : :class:`bool`
-            If :data:`True` then don't ask for confirmation before installing.
-            The default is :data:`False` (ask before installing).
         * branch : :class:`str`
             The name of a GitHub branch to use for the installation. If :data:`None`,
             and no `tag` value has been specified, then installs from the ``master``
@@ -47,6 +44,9 @@ def install(*names, **kwargs):
             calls to this function. After 24 hours the cache is automatically updated. Set
             `update_cache` to be :data:`True` to force the cache to be updated when you call
             this function. Default is :data:`False`.
+        * yes : :class:`bool`
+            If :data:`True` then don't ask for confirmation before installing.
+            The default is :data:`False` (ask before installing).
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.

@@ -15,6 +15,22 @@ def create(*names, **kwargs):
     *names : :class:`str`
         The name(s) of the MSL package(s) to create.
     **kwargs
+        * author : :class:`str`
+            The name of the author to use for the new package. If :data:`None` then uses
+            :func:`.utils.get_username` to determine the author's name.
+            Default is :data:`None`.
+        * directory : :class:`str`
+            The directory to create the new package(s) in. If :data:`None`
+            then creates the new package(s) in the current working directory.
+            Default is :data:`None`.
+        * email : :class:`str`
+            The author's email address. If :data:`None` then uses
+            :func:`.utils.get_email` to determine the author's email address.
+            Default is :data:`None`.
+        * namespace : :class:`str`
+            The namespace that the package belongs to, for example `namespace`=``'pr'``
+            will create a new package for the Photometry and Radiometry `namespace`.
+            Default is the ``'msl'`` namespace.'
         * yes : :class:`bool`
             If :data:`True` then don't ask for verification for the `author` name
             and for the `email` address. This argument is only used if you do not
@@ -23,22 +39,6 @@ def create(*names, **kwargs):
             package is created. The default is to ask for verification before creating
             the package if the `author` or the `email` value was not specified.
             Default is :data:`False`.
-        * author : :class:`str`
-            The name of the author to use for the new package. If :data:`None` then uses
-            :func:`.utils.get_username` to determine the author's name.
-            Default is :data:`None`.
-        * email : :class:`str`
-            The author's email address. If :data:`None` then uses
-            :func:`.utils.get_email` to determine the author's email address.
-            Default is :data:`None`.
-        * directory : :class:`str`
-            The directory to create the new package(s) in. If :data:`None`
-            then creates the new package(s) in the current working directory.
-            Default is :data:`None`.
-        * namespace : :class:`str`
-            The namespace that the package belongs to, for example `namespace`=``'pr'``
-            will create a new package for the Photometry and Radiometry `namespace`.
-            Default is the ``'msl'`` namespace.'
 
     """
     # Python 2.7 does not support named arguments after using *args
