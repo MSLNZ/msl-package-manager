@@ -56,6 +56,10 @@ def authorize(username=None, password=None):
             log.warning('\nDid not create GitHub authorization file.')
             return
 
+    if not username:
+        log.warning('You must enter a username. Did not create GitHub authorization file.')
+        return
+
     if not password:
         log.warning('You must enter a password. Did not create GitHub authorization file.')
         return
