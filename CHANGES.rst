@@ -10,6 +10,7 @@ Version 2.3.0.dev0
   * ability to install, update, create and uninstall MSL packages that do not start with ``msl-``
   * the shorter ``-D`` flag for ``--disable-mslpm-version-check``
   * use of a shell-style wildcard when specifying the package name(s)
+  * `authorize` as an API function
 
 - Changed
 
