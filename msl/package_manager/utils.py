@@ -100,9 +100,9 @@ def github(update_cache=False):
     :class:`dict` of :class:`dict`
         The MSL repositories_ that are available on GitHub.
     """
-    cached_pgks, path, cached_msg = _inspect_github_pypi('github', update_cache)
-    if cached_pgks:
-        return cached_pgks
+    packages, path = _inspect_github_pypi('github', update_cache)
+    if packages:
+        return packages
 
     def fetch(url_suffix):
         url = 'https://api.github.com' + url_suffix
@@ -163,7 +163,7 @@ def github(update_cache=False):
         pkgs[repo_name]['branches'] = val
 
     def reload_cache():
-        cached_pgks, path, cached_msg = _inspect_github_pypi('github', False)
+        cached_pgks = _inspect_github_pypi('github', False)[0]
         if cached_pgks:
             return cached_pgks
         return dict()
@@ -359,27 +359,29 @@ def pypi(update_cache=False):
     :class:`dict` of :class:`dict`
         The MSL packages_ that are available on PyPI.
     """
-    cached_pgks, path, cached_msg = _inspect_github_pypi('pypi', update_cache)
-    if cached_pgks:
-        return cached_pgks
+    packages, path = _inspect_github_pypi('pypi', update_cache)
+    if packages:
+        return packages
 
     log.debug('Getting the packages from PyPI')
     cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', 'gtc', '--disable-pip-version-check']
     try:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        if err and not err.startswith('DEPRECATION: Python 2.7 will reach the end of its life'):
-            raise Exception(err.splitlines()[-1].decode('utf-8'))
+        if err:
+            lines = err.splitlines()
+            if len(lines) == 1 and err.startswith(b'DEPRECATION: Python 2.7 will reach the end of its life'):
+                pass  # only the DEPRECATION warning was written to stderr
+            else:
+                raise Exception(lines[-1].decode('utf-8'))
     except Exception as e:
         log.error('Cannot connect to PyPI -- {}'.format(e))
-        log.info(cached_msg)
-        return cached_pgks
+        return _inspect_github_pypi('pypi', False)[0]
     else:
         stdout = out.decode('utf-8').strip()
         if not stdout:
-            log.error('PyPI did not return any "msl-" packages')
-            log.info(cached_msg)
-            return cached_pgks
+            log.error('PyPI did not return any MSL packages')
+            return _inspect_github_pypi('pypi', False)[0]
 
     pkgs = dict()
     for line in stdout.splitlines():
@@ -392,8 +394,7 @@ def pypi(update_cache=False):
 
     if not pkgs:
         log.critical('The regex pattern for the PyPI packages is no longer valid')
-        log.info(cached_msg)
-        return cached_pgks
+        return _inspect_github_pypi('pypi', False)[0]
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
@@ -621,8 +622,6 @@ def _inspect_github_pypi(where, update_cache):
         The packages
     :class:`str`
         The path to the cached files.
-    :class:`str`
-        A message about the where the cached data comes from.
     """
     if where == 'github':
         filename = 'msl-github-repo-cache.json'
@@ -635,8 +634,6 @@ def _inspect_github_pypi(where, update_cache):
 
     path = os.path.join(tempfile.gettempdir(), filename)
 
-    cached_msg = 'Loaded the cached information about the ' + suffix
-
     cached_pgks = None
     if os.path.isfile(path):
         with open(path, 'r') as f:
@@ -644,10 +641,10 @@ def _inspect_github_pypi(where, update_cache):
 
     one_day = 60 * 60 * 24
     if (not update_cache) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
-        log.debug(cached_msg)
-        return _sort_packages(cached_pgks), path, cached_msg
+        log.debug('Loaded the cached information about the ' + suffix)
+        return _sort_packages(cached_pgks), path
 
-    return dict(), path, cached_msg
+    return dict(), path
 
 
 def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None):
