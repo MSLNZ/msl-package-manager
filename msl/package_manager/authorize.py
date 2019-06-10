@@ -22,8 +22,13 @@ def authorize(username=None, password=None):
     include your username and password with each request then this
     limit is increased.
 
-    Calling this function will create a file that contains your GitHub
-    username and password so that GitHub requests are authorized.
+    .. important::
+
+       Calling this function will create a file that contains your GitHub
+       username and password so that GitHub requests are authorized. Your
+       username and password are saved in plain text in the file that is
+       created. You should set the file permissions provided by your
+       operating system to ensure that your GitHub credentials are safe.
 
     .. versionadded:: 2.3.0
 
