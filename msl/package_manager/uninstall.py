@@ -25,9 +25,9 @@ def uninstall(*names, **kwargs):
             If :data:`True` then don't ask for confirmation before uninstalling.
             The default is :data:`False` (ask before uninstalling).
     """
-    # Python 2.7 does not support named arguments after using *args
-    # we can define yes=False in the function signature
-    # if we choose to drop support for Python 2.7
+    # TODO Python 2.7 does not support named arguments after using *args
+    #  we can define yes=False in the function signature
+    #  if we choose to drop support for Python 2.7
     utils._check_kwargs(kwargs, {'yes', })
 
     yes = kwargs.get('yes', False)

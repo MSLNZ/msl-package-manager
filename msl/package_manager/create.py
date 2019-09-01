@@ -41,9 +41,9 @@ def create(*names, **kwargs):
             Default is :data:`False`.
 
     """
-    # Python 2.7 does not support named arguments after using *args
-    # we can define yes=False, author=None, email=None, directory=None in the function signature
-    # if we choose to drop support for Python 2.7
+    # TODO Python 2.7 does not support named arguments after using *args
+    #  we can define yes=False, author=None, email=None, directory=None in the
+    #  function signature if we choose to drop support for Python 2.7
     utils._check_kwargs(kwargs, {'yes', 'author', 'email', 'directory', 'namespace'})
 
     yes = kwargs.get('yes', False)
