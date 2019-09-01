@@ -2,8 +2,24 @@
 Release Notes
 =============
 
-Version 2.3.1.dev0
+Version 2.4.0.dev0
 ==================
+
+- Added
+
+  * the ``--create``, ``--requires`` and ``--ini`` arguments to ``condatests.py``
+
+- Fixed
+
+  * issue `#6 <https://github.com/MSLNZ/msl-package-manager/issues/6>`_ - add support for specifying
+    a version number when installing/updating
+  * issue `#5 <https://github.com/MSLNZ/msl-package-manager/issues/5>`_ - add support for
+    specifying an extras_require value when installing/updating
+  * the `test_require` kwarg in ``setup.py`` now specifies `pytest<=4.6.4` for Python 2.7
+
+- Removed
+
+  * Support for Python 3.4
 
 
 Version 2.3.0 (2019.06.10)
