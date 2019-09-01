@@ -135,7 +135,9 @@ def create_env(name, base_env_path, args):
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
     if err:
-        sys.exit(err.decode())
+        err = err.decode()
+        if not err.lstrip().startswith('==> WARNING: A newer version of conda exists. <=='):
+            sys.exit(err)
 
     test_packages = []
     if 'setup.py' in args.command or 'pytest' in args.command:
@@ -159,7 +161,10 @@ def install_packages(env_name, packages):
     p = subprocess.Popen(['conda', 'install', '--name', env_name, '--yes'] + packages,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
-    return err.decode()
+    err = err.decode()
+    if not err.lstrip().startswith('==> WARNING: A newer version of conda exists. <=='):
+        return err
+    return ''
 
 
 def remove_env(name):
@@ -228,7 +233,7 @@ def main(*args):
         activate.extend(['activate', name, '&&'])
         cmd = activate + get_executable(path) + command
         print('Testing with the {!r} environment'.format(name))
-        ret = subprocess.call(cmd, shell=True, executable=executable)
+        ret = subprocess.call(' '.join(cmd), shell=True, executable=executable)
 
         if name.startswith(CREATE_ENV_PREFIX):
             remove_env(name)
