@@ -19,7 +19,7 @@ Version 2.4.0.dev0
 
 - Removed
 
-  * Support for Python 3.4
+  * support for Python 3.4
 
 
 Version 2.3.0 (2019.06.10)
@@ -78,11 +78,11 @@ Version 2.1.0 (2018.08.24)
   * *nitpicky* to conf.py
   * the ``version_info`` named tuple now includes a *releaselevel*
   * can now update the MSL Package Manager using `msl update package-manager`
-  * Python 3.7 support
+  * support for Python 3.7
 
 - Removed
 
-  * Python 3.3 support
+  * support for Python 3.3
 
 
 Version 2.0.0 (2018.07.02)
@@ -241,4 +241,4 @@ Version 1.0.0 (2017.03.02)
 
 Version 0.1.0 (2017.02.19)
 ==========================
-- Initial release
+- initial release
