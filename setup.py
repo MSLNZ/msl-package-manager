@@ -93,6 +93,12 @@ pytest_runner = ['pytest-runner'] if testing else []
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
+tests_require = ['pytest-cov', 'colorama']
+if sys.version_info[:2] == (2, 7):
+    tests_require.append('pytest<=4.6.4')
+else:
+    tests_require.append('pytest')
+
 setup(
     name=fetch_init('_PKG_NAME'),
     version=fetch_init('__version__'),
@@ -116,7 +122,7 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     setup_requires=sphinx + pytest_runner,
-    tests_require=['pytest-cov', 'pytest', 'colorama'],
+    tests_require=tests_require,
     install_requires=['setuptools', 'colorama'],
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     entry_points={

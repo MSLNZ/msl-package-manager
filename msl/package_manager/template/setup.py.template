@@ -93,6 +93,12 @@ pytest_runner = ['pytest-runner'] if testing else []
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
+tests_require = ['pytest-cov']
+if sys.version_info[:2] == (2, 7):
+    tests_require.append('pytest<=4.6.4')
+else:
+    tests_require.append('pytest')
+
 setup(
     name='${namespace-lower}-${msl-package-lower}',
     version=fetch_init('__version__'),
@@ -105,7 +111,7 @@ setup(
     license='MIT',
     classifiers=[],  # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
     setup_requires=sphinx + pytest_runner,
-    tests_require=['pytest-cov', 'pytest'],
+    tests_require=tests_require,
     install_requires=[],  # specify the packages that ${namespace-lower}-${msl-package-lower} depends on
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     packages=find_packages(include=('${namespace-lower}*',)),
