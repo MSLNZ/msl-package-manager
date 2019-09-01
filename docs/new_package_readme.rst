@@ -90,21 +90,33 @@ Additionally, there is a **condatests.py** file that is created by running :ref:
 script will run the tests in all specified conda environment_\s. At the time of writing this script, tox_ and
 conda_ were not compatible_ and so this script provided a way around this issue.
 
-You can either pass options from the :ref:`condatests-cli` or by creating a :ref:`condatests-ini`. If you do not specify
-any command-line arguments to **condatests.py** then the configuration file will automatically be used; however, if no
-configuration file exists then the tests will be run with the default settings, which are to run ``setup.py tests``
-(see :ref:`create_readme_setup`) with all conda environment_\s.
+You can either pass options from the :ref:`condatests-cli` or by creating a :ref:`condatests-ini`.
 
-.. note::
-
-   A regex search is performed when filtering environment_ names for the ``--include`` and ``--exclude`` options.
+.. attention::
+   ``python condatests.py`` must be executed from the `base` conda environment_
 
 .. _condatests-cli:
 
 command line
 ++++++++++++
 
-Run the tests with all conda environment_\'s using the ``setup.py tests`` command (see :ref:`create_readme_setup`).
+**condatests.py** accepts the following command-line arguments:
+
+* ``--create`` - the Python version numbers to use to create conda environment_\s (e.g., 2 3.6 3.7.2)
+* ``--include`` - the conda environment_\s to include (supports regex)
+* ``--exclude`` - the conda environment_\s to exclude (supports regex)
+* ``--requires`` - additional packages to install for the tests
+* ``--command`` - the command to execute with each conda environment_
+* ``--ini`` - the path to the :ref:`condatests-ini`
+* ``--list`` - list the conda environment_\s that will be used for the tests and then exit
+
+You can view the help for **condatests.py** by running
+
+.. code-block:: console
+
+   python condatests.py --help
+
+Run the tests with all conda environment_\'s using ``python setup.py tests`` (see :ref:`create_readme_setup`).
 This assumes that a :ref:`condatests-ini` does not exist (which could change the default options).
 
 .. code-block:: console
@@ -145,6 +157,26 @@ those with *dev33* in the environment_ name
 
    python condatests.py --include dev --exclude dev33
 
+Create new conda environment_\s for the specified Python versions (if the `minor` or `micro` version
+numbers are not specified then the latest Python version that is available to conda will be installed).
+After the test finishes the newly-created environment_ is removed. For example, the following
+command will create environment_\s for the latest Python 2.x.x version, for the latest Python 3.6.x
+version and for Python 3.7.4
+
+.. code-block:: console
+
+   python condatests.py --create 2 3.6 3.7.4
+
+.. code-block:: console
+
+   python condatests.py -C 2 3.6 3.7.4
+
+You can also mix the ``--create``, ``--include`` and ``--exclude`` arguments
+
+.. code-block:: console
+
+   python condatests.py --create 3.7 --include dev --exclude dev33
+
 Run the tests with all conda environment_\s using the command ``nosetests``
 
 .. code-block:: console
@@ -153,7 +185,7 @@ Run the tests with all conda environment_\s using the command ``nosetests``
 
 .. code-block:: console
 
-   python condatests.py --c nosetests
+   python condatests.py -c nosetests
 
 Run the tests with all conda environment_\s using the command ``unittest discover -s tests/``
 
@@ -161,7 +193,14 @@ Run the tests with all conda environment_\s using the command ``unittest discove
 
    python condatests.py --command "unittest discover -s tests/"
 
-List all conda environment_\s that are available and then exit
+Run the tests with all conda environment_\s using the command ``unittest discover -s tests/`` and ensure
+that *scipy* is installed in each environment_
+
+.. code-block:: console
+
+   python condatests.py --command "unittest discover -s tests/" --requires scipy
+
+List (show) all conda environment_\s that will be used for the tests and then exit
 
 .. code-block:: console
 
@@ -171,17 +210,30 @@ List all conda environment_\s that are available and then exit
 
    python condatests.py -l
 
+.. code-block:: console
+
+   python condatests.py --show
+
+.. code-block:: console
+
+   python condatests.py -s
+
 List the conda environment_\s that include *dev* in the environment_ name and then exit
 
 .. code-block:: console
 
    python condatests.py --include dev --list
 
-You can view the help for **condatests.py** by running
+Specify the path to a  `condatests-ini`_
 
 .. code-block:: console
 
-   python condatests.py --help
+   python condatests.py --ini C:\Users\Me\my_condatests_config.ini
+
+.. code-block:: console
+
+   python condatests.py -f C:\Users\Me\my_condatests_config.ini
+
 
 .. _condatests-ini:
 
@@ -189,29 +241,46 @@ configuration file
 ++++++++++++++++++
 
 In addition to passing :ref:`condatests-cli` options, you can also save the options in an **condatests.ini**
-configuration file, which must be saved to the same directory as the **condatests.py** file. This is a standard
-ini-style configuration file with the options (e.g., *include*, *exclude*, *command*) specified under the
-**[envs]** section. This configuration file is loaded when the following command is executed
+configuration file. This is a standard ini-style configuration file with the options *create*, *include*,
+*exclude*, *command* and *requires* specified under the **[envs]** section.
+
+If a **condatests.ini** configuration file exists in the current working directory then it will
+automatically be loaded by running
 
 .. code-block:: console
 
    python condatests.py
+
+Alternatively, you can also specify the path to the configuration file from the command line
+
+.. code-block:: console
+
+   python condatests.py --ini C:\Users\Me\my_condatests_config.ini
+
+You can pass in command-line arguments as well as reading from the configuration file. The following
+will load the **condatests.ini** file in the current working directory, print the conda environment_\s
+that will be used for the tests and then exit
+
+.. code-block:: console
+
+   python condatests.py --show
 
 Since every developer can name their environment_\s to be anything that they want the **condatests.ini**
 file is included in **.gitignore**.
 
 The following are example **condatests.ini** files.
 
-**Example 1**: Run the tests with all conda environment_\s except for the *base* environment_
+**Example 1**: Run ``python setup.py tests`` (see :ref:`create_readme_setup`) with all conda environment_\s except
+for the *base* environment_
 
 .. code-block:: ini
 
    [envs]
    exclude=base
 
-**Example 2**: Run the tests with all conda environment_\s that include the text *py* in the name of the environment_
-but exclude the environment_\s that contain *py33* in the name (recall that a regex search is used to filter the
-environment_ names)
+**Example 2**: Run ``python setup.py tests`` with all conda environment_\s that include the text *py* in the name
+of the environment_ but exclude the environment_\s that contain *py33* in the name (recall that a regex
+search is used to filter the environment_ names)
 
 .. code-block:: ini
 
@@ -219,7 +288,29 @@ environment_ names)
    include=py
    exclude=py33
 
-**Example 3**: Run ``unittest``, for all modules in the **tests** directory, with all conda environment_\s
+**Example 3**: Run ``python setup.py tests`` only with newly-created conda environment_\s, exclude all
+environment_\s that already exist and ensure that *scipy* is installed in each new environment_
+(if the `minor` or `micro` version numbers of the Python environment_\s are not specified then the latest
+Python version that is available to conda will be installed)
+
+.. code-block:: ini
+
+   [envs]
+   create=2 3.5 3.6 3.7
+   exclude=*
+   requires=scipy
+
+**Example 4**: Run ``python setup.py tests`` with newly-created conda environment_\s and all conda environment_\s
+that already exist that contain the text *dev* in the name of the environment_ except for the *dev33* environment_
+
+.. code-block:: ini
+
+   [envs]
+   create=3.6 3.7.3 3.7.4
+   include=dev
+   exclude=dev33
+
+**Example 5**: Run ``unittest``, for all modules in the **tests** directory, with all conda environment_\s
 that include the text *dev* in the environment_ name
 
 .. code-block:: ini
@@ -228,13 +319,14 @@ that include the text *dev* in the environment_ name
    include=dev
    command=unittest discover -s tests/
 
-**Example 4**: Run pytest_ with customized options (i.e., ignoring any *pytest.ini*, *tox.ini* or *setup.cfg*
+**Example 6**: Run pytest_ with customized options (i.e., ignoring any *pytest.ini*, *tox.ini* or *setup.cfg*
 files that might exist) with the specified conda environment_\s.
 
 .. code-block:: ini
 
    [envs]
-   include=dev27 myenvironment py37
+   create=3.7
+   include=dev27 myenvironment py36
    command=pytest -c condatests.ini
 
    [pytest]
@@ -244,9 +336,9 @@ files that might exist) with the specified conda environment_\s.
 
 .. note::
 
-   The environment_ names specified in the `include` and `exclude` option can be separated by a
-   comma, by whitespace or both. So, ``include=py27,py36,py37``, ``include=py27 py36 py37`` and
-   ``include=py27, py36, py37`` are all equivalent.
+   The environment_ names specified in the *create*, *include*, *exclude* and *requires* option can
+   be separated by a comma, by whitespace or both. So, ``include=py27,py36,py37``, ``include=py27 py36 py37``
+   and ``include=py27, py36, py37`` are all equivalent.
 
 .. _compatible: https://github.com/tox-dev/tox/issues/273
 .. _pytest: https://doc.pytest.org/en/latest/
