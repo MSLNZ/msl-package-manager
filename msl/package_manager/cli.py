@@ -76,7 +76,7 @@ def _main(*args):
     elif args.quiet == 3:
         utils.set_log_level(logging.CRITICAL + 1)
 
-    # when the msl-package-manager gets updated a msl.exe.old file gets created
+    # when the msl-package-manager gets updated a msl.exe.old file gets created (on Windows)
     old = sys.exec_prefix + '/Scripts/msl.exe.old'
     if os.path.isfile(old):
         os.remove(old)
