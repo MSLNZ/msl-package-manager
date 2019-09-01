@@ -58,9 +58,9 @@ def update(*names, **kwargs):
         .. important::
            If you specify a `branch` or a `tag` then the update will be forced.
     """
-    # Python 2.7 does not support named arguments after using *args
-    # we can define yes=False, branch=None, tag=None, update_cache=False in the function signature
-    # if we choose to drop support for Python 2.7
+    # TODO Python 2.7 does not support named arguments after using *args
+    #  we can define yes=False, branch=None, tag=None, update_cache=False in the
+    #  function signature if we choose to drop support for Python 2.7
     utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache'})
 
     yes = kwargs.get('yes', False)
@@ -79,13 +79,13 @@ def update(*names, **kwargs):
         return
 
     if not names:
-        names = pkgs_installed.keys()  # update all installed packages
+        packages = pkgs_installed  # update all installed packages
     else:
-        names = utils._check_wildcards_and_prefix(names, pkgs_installed)
+        packages = utils._check_wildcards_and_prefix(names, pkgs_github)
 
     w = [0, 0]
     pkgs_to_update = dict()
-    for name in names:
+    for name, values in packages.items():
 
         err_msg = 'Cannot update {!r}. '.format(name)
 
@@ -99,15 +99,27 @@ def update(*names, **kwargs):
         using_pypi = name in pkgs_pypi and tag is None and branch is None
         repo_name = pkgs_installed[name]['repo_name']
 
+        extras_require = values['extras_require'] if values.get('extras_require') is not None else ''
+
         if tag is not None:
             if tag in pkgs_github[repo_name]['tags']:
-                pkgs_to_update[name] = (installed_version, '[tag:{}]'.format(tag), using_pypi)
+                pkgs_to_update[name] = {
+                    'installed_version': installed_version,
+                    'using_pypi': using_pypi,
+                    'extras_require': extras_require,
+                    'version': '[tag:{}]'.format(tag),
+                }
             else:
                 utils.log.error(err_msg + 'A {!r} tag does not exist.'.format(tag))
                 continue
         elif branch is not None:
             if branch in pkgs_github[repo_name]['branches']:
-                pkgs_to_update[name] = (installed_version, '[branch:{}]'.format(branch), using_pypi)
+                pkgs_to_update[name] = {
+                    'installed_version': installed_version,
+                    'using_pypi': using_pypi,
+                    'extras_require': extras_require,
+                    'version': '[branch:{}]'.format(branch),
+                }
             else:
                 utils.log.error(err_msg + 'A {!r} branch does not exist.'.format(branch))
                 continue
@@ -121,22 +133,36 @@ def update(*names, **kwargs):
                 # a version number must exist on PyPI, so if this occurs it must be for a github repo
                 utils.log.error(err_msg + 'The GitHub repository does not contain a release.')
                 continue
+            elif values.get('version_requested'):
+                # this elif must come before the parse_version check
+                pkgs_to_update[name] = {
+                    'installed_version': installed_version,
+                    'using_pypi': using_pypi,
+                    'extras_require': extras_require,
+                    'version': values['version_requested'],
+                }
             elif parse_version(version) > parse_version(installed_version):
-                pkgs_to_update[name] = (installed_version, version, using_pypi)
+                pkgs_to_update[name] = {
+                    'installed_version': installed_version,
+                    'using_pypi': using_pypi,
+                    'extras_require': extras_require,
+                    'version': version,
+                }
             else:
                 utils.log.warning('The {!r} package is already the latest [{}]'.format(name, installed_version))
                 continue
 
-        w = [max(w[0], len(name)), max(w[1], len(installed_version))]
+        w = [max(w[0], len(name+extras_require)), max(w[1], len(installed_version))]
 
     if pkgs_to_update:
         pkgs_to_update = utils._sort_packages(pkgs_to_update)
 
         msg = '\n{}The following MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
-        for pkg in pkgs_to_update:
-            local, remote, _ = pkgs_to_update[pkg]
-            pkg += ': '
-            msg += '\n  ' + pkg.ljust(w[0]+2) + local.ljust(w[1]) + ' --> ' + remote
+        for pkg, info in pkgs_to_update.items():
+            pkg += info['extras_require'] + ': '
+            msg += '\n  ' + pkg.ljust(w[0]+2) + info['installed_version'].ljust(w[1]) + \
+                   ' --> ' + info['version'].replace('==', '') + \
+                   '  [{}]'.format('PyPI' if info['using_pypi'] else 'GitHub')
 
         utils.log.info(msg)
         if not (yes or utils._ask_proceed()):
@@ -150,16 +176,25 @@ def update(*names, **kwargs):
             value = pkgs_to_update.pop(_PKG_NAME)
             pkgs_to_update[_PKG_NAME] = value  # using an OrderedDict so this item will be last
 
+        zip_extn = 'zip' if utils._IS_WINDOWS else 'tar.gz'
         exe = [sys.executable, '-m', 'pip', 'install']
-        options = ['--disable-pip-version-check', '--upgrade', '--force-reinstall', '--no-deps']
-        options += ['--quiet'] * utils._NUM_QUIET
-        for pkg in pkgs_to_update:
-            if pkgs_to_update[pkg][2]:
+        options = ['--disable-pip-version-check', '--upgrade', '--force-reinstall']
+        options.extend(['--quiet'] * utils._NUM_QUIET)
+        for pkg, info in pkgs_to_update.items():
+            if not info['extras_require']:
+                options.append('--no-deps')
+
+            if info['using_pypi']:
                 utils.log.debug('Updating {!r} from PyPI'.format(pkg))
-                package = [pkg]
+                if info['version'] and info['version'][0] not in '<!=>~':
+                    info['version'] = '==' + info['version']
+                package = [pkg + info['extras_require'] + info['version']]
             else:
                 utils.log.debug('Updating {!r} from GitHub/{}'.format(pkg, zip_name))
-                package = ['https://github.com/MSLNZ/{}/archive/{}.zip'.format(pkg, zip_name)]
+                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(pkg, zip_name, zip_extn)
+                if info['extras_require']:
+                    repo += '#egg={}{}'.format(pkg, info['extras_require'])
+                package = [repo]
 
             if utils._IS_WINDOWS and pkg == _PKG_NAME:
                 # On Windows, an executable cannot replace itself while it is running. However,
@@ -174,4 +209,4 @@ def update(*names, **kwargs):
             return 'updating_msl_package_manager'
 
     else:
-        utils.log.info('No MSL packages to update.')
+        utils.log.info('{0}No MSL packages to update.{0}'.format(Fore.RESET))

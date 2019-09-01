@@ -74,6 +74,27 @@ Install multiple MSL packages:
 
    msl install loadlib equipment qt
 
+Install a specific version of a package (the package must be available as a PyPI `package <packages_>`_):
+
+.. code-block:: console
+
+   msl install loadlib==0.6.0
+
+Specify a version range of a package -- make sure to surround the package and version range in quotes
+(the package must be available as a PyPI `package <packages_>`_):
+
+.. code-block:: console
+
+   msl install "loadlib>=0.4,<0.6"
+
+Install a package and its
+`extra <https://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_
+dependencies:
+
+.. code-block:: console
+
+   msl install loadlib[com]
+
 You can also use a wildcard, for example, to install all packages that start with ``pr-``:
 
 .. code-block:: console

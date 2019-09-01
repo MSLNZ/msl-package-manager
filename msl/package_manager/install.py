@@ -51,9 +51,9 @@ def install(*names, **kwargs):
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
     """
-    # Python 2.7 does not support named arguments after using *args
-    # we can define yes=False, branch=None, tag=None, update_cache=False in the function signature
-    # if we choose to drop support for Python 2.7
+    # TODO Python 2.7 does not support named arguments after using *args
+    #  we can define yes=False, branch=None, tag=None, update_cache=False in the
+    #  function signature if we choose to drop support for Python 2.7
     utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache'})
 
     yes = kwargs.get('yes', False)
@@ -81,11 +81,17 @@ def install(*names, **kwargs):
     zip_extn = 'zip' if utils._IS_WINDOWS else 'tar.gz'
     exe = [sys.executable, '-m', 'pip', 'install']
     options = ['--disable-pip-version-check'] + ['--quiet'] * utils._NUM_QUIET
-    for pkg in packages:
-        if pkg in pkgs_pypi and branch is None and tag is None:
-            utils.log.debug('Installing {!r} from PyPI'.format(pkg))
-            subprocess.call(exe + options + [pkg])
+    for name, values in packages.items():
+        if name in pkgs_pypi and branch is None and tag is None:
+            utils.log.debug('Installing {!r} from PyPI'.format(name))
+            if values['extras_require']:
+                name += values['extras_require']
+            if values['version_requested']:
+                name += values['version_requested']
+            subprocess.call(exe + options + [name])
         else:
-            utils.log.debug('Installing {!r} from GitHub/{}'.format(pkg, zip_name))
-            repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(pkg, zip_name, zip_extn)
+            utils.log.debug('Installing {!r} from GitHub/{}'.format(name, zip_name))
+            repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, zip_name, zip_extn)
+            if values['extras_require']:
+                repo += '#egg={}{}'.format(name, values['extras_require'])
             subprocess.call(exe + options + [repo])

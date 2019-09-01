@@ -45,6 +45,10 @@ if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.msl')):
 
 _GITHUB_AUTH_PATH = os.path.join(os.path.expanduser('~'), '.msl', '.mslpm-github-auth')
 
+_package_name_regex = re.compile(
+    r'(?P<package_name>[*]?[\w-]*[*]?[\w-]*)(?P<extras_require>\[.*\])?(?P<version_requested>[<!=>~].*)?'
+)
+
 
 def get_email():
     """Try to determine the user's email address.
@@ -300,7 +304,7 @@ def installed():
 
     Returns
     -------
-    :class:`dict` of :class:`dict`
+    :class:`dict`
         The MSL packages that are installed.
     """
     log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
@@ -463,17 +467,26 @@ def _check_wildcards_and_prefix(names, pkgs):
 
     Returns
     -------
-    :class:`set` of :class:`str`
-       A set of package names.
+    :class:`dict`
+       The keys are the package names and the values are the version info/extra requires.
     """
-    _names = set()
+    _packages = dict()
     pkgs_map = dict((p.lower(), p) for p in pkgs)
     for name in names:
-        name = name.lower()
+        found = re.search(_package_name_regex, name.lower())
+        if not found:
+            continue
+        result = found.groupdict()
+        if not result['package_name']:
+            log.error('Invalid package name {!r}'.format(name))
+            continue
         for prefix in ['', 'msl-']:
-            for match in fnmatch.filter(pkgs_map, prefix+name):
-                _names.add(pkgs_map[match])
-    return _names
+            for match in fnmatch.filter(pkgs_map, prefix+result['package_name']):
+                _packages[pkgs_map[match]] = {
+                    'extras_require': result['extras_require'],
+                    'version_requested': result['version_requested']
+                }
+    return _packages
 
 
 def _create_install_list(names, branch, tag, update_cache):
@@ -492,7 +505,7 @@ def _create_install_list(names, branch, tag, update_cache):
 
     Returns
     -------
-    :class:`dict` of :class:`dict`
+    :class:`dict`
         The MSL packages to ``install``.
     """
     zip_name = _get_github_zip_name(branch, tag)
@@ -503,15 +516,16 @@ def _create_install_list(names, branch, tag, update_cache):
     pkgs_github = github(update_cache=update_cache)
 
     if not names:  # e.g., the --all flag
-        names = [pkg for pkg in pkgs_github if pkg != _PKG_NAME and pkg.startswith('msl-')]
+        packages = dict((pkg, {'extras_require': None, 'version_requested': None})
+                        for pkg in pkgs_github if pkg != _PKG_NAME and pkg.startswith('msl-'))
     else:
-        names = _check_wildcards_and_prefix(names, pkgs_github)
+        packages = _check_wildcards_and_prefix(names, pkgs_github)
 
     # the name of an installed package can be different than the repo name
     repo_names = [p['repo_name'] for p in pkgs_installed.values()]
 
     pkgs = {}
-    for name in names:
+    for name, value in packages.items():
         if name in pkgs_installed or name in repo_names:
             log.warning('The {!r} package is already installed.'.format(name))
         elif name not in pkgs_github:
@@ -522,6 +536,8 @@ def _create_install_list(names, branch, tag, update_cache):
             log.error('Cannot install {!r}. A {!r} tag does not exist.'.format(name, tag))
         else:
             pkgs[name] = pkgs_github[name]
+            pkgs[name]['version_requested'] = value['version_requested']
+            pkgs[name]['extras_require'] = value['extras_require']
     return pkgs
 
 
@@ -668,13 +684,26 @@ def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None
     pkgs = _sort_packages(packages)
 
     w = [0, 0]
-    for p in pkgs:
-        w[0] = max(w[0], len(p))
-        w[1] = max(w[1], len(pkgs[p]['version']))
+    for pkg, values in pkgs.items():
+        if values.get('extras_require'):
+            w[0] = max(w[0], len(pkg + values['extras_require']))
+        else:
+            w[0] = max(w[0], len(pkg))
+        if values.get('version_requested'):
+            w[1] = max(w[1], len(values['version_requested']))
+        else:
+            w[1] = max(w[1], len(values['version']))
 
     msg = '\n{}The following MSL packages will be {}{}{}:\n'.format(Fore.RESET, Fore.CYAN, action, Fore.RESET)
     for pkg, values in pkgs.items():
-        msg += '\n  {}  {} '.format(pkg.ljust(w[0]), values['version'].ljust(w[1]))
+        name = pkg
+        if values.get('extras_require'):
+            name += values['extras_require']
+        if values.get('version_requested'):
+            version = values['version_requested'].replace('==', '')
+        else:
+            version = values['version']
+        msg += '\n  {}  {} '.format(name.ljust(w[0]), version.ljust(w[1]))
         if action == 'REMOVED':
             continue
         if branch is not None:
