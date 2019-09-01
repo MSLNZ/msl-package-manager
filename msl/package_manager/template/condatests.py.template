@@ -23,7 +23,7 @@ else:
     BIN, EXT = 'bin', ''
 
 EXECUTABLES = {'python', 'pypy', 'pypy3'}
-CREATE_ENV_PREFIX = 'condatestenv-'
+CREATE_ENV_PREFIX = 'condatestsenv-'
 INI_PATH = 'condatests.ini'
 
 
@@ -124,7 +124,8 @@ def cli_parser(args):
     p.add_argument('-x', '--exclude', default=[], nargs='+', help='the conda environments to exclude (supports regex)')
     p.add_argument('-f', '--ini', default=INI_PATH, help='the path to the configuration file '
                                                          '[default: {}]'.format(INI_PATH))
-    p.add_argument('-r', '--requires', default=[], nargs='+', help='additional packages to install for the tests')
+    p.add_argument('-r', '--requires', default=[], nargs='+', help='additional packages to install for the tests '
+                                                                   '(can also be a path to a file)')
     return p.parse_args(args)
 
 
@@ -153,9 +154,18 @@ def create_env(name, base_env_path, args):
     return path
 
 
-def install_packages(env_name, packages):
-    if not packages:
-        return
+def install_packages(env_name, packages_or_files):
+    if not packages_or_files:
+        return ''
+
+    files = []
+    packages = []
+    for item in packages_or_files:
+        if os.path.isfile(item):
+            files.append('--file={}'.format(item))
+        else:
+            packages.append(item)
+    packages.extend(files)
 
     print('Installing {} in the {!r} environment'.format(', '.join(packages), env_name))
     p = subprocess.Popen(['conda', 'install', '--name', env_name, '--yes'] + packages,

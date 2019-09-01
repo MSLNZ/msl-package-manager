@@ -105,7 +105,7 @@ command line
 * ``--create`` - the Python version numbers to use to create conda environment_\s (e.g., 2 3.6 3.7.2)
 * ``--include`` - the conda environment_\s to include (supports regex)
 * ``--exclude`` - the conda environment_\s to exclude (supports regex)
-* ``--requires`` - additional packages to install for the tests
+* ``--requires`` - additional packages to install for the tests (can also be a path to a file_)
 * ``--command`` - the command to execute with each conda environment_
 * ``--ini`` - the path to the :ref:`condatests-ini`
 * ``--list`` - list the conda environment_\s that will be used for the tests and then exit
@@ -129,19 +129,11 @@ Run the tests with all conda environment_\s that include *py* in the environment
 
    python condatests.py --include py
 
-.. code-block:: console
-
-   python condatests.py -i py
-
 Run the tests with all conda environment_\s but exclude those that contain *py26* and *py33* in the environment_ name
 
 .. code-block:: console
 
    python condatests.py --exclude py26 py33
-
-.. code-block:: console
-
-   python condatests.py -x py26 py33
 
 .. tip::
 
@@ -161,15 +153,11 @@ Create new conda environment_\s for the specified Python versions (if the `minor
 numbers are not specified then the latest Python version that is available to conda will be installed).
 After the test finishes the newly-created environment_ is removed. For example, the following
 command will create environment_\s for the latest Python 2.x.x version, for the latest Python 3.6.x
-version and for Python 3.7.4
+version and for Python 3.7.4 and exclude all environment_\s that already exist
 
 .. code-block:: console
 
-   python condatests.py --create 2 3.6 3.7.4
-
-.. code-block:: console
-
-   python condatests.py -C 2 3.6 3.7.4
+   python condatests.py --create 2 3.6 3.7.4 --exclude *
 
 You can also mix the ``--create``, ``--include`` and ``--exclude`` arguments
 
@@ -183,10 +171,6 @@ Run the tests with all conda environment_\s using the command ``nosetests``
 
    python condatests.py --command nosetests
 
-.. code-block:: console
-
-   python condatests.py -c nosetests
-
 Run the tests with all conda environment_\s using the command ``unittest discover -s tests/``
 
 .. code-block:: console
@@ -194,29 +178,23 @@ Run the tests with all conda environment_\s using the command ``unittest discove
    python condatests.py --command "unittest discover -s tests/"
 
 Run the tests with all conda environment_\s using the command ``unittest discover -s tests/`` and ensure
-that *scipy* is installed in each environment_
+that all the packages specified in a requirements file_ are installed in each environment_
 
 .. code-block:: console
 
-   python condatests.py --command "unittest discover -s tests/" --requires scipy
+   python condatests.py --command "unittest discover -s tests/" --requires my_requirements.txt
 
-List (show) all conda environment_\s that will be used for the tests and then exit
+List all conda environment_\s that will be used for the tests and then exit
 
 .. code-block:: console
 
    python condatests.py --list
 
-.. code-block:: console
-
-   python condatests.py -l
+Show is an alias for `list`
 
 .. code-block:: console
 
    python condatests.py --show
-
-.. code-block:: console
-
-   python condatests.py -s
 
 List the conda environment_\s that include *dev* in the environment_ name and then exit
 
@@ -229,10 +207,6 @@ Specify the path to a  `condatests-ini`_
 .. code-block:: console
 
    python condatests.py --ini C:\Users\Me\my_condatests_config.ini
-
-.. code-block:: console
-
-   python condatests.py -f C:\Users\Me\my_condatests_config.ini
 
 
 .. _condatests-ini:
@@ -350,3 +324,4 @@ files that might exist) with the specified conda environment_\s.
 .. _tox: https://tox.readthedocs.io/en/latest/
 .. _conda: https://conda.readthedocs.io/en/latest/
 .. _pipe: https://en.wikipedia.org/wiki/Pipeline_(Unix)
+.. _file: https://docs.conda.io/projects/conda/en/latest/commands/install.html#Named%20Arguments
