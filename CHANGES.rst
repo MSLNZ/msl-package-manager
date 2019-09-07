@@ -15,12 +15,13 @@ Version 2.4.0.dev0
     a version number when installing/updating
   * issue `#5 <https://github.com/MSLNZ/msl-package-manager/issues/5>`_ - add support for
     specifying an extras_require value when installing/updating
+  * issue `#4 <https://github.com/MSLNZ/msl-package-manager/issues/4>`_ - error updating package if the
+    installed name != repository name
   * the `test_require` kwarg in ``setup.py`` now specifies `pytest<=4.6.4` for Python 2.7
 
 - Removed
 
   * support for Python 3.4
-
 
 Version 2.3.0 (2019.06.10)
 ==========================
