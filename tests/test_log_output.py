@@ -47,7 +47,9 @@ def test_log_output(caplog):
     # make sure that MSL-LoadLib is not installed
     assert 'msl-loadlib' not in installed()
 
+    #
     # the expected logging messages
+    #
     exec_path = os.path.dirname(sys.executable)
     loadlib_name = "u'msl-loadlib'" if sys.version_info.major == 2 else "'msl-loadlib'"
     expected = [
@@ -65,6 +67,7 @@ def test_log_output(caplog):
         # msl install does_not_exist -> a that package does not exist
         'Getting the packages from {}'.format(exec_path),
         'Loaded the cached information about the GitHub repositories',
+        'No MSL packages match \'does_not_exist\'',
         'No MSL packages to install.',
 
         # msl install loadlib -> already installed
@@ -85,10 +88,12 @@ def test_log_output(caplog):
         'Getting the packages from {}'.format(exec_path),
         'Loaded the cached information about the GitHub repositories',
         'Loaded the cached information about the PyPI packages',
+        'No MSL packages match \'colorama\'',
         '\x1b[39mNo MSL packages to update.\x1b[39m',
 
         # msl uninstall colorama -> not an MSL package
         'Getting the packages from {}'.format(exec_path),
+        'No MSL packages match \'colorama\'',
         'No MSL packages to uninstall.',
 
         # msl uninstall loadlib

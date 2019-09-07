@@ -480,12 +480,16 @@ def _check_wildcards_and_prefix(names, pkgs):
         if not result['package_name']:
             log.error('Invalid package name {!r}'.format(name))
             continue
+        found_it = False
         for prefix in ['', 'msl-']:
             for match in fnmatch.filter(pkgs_map, prefix+result['package_name']):
+                found_it = True
                 _packages[pkgs_map[match]] = {
                     'extras_require': result['extras_require'],
                     'version_requested': result['version_requested']
                 }
+        if not found_it:
+            log.warning('No MSL packages match {!r}'.format(name))
     return _packages
 
 
