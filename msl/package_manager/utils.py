@@ -101,7 +101,7 @@ def github(update_cache=False):
 
     Returns
     -------
-    :class:`dict` of :class:`dict`
+    :class:`dict`
         The MSL repositories_ that are available on GitHub.
     """
     packages, path = _inspect_github_pypi('github', update_cache)
@@ -360,7 +360,7 @@ def pypi(update_cache=False):
 
     Returns
     -------
-    :class:`dict` of :class:`dict`
+    :class:`dict`
         The MSL packages_ that are available on PyPI.
     """
     packages, path = _inspect_github_pypi('pypi', update_cache)
@@ -555,7 +555,7 @@ def _create_uninstall_list(names):
 
     Returns
     -------
-    :class:`dict` of :class:`dict`
+    :class:`dict`
         The MSL packages to ``uninstall``.
     """
 
