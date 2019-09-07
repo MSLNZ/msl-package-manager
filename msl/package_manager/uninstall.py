@@ -34,7 +34,7 @@ def uninstall(*names, **kwargs):
 
     packages = utils._create_uninstall_list(names)
     if not packages:
-        utils.log.info('No MSL packages to uninstall.')
+        utils.log.info('No MSL packages to uninstall')
         return
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do

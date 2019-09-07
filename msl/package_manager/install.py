@@ -67,7 +67,7 @@ def install(*names, **kwargs):
 
     packages = utils._create_install_list(names, branch, tag, update_cache)
     if not packages:
-        utils.log.info('No MSL packages to install.')
+        utils.log.info('No MSL packages to install')
         return
 
     pkgs_pypi = utils.pypi(update_cache)

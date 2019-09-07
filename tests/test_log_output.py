@@ -51,7 +51,7 @@ def test_log_output(caplog):
     # the expected logging messages
     #
     exec_path = os.path.dirname(sys.executable)
-    loadlib_name = "u'msl-loadlib'" if sys.version_info.major == 2 else "'msl-loadlib'"
+    u = 'u' if sys.version_info.major == 2 else ''
     expected = [
         # msl install loadlib==0.5.0
         'Getting the packages from {}'.format(exec_path),
@@ -59,7 +59,7 @@ def test_log_output(caplog):
         'Loaded the cached information about the PyPI packages',
         '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  msl-loadlib  0.5.0    [PyPI]',
         '',
-        'Installing {} from PyPI'.format(loadlib_name),
+        "Installing {}'msl-loadlib' from PyPI".format(u),
 
         # check if msl-loadlib is installed
         'Getting the packages from {}'.format(exec_path),
@@ -67,14 +67,14 @@ def test_log_output(caplog):
         # msl install does_not_exist -> a that package does not exist
         'Getting the packages from {}'.format(exec_path),
         'Loaded the cached information about the GitHub repositories',
-        'No MSL packages match \'does_not_exist\'',
-        'No MSL packages to install.',
+        "No MSL packages match 'does_not_exist'",
+        'No MSL packages to install',
 
         # msl install loadlib -> already installed
         'Getting the packages from {}'.format(exec_path),
         'Loaded the cached information about the GitHub repositories',
-        'The {} package is already installed.'.format(loadlib_name),
-        'No MSL packages to install.',
+        "The {}'msl-loadlib' package is already installed".format(u),
+        'No MSL packages to install',
 
         # msl update loadlib[java]==0.6.0
         'Getting the packages from {}'.format(exec_path),
@@ -82,19 +82,19 @@ def test_log_output(caplog):
         'Loaded the cached information about the PyPI packages',
         '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  msl-loadlib[java]: 0.5.0 --> 0.6.0  [PyPI]',
         '',
-        'Updating {} from PyPI'.format(loadlib_name),
+        "Updating {}'msl-loadlib' from PyPI".format(u),
 
         # msl update colorama -> not an MSL package
         'Getting the packages from {}'.format(exec_path),
         'Loaded the cached information about the GitHub repositories',
         'Loaded the cached information about the PyPI packages',
-        'No MSL packages match \'colorama\'',
-        '\x1b[39mNo MSL packages to update.\x1b[39m',
+        "No MSL packages match 'colorama'",
+        '\x1b[39mNo MSL packages to update\x1b[39m',
 
         # msl uninstall colorama -> not an MSL package
         'Getting the packages from {}'.format(exec_path),
-        'No MSL packages match \'colorama\'',
-        'No MSL packages to uninstall.',
+        "No MSL packages match 'colorama'",
+        'No MSL packages to uninstall',
 
         # msl uninstall loadlib
         'Getting the packages from {}'.format(exec_path),

@@ -81,16 +81,16 @@ def update(*names, **kwargs):
     if not names:
         packages = pkgs_installed  # update all installed packages
     else:
-        packages = utils._check_wildcards_and_prefix(names, pkgs_github)
+        packages = utils._check_wildcards_and_prefix(names, pkgs_installed)
 
     w = [0, 0]
     pkgs_to_update = dict()
     for name, values in packages.items():
 
-        err_msg = 'Cannot update {!r}. '.format(name)
+        err_msg = 'Cannot update {!r} -- '.format(name)
 
         if name not in pkgs_installed:
-            utils.log.error(err_msg + 'The package is not installed.')
+            utils.log.error(err_msg + 'The package is not installed')
             continue
 
         installed_version = pkgs_installed[name]['version']
@@ -110,7 +110,7 @@ def update(*names, **kwargs):
                     'version': '[tag:{}]'.format(tag),
                 }
             else:
-                utils.log.error(err_msg + 'A {!r} tag does not exist.'.format(tag))
+                utils.log.error(err_msg + 'A {!r} tag does not exist'.format(tag))
                 continue
         elif branch is not None:
             if branch in pkgs_github[repo_name]['branches']:
@@ -121,7 +121,7 @@ def update(*names, **kwargs):
                     'version': '[branch:{}]'.format(branch),
                 }
             else:
-                utils.log.error(err_msg + 'A {!r} branch does not exist.'.format(branch))
+                utils.log.error(err_msg + 'A {!r} branch does not exist'.format(branch))
                 continue
         else:
             if using_pypi:
@@ -131,7 +131,7 @@ def update(*names, **kwargs):
 
             if not version:
                 # a version number must exist on PyPI, so if this occurs it must be for a github repo
-                utils.log.error(err_msg + 'The GitHub repository does not contain a release.')
+                utils.log.error(err_msg + 'The GitHub repository does not contain a release. Specify a branch or a tag')
                 continue
             elif values.get('version_requested'):
                 # this elif must come before the parse_version check
@@ -209,4 +209,4 @@ def update(*names, **kwargs):
             return 'updating_msl_package_manager'
 
     else:
-        utils.log.info('{0}No MSL packages to update.{0}'.format(Fore.RESET))
+        utils.log.info('{0}No MSL packages to update{0}'.format(Fore.RESET))

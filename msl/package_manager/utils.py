@@ -531,13 +531,13 @@ def _create_install_list(names, branch, tag, update_cache):
     pkgs = {}
     for name, value in packages.items():
         if name in pkgs_installed or name in repo_names:
-            log.warning('The {!r} package is already installed.'.format(name))
+            log.warning('The {!r} package is already installed'.format(name))
         elif name not in pkgs_github:
-            log.error('Cannot install {!r}. The package is not found.'.format(name))
+            log.error('Cannot install {!r} -- the package does not exist'.format(name))
         elif branch is not None and branch not in pkgs_github[name]['branches']:
-            log.error('Cannot install {!r}. A {!r} branch does not exist.'.format(name, branch))
+            log.error('Cannot install {!r} -- a {!r} branch does not exist'.format(name, branch))
         elif tag is not None and tag not in pkgs_github[name]['tags']:
-            log.error('Cannot install {!r}. A {!r} tag does not exist.'.format(name, tag))
+            log.error('Cannot install {!r} -- a {!r} tag does not exist'.format(name, tag))
         else:
             pkgs[name] = pkgs_github[name]
             pkgs[name]['version_requested'] = value['version_requested']
@@ -735,7 +735,7 @@ def _sort_packages(pkgs):
     :class:`collections.OrderedDict`
         The packages sorted by name.
     """
-    return collections.OrderedDict([(k, pkgs[k]) for k in sorted(pkgs)])
+    return collections.OrderedDict([(u'{}'.format(k), pkgs[k]) for k in sorted(pkgs)])
 
 
 class _ColourStreamHandler(logging.StreamHandler):
