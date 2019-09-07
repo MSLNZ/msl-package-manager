@@ -47,6 +47,34 @@ def test_log_output(caplog):
     # make sure that MSL-LoadLib is not installed
     assert 'msl-loadlib' not in installed()
 
+    if sys.version_info[:2] >= (3, 5):
+        # rpi-smartgadget requires msl-network which require Python 3.5+
+
+        # msl install rpi-smartgadget
+        install('rpi-smartgadget', yes=True)
+
+        # make sure that smartgadget and msl-network are installed
+        installed_ = installed()
+        assert 'smartgadget' in installed_
+        assert 'msl-network' in installed_
+
+        # update rpi-smartgadget -> invalid branch
+        update('smartgadget', yes=True, branch='invalid')
+
+        # update rpi-smartgadget -> invalid tag
+        update('smartgadget', yes=True, tag='invalid')
+
+        # update rpi-smartgadget
+        update('smartgadget', yes=True, branch='master')
+
+        # uninstall rpi-smartgadget
+        uninstall('smartgadget', 'network', yes=True)
+
+        # make sure that smartgadget and msl-network are not installed
+        installed_ = installed()
+        assert 'smartgadget' not in installed_
+        assert 'msl-network' not in installed_
+
     #
     # the expected logging messages
     #
@@ -104,6 +132,50 @@ def test_log_output(caplog):
         # check if msl-loadlib is installed
         'Getting the packages from {}'.format(exec_path),
     ]
+
+    if sys.version_info[:2] >= (3, 5):
+        expected.extend([
+            # install rpi-smartgadget
+            'Getting the packages from {}'.format(exec_path),
+            'Loaded the cached information about the GitHub repositories',
+            'Loaded the cached information about the PyPI packages',
+            '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  rpi-smartgadget    [GitHub]',
+            '',
+            "Installing {}'rpi-smartgadget' from GitHub/master".format(u),
+
+            # check if smartgadget and msl-network are installed
+            'Getting the packages from {}'.format(exec_path),
+
+            # update rpi-smartgadget -> invalid branch
+            'Getting the packages from {}'.format(exec_path),
+            'Loaded the cached information about the GitHub repositories',
+            'Loaded the cached information about the PyPI packages',
+            "Cannot update 'smartgadget' -- The 'invalid' branch does not exist",
+            '\x1b[39mNo MSL packages to update\x1b[39m',
+
+            # update rpi-smartgadget -> invalid tag
+            'Getting the packages from {}'.format(exec_path),
+            'Loaded the cached information about the GitHub repositories',
+            'Loaded the cached information about the PyPI packages',
+            "Cannot update 'smartgadget' -- The 'invalid' tag does not exist",
+            '\x1b[39mNo MSL packages to update\x1b[39m',
+
+            # update rpi-smartgadget -> master branch
+            'Getting the packages from {}'.format(exec_path),
+            'Loaded the cached information about the GitHub repositories',
+            'Loaded the cached information about the PyPI packages',
+            '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  smartgadget: 0.1.0.dev0 --> [branch:master]  [GitHub]',
+            '',
+            "Updating {}'smartgadget' from GitHub/master".format(u),
+
+            # msl uninstall smartgadget network
+            'Getting the packages from {}'.format(exec_path),
+            '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  msl-network  0.4.1      \n  smartgadget  0.1.0.dev0 ',
+            '',
+
+            # checking that smartgadget and msl-network are not installed
+            'Getting the packages from {}'.format(exec_path),
+    ])
 
     for index, record in enumerate(caplog.records):
         assert expected[index] == record.message

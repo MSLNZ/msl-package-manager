@@ -108,9 +108,10 @@ def update(*names, **kwargs):
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
                     'version': '[tag:{}]'.format(tag),
+                    'repo_name': repo_name,
                 }
             else:
-                utils.log.error(err_msg + 'A {!r} tag does not exist'.format(tag))
+                utils.log.error(err_msg + 'The {!r} tag does not exist'.format(tag))
                 continue
         elif branch is not None:
             if branch in pkgs_github[repo_name]['branches']:
@@ -119,9 +120,10 @@ def update(*names, **kwargs):
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
                     'version': '[branch:{}]'.format(branch),
+                    'repo_name': repo_name,
                 }
             else:
-                utils.log.error(err_msg + 'A {!r} branch does not exist'.format(branch))
+                utils.log.error(err_msg + 'The {!r} branch does not exist'.format(branch))
                 continue
         else:
             if using_pypi:
@@ -140,6 +142,7 @@ def update(*names, **kwargs):
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
                     'version': values['version_requested'],
+                    'repo_name': repo_name,
                 }
             elif parse_version(version) > parse_version(installed_version):
                 pkgs_to_update[name] = {
@@ -147,6 +150,7 @@ def update(*names, **kwargs):
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
                     'version': version,
+                    'repo_name': repo_name,
                 }
             else:
                 utils.log.warning('The {!r} package is already the latest [{}]'.format(name, installed_version))
@@ -191,7 +195,7 @@ def update(*names, **kwargs):
                 package = [pkg + info['extras_require'] + info['version']]
             else:
                 utils.log.debug('Updating {!r} from GitHub/{}'.format(pkg, zip_name))
-                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(pkg, zip_name, zip_extn)
+                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
                 if info['extras_require']:
                     repo += '#egg={}{}'.format(pkg, info['extras_require'])
                 package = [repo]
