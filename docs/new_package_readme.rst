@@ -271,7 +271,7 @@ Python version that is available to conda will be installed)
 
    [envs]
    create=2 3.5 3.6 3.7
-   exclude=*
+   exclude=.
    requires=scipy
 
 **Example 4**: Run ``python setup.py tests`` with newly-created conda environment_\s and all conda environment_\s
