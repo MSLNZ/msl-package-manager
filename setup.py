@@ -94,7 +94,7 @@ sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
 
 tests_require = ['pytest-cov', 'colorama']
 if sys.version_info[:2] == (2, 7):
-    tests_require.append('pytest<=4.6.4')
+    tests_require.append('pytest<5.0')
 else:
     tests_require.append('pytest')
 
