@@ -129,7 +129,13 @@ def update(*names, **kwargs):
             if using_pypi:
                 version = pkgs_pypi[name]['version']
             else:
-                version = pkgs_github[repo_name]['version']
+                # an MSL package could have been installed in "editable" mode, i.e., pip install -e .
+                # and therefore it might only exist locally until it is pushed to the repository
+                repo = pkgs_github.get(repo_name)
+                if not repo:
+                    utils.log.error(err_msg + 'The {!r} repository does not exist'.format(repo_name))
+                    continue
+                version = repo['version']
 
             if not version:
                 # a version number must exist on PyPI, so if this occurs it must be for a github repo
