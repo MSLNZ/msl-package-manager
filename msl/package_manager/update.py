@@ -99,10 +99,18 @@ def update(*names, **kwargs):
         using_pypi = name in pkgs_pypi and tag is None and branch is None
         repo_name = pkgs_installed[name]['repo_name']
 
+        # an MSL package could have been installed in "editable" mode, i.e., pip install -e .
+        # and therefore it might only exist locally until it is pushed to the repository
+        repo = pkgs_github.get(repo_name)
+        no_repo_err_msg = err_msg + 'The {!r} repository does not exist'.format(repo_name)
+
         extras_require = values['extras_require'] if values.get('extras_require') is not None else ''
 
         if tag is not None:
-            if tag in pkgs_github[repo_name]['tags']:
+            if not repo:
+                utils.log.error(no_repo_err_msg)
+                continue
+            if tag in repo['tags']:
                 pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
@@ -114,7 +122,10 @@ def update(*names, **kwargs):
                 utils.log.error(err_msg + 'The {!r} tag does not exist'.format(tag))
                 continue
         elif branch is not None:
-            if branch in pkgs_github[repo_name]['branches']:
+            if not repo:
+                utils.log.error(no_repo_err_msg)
+                continue
+            if branch in repo['branches']:
                 pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
@@ -129,11 +140,8 @@ def update(*names, **kwargs):
             if using_pypi:
                 version = pkgs_pypi[name]['version']
             else:
-                # an MSL package could have been installed in "editable" mode, i.e., pip install -e .
-                # and therefore it might only exist locally until it is pushed to the repository
-                repo = pkgs_github.get(repo_name)
                 if not repo:
-                    utils.log.error(err_msg + 'The {!r} repository does not exist'.format(repo_name))
+                    utils.log.error(no_repo_err_msg)
                     continue
                 version = repo['version']
 
