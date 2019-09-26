@@ -6,6 +6,7 @@ import pytest
 
 from msl.package_manager import install, update, uninstall, installed, _PKG_NAME
 
+
 # see the docs for the caplog fixture
 # https://docs.pytest.org/en/latest/logging.html#caplog-fixture
 def test_log_output(caplog):
