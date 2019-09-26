@@ -309,9 +309,7 @@ def installed():
     """
     log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
 
-    log.disabled = True
     gh = github(update_cache=False)
-    log.disabled = False
 
     # refresh the working_set
     reload(pkg_resources)
@@ -516,8 +514,9 @@ def _create_install_list(names, branch, tag, update_cache):
     if zip_name is None:
         return
 
-    pkgs_installed = installed()
+    # keep the order of the log messages consistent: pypi -> github -> local
     pkgs_github = github(update_cache=update_cache)
+    pkgs_installed = installed()
 
     if not names:  # e.g., the --all flag
         packages = dict((pkg, {'extras_require': None, 'version_requested': None})
@@ -661,7 +660,10 @@ def _inspect_github_pypi(where, update_cache):
 
     one_day = 60 * 60 * 24
     if (not update_cache) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
-        log.debug('Loaded the cached information about the ' + suffix)
+        # The installed() function also calls github() so this log message could be displayed twice.
+        # Avoid seeing the following log message when the installed() function was previously called.
+        if where == 'pypi' or not _ColourStreamHandler.previous_message.endswith(os.path.dirname(sys.executable)):
+            log.debug('Loaded the cached information about the ' + suffix)
         return _sort_packages(cached_pgks), path
 
     return dict(), path
@@ -751,7 +753,10 @@ class _ColourStreamHandler(logging.StreamHandler):
         'CRITICAL': Back.RED + Fore.WHITE
     }
 
+    previous_message = ''
+
     def emit(self, record):
+        _ColourStreamHandler.previous_message = record.getMessage()
         try:
             message = self.format(record)
             self.stream.write(self.COLOURS[record.levelname] + message)

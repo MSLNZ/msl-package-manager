@@ -82,9 +82,9 @@ def test_log_output(caplog):
     u = 'u' if sys.version_info.major == 2 else ''
     expected = [
         # msl install loadlib==0.5.0
-        'Getting the packages from {}'.format(exec_path),
-        'Loaded the cached information about the GitHub repositories',
         'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
         '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  msl-loadlib  0.5.0    [PyPI]',
         '',
         "Installing {}'msl-loadlib' from PyPI".format(u),
@@ -93,29 +93,31 @@ def test_log_output(caplog):
         'Getting the packages from {}'.format(exec_path),
 
         # msl install does_not_exist -> a that package does not exist
-        'Getting the packages from {}'.format(exec_path),
+        'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
         "No MSL packages match 'does_not_exist'",
         'No MSL packages to install',
 
         # msl install loadlib -> already installed
-        'Getting the packages from {}'.format(exec_path),
+        'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
         "The {}'msl-loadlib' package is already installed".format(u),
         'No MSL packages to install',
 
         # msl update loadlib[java]==0.6.0
-        'Getting the packages from {}'.format(exec_path),
-        'Loaded the cached information about the GitHub repositories',
         'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
         '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  msl-loadlib[java]: 0.5.0 --> 0.6.0  [PyPI]',
         '',
         "Updating {}'msl-loadlib' from PyPI".format(u),
 
         # msl update colorama -> not an MSL package
-        'Getting the packages from {}'.format(exec_path),
-        'Loaded the cached information about the GitHub repositories',
         'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
         "No MSL packages match 'colorama'",
         '\x1b[39mNo MSL packages to update\x1b[39m',
 
@@ -136,9 +138,9 @@ def test_log_output(caplog):
     if sys.version_info[:2] >= (3, 5):
         expected.extend([
             # install rpi-smartgadget
-            'Getting the packages from {}'.format(exec_path),
-            'Loaded the cached information about the GitHub repositories',
             'Loaded the cached information about the PyPI packages',
+            'Loaded the cached information about the GitHub repositories',
+            'Getting the packages from {}'.format(exec_path),
             '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  rpi-smartgadget    [GitHub]',
             '',
             "Installing {}'rpi-smartgadget' from GitHub/master".format(u),
@@ -147,23 +149,23 @@ def test_log_output(caplog):
             'Getting the packages from {}'.format(exec_path),
 
             # update rpi-smartgadget -> invalid branch
-            'Getting the packages from {}'.format(exec_path),
-            'Loaded the cached information about the GitHub repositories',
             'Loaded the cached information about the PyPI packages',
+            'Loaded the cached information about the GitHub repositories',
+            'Getting the packages from {}'.format(exec_path),
             "Cannot update 'smartgadget' -- The 'invalid' branch does not exist",
             '\x1b[39mNo MSL packages to update\x1b[39m',
 
             # update rpi-smartgadget -> invalid tag
-            'Getting the packages from {}'.format(exec_path),
-            'Loaded the cached information about the GitHub repositories',
             'Loaded the cached information about the PyPI packages',
+            'Loaded the cached information about the GitHub repositories',
+            'Getting the packages from {}'.format(exec_path),
             "Cannot update 'smartgadget' -- The 'invalid' tag does not exist",
             '\x1b[39mNo MSL packages to update\x1b[39m',
 
             # update rpi-smartgadget -> master branch
-            'Getting the packages from {}'.format(exec_path),
-            'Loaded the cached information about the GitHub repositories',
             'Loaded the cached information about the PyPI packages',
+            'Loaded the cached information about the GitHub repositories',
+            'Getting the packages from {}'.format(exec_path),
             '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  smartgadget: 0.1.0.dev0 --> [branch:master]  [GitHub]',
             '',
             "Updating {}'smartgadget' from GitHub/master".format(u),

@@ -72,9 +72,10 @@ def update(*names, **kwargs):
     if zip_name is None:
         return
 
-    pkgs_installed = utils.installed()
-    pkgs_github = utils.github(update_cache=update_cache)
+    # keep the order of the log messages consistent: pypi -> github -> local
     pkgs_pypi = utils.pypi(update_cache=update_cache)
+    pkgs_github = utils.github(update_cache=update_cache)
+    pkgs_installed = utils.installed()
     if not pkgs_github and not pkgs_pypi:
         return
 

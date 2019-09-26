@@ -65,12 +65,13 @@ def install(*names, **kwargs):
     if zip_name is None:
         return
 
+    # keep the order of the log messages consistent: pypi -> github -> local
+    # utils._create_install_list() does github -> local
+    pkgs_pypi = utils.pypi(update_cache)
     packages = utils._create_install_list(names, branch, tag, update_cache)
     if not packages:
         utils.log.info('No MSL packages to install')
         return
-
-    pkgs_pypi = utils.pypi(update_cache)
 
     utils._log_install_uninstall_message(packages, 'INSTALLED', branch, tag, pkgs_pypi)
     if not (yes or utils._ask_proceed()):
