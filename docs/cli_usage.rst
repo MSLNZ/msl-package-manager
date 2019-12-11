@@ -287,21 +287,24 @@ authorize
 
 When requesting information about the MSL repositories_ that are available on GitHub there is a limit_ to
 how often you can send requests to the GitHub API (this is the primary reason for :ref:`caching <cache_note>`
-the information). If you have a GitHub account and include your username and password with each request then
-this limit_ is increased. If you do not have a GitHub account then you could `sign up <github_signup_>`_ to
-create an account.
+the information). If you have a GitHub account and include your username and a `personal access token`_ with each
+request then this limit_ is increased. If you do not have a GitHub account then you could
+`sign up <github_signup_>`_ to create an account.
 
-By running this command you will be prompted for your GitHub username and password so that you send
-authorized requests to GitHub.
+By running this command you will be asked for your GitHub username and `personal access token`_ so that you send
+authorized requests to the GitHub API.
 
 .. code-block:: console
 
    msl authorize
 
+.. tip::
+   You can also use ``authorise`` as an alias for ``authorize``, e.g., ``msl authorise``
+
 .. important::
-   Your GitHub username and password are saved in plain text in the file that is created. You should set
-   the file permissions provided by your operating system to ensure that your GitHub credentials are safe.
-   The file is saved to your ``$HOME`` directory.
+   Your GitHub username and `personal access token`_ are saved in plain text in the file that is created.
+   You should set the file permissions provided by your operating system to ensure that your GitHub
+   credentials are safe.
 
 .. _git: https://git-scm.com
 .. _repositories: https://github.com/MSLNZ
@@ -310,3 +313,4 @@ authorized requests to GitHub.
 .. _limit: https://developer.github.com/v3/#rate-limiting
 .. _github_signup: https://github.com/join?source=header-home
 .. _JSON: https://www.json.org/
+.. _personal access token: https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line

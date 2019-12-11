@@ -49,12 +49,13 @@ def configure_parser():
 
     add_parser_install(command_parser)
     add_parser_uninstall(command_parser)
-    add_parser_uninstall(command_parser, 'remove')
+    add_parser_uninstall(command_parser, name='remove')
     add_parser_update(command_parser)
-    add_parser_update(command_parser, 'upgrade')
+    add_parser_update(command_parser, name='upgrade')
     add_parser_list(command_parser)
     add_parser_create(command_parser)
     add_parser_authorize(command_parser)
+    add_parser_authorize(command_parser, name='authorise')
 
     return PARSER
 

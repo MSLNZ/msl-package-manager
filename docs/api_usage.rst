@@ -140,13 +140,13 @@ create
 authorize
 ---------
 
-Create the GitHub authorization file, see :func:`~msl.package_manager.authorize.authorize`
+Create an authorization file for the GitHub API, see :func:`~msl.package_manager.authorize.authorize`
 
 .. code-block:: pycon
 
    >>> pm.authorize()
    Enter your GitHub username [default: ...]: >?
-   Enter your GitHub password: >?
+   Enter your GitHub personal access token: >?
 
 .. _repositories: https://github.com/MSLNZ
 .. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
