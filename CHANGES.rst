@@ -7,17 +7,28 @@ Version 2.4.0.dev0
 
 - Added
 
+  * support for Python 3.8
+  * ``authorise`` as an alias for ``authorize`` for the CLI
   * the ``--create``, ``--requires`` and ``--ini`` arguments to ``condatests.py``
+
+- Changed
+
+  * make the order of the log messages consistent: pypi -> github -> local
+  * use a personal access token instead of a password for authentication to the GitHub API
+    (authenticating to the GitHub API using a password is
+    `deprecated <https://developer.github.com/v3/auth/#via-username-and-password>`_)
+  * omit the `examples` directory from the coverage report and from pytest
 
 - Fixed
 
+  * check if an MSL package was installed via pip in `editable` mode
   * issue `#6 <https://github.com/MSLNZ/msl-package-manager/issues/6>`_ - add support for specifying
     a version number when installing/updating
   * issue `#5 <https://github.com/MSLNZ/msl-package-manager/issues/5>`_ - add support for
     specifying an extras_require value when installing/updating
-  * issue `#4 <https://github.com/MSLNZ/msl-package-manager/issues/4>`_ - error updating package if the
+  * issue `#4 <https://github.com/MSLNZ/msl-package-manager/issues/4>`_ - error updating a package if the
     installed name != repository name
-  * the `test_require` kwarg in ``setup.py`` now specifies `pytest<=4.6.4` for Python 2.7
+  * the `test_require` kwarg in ``setup.py`` now specifies `pytest<5.0` for Python 2.7
 
 - Removed
 
