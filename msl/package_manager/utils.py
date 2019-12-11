@@ -708,7 +708,7 @@ def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None
         if values.get('version_requested'):
             version = values['version_requested'].replace('==', '')
         else:
-            version = values['version']
+            version = '' if branch is not None or tag is not None else values['version']
         msg += '\n  {}  {} '.format(name.ljust(w[0]), version.ljust(w[1]))
         if action == 'REMOVED':
             continue
