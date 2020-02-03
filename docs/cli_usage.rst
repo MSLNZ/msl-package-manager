@@ -37,51 +37,51 @@ or, for help about a specific command (for example, the *install* command), run
 install
 -------
 
-Install all MSL packages that are available on the GitHub `repository <repositories_>`_:
+Install all MSL packages that are available on the GitHub `repository <repositories_>`_
 
 .. code-block:: console
 
    msl install --all
 
-Install all MSL packages without asking for confirmation:
+Install all MSL packages without asking for confirmation
 
 .. code-block:: console
 
    msl install --all --yes
 
-Install a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix):
+Install a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix)
 
 .. code-block:: console
 
    msl install loadlib
 
 Install a package from a specific GitHub branch (by default the **master** branch is used if the package
-is not available on PyPI):
+is not available on PyPI)
 
 .. code-block:: console
 
    msl install loadlib --branch develop
 
-Install a package from a specific GitHub tag:
+Install a package from a specific GitHub tag
 
 .. code-block:: console
 
    msl install loadlib --tag v0.3.0
 
-Install multiple MSL packages:
+Install multiple MSL packages
 
 .. code-block:: console
 
    msl install loadlib equipment qt
 
-Install a specific version of a package (the package must be available as a PyPI `package <packages_>`_):
+Install a specific version of a package (the package must be available as a PyPI `package <packages_>`_)
 
 .. code-block:: console
 
    msl install loadlib==0.6.0
 
 Specify a version range of a package -- make sure to surround the package and version range in quotes
-(the package must be available as a PyPI `package <packages_>`_):
+(the package must be available as a PyPI `package <packages_>`_)
 
 .. code-block:: console
 
@@ -89,13 +89,13 @@ Specify a version range of a package -- make sure to surround the package and ve
 
 Install a package and its
 `extra <https://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_
-dependencies:
+dependencies
 
 .. code-block:: console
 
    msl install loadlib[com]
 
-You can also use a wildcard, for example, to install all packages that start with ``pr-``:
+You can also use a wildcard, for example, to install all packages that start with ``pr-``
 
 .. code-block:: console
 
@@ -106,7 +106,7 @@ You can also use a wildcard, for example, to install all packages that start wit
 uninstall
 ---------
 
-Uninstall all MSL packages (except for the **msl-package-manager**):
+Uninstall all MSL packages (except for the **msl-package-manager**)
 
 .. code-block:: console
 
@@ -120,19 +120,19 @@ Uninstall all MSL packages (except for the **msl-package-manager**):
    Use with caution. If you uninstall the MSL Package Manager and you still have
    other MSL packages installed then you may break the MSL namespace_.
 
-Uninstall all MSL packages without asking for confirmation:
+Uninstall all MSL packages without asking for confirmation
 
 .. code-block:: console
 
    msl uninstall --all --yes
 
-Uninstall a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix):
+Uninstall a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix)
 
 .. code-block:: console
 
    msl uninstall loadlib
 
-Uninstall multiple MSL packages:
+Uninstall multiple MSL packages
 
 .. code-block:: console
 
@@ -143,7 +143,7 @@ Uninstall multiple MSL packages:
 update
 ------
 
-Update all MSL packages that are installed:
+Update all MSL packages that are installed
 
 .. code-block:: console
 
@@ -152,38 +152,38 @@ Update all MSL packages that are installed:
 .. tip::
    You can also use ``upgrade`` as an alias for ``update``, e.g., ``msl upgrade --all``
 
-Update all MSL packages without asking for confirmation:
+Update all MSL packages without asking for confirmation
 
 .. code-block:: console
 
    msl update --all --yes
 
-Update a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix):
+Update a specific MSL package, for example **msl-loadlib** (you can ignore the **msl-** prefix)
 
 .. code-block:: console
 
    msl update loadlib
 
-Update to a package that was released :ref:`\<24 hours ago <cache_note>`:
+Update to a package that was released :ref:`\<24 hours ago <cache_note>`
 
 .. code-block:: console
 
    msl update loadlib --update-cache
 
 Update a package from a specific GitHub branch (by default the **master** branch is used if the package
-is not available on PyPI):
+is not available on PyPI)
 
 .. code-block:: console
 
    msl update loadlib --branch develop
 
-Update a package from a specific GitHub tag:
+Update a package from a specific GitHub tag
 
 .. code-block:: console
 
    msl update loadlib --tag v0.3.0
 
-Update multiple MSL packages:
+Update multiple MSL packages
 
 .. code-block:: console
 
@@ -194,38 +194,38 @@ Update multiple MSL packages:
 list
 ----
 
-List all MSL packages that are installed:
+List all MSL packages that are installed
 
 .. code-block:: console
 
    msl list
 
-List all MSL repositories_ that are available on GitHub:
+List all MSL repositories_ that are available on GitHub
 
 .. code-block:: console
 
    msl list --github
 
-List all MSL packages_ that are available on PyPI:
+List all MSL packages_ that are available on PyPI
 
 .. code-block:: console
 
    msl list --pypi
 
-Update the GitHub :ref:`cache <cache_note>` and then list all repositories_ that are available:
+Update the GitHub :ref:`cache <cache_note>` and then list all repositories_ that are available
 
 .. code-block:: console
 
    msl list --github --update-cache
 
-Update the PyPI :ref:`cache <cache_note>` and then list all packages_ that are available:
+Update the PyPI :ref:`cache <cache_note>` and then list all packages_ that are available
 
 .. code-block:: console
 
    msl list --pypi --update-cache
 
 Show the information about the repositories_ (includes information about the branches and the tags)
-in JSON_ format:
+in JSON_ format
 
 .. code-block:: console
 
@@ -236,24 +236,24 @@ in JSON_ format:
 create
 ------
 
-To create a new MSL package called **MyPackage**, run:
+To create a new package called **MyPackage**, run
 
 .. code-block:: console
 
    msl create MyPackage
 
-This will create a new folder (in the current working directory) called **msl-mypackage**. The name of the package
-will be displayed as **MSL-MyPackage** in the documentation; however, when you want to import the package you would
-use all lower-case letters, for example:
+This will create a new folder (in the current working directory) called **msl-MyPackage**.
+
+To import the package you would use
 
 .. code-block:: pycon
 
-   >>> from msl import mypackage
+   >>> from msl import MyPackage
 
 Running the ``create`` command attempts to determine your user name and email address from your git_ account
 to use as the **author** and **email** values in the files that it creates. You do not need git_ to be installed
 to use the ``create`` command, but it helps to make the process more automated. Optionally, you can specify the
-name to use for the **author** and the **email** address by passing additional arguments:
+name to use for the **author** and the **email** address by passing additional arguments
 
 .. code-block:: console
 
@@ -261,24 +261,35 @@ name to use for the **author** and the **email** address by passing additional a
 
 You can also specify where to create the package (instead of the default location which is in the current working
 directory) by specifying a value for the ``--dir`` argument and to automatically accept the default **author**
-name and **email** address values by adding the ``--yes`` argument:
+name and **email** address values by adding the ``--yes`` argument
 
 .. code-block:: console
 
    msl create MyPackage --yes --dir D:\create\package\here
 
-To create a new package that is not part of the **MSL** namespace_, but, for example,
-the Photometry and Radiometry namespace_ you can run,
+To create a new package that is part of a different namespace_, you can run
 
 .. code-block:: console
 
-   msl create Monochromator --namespace pr
+   msl create monochromator --namespace pr
 
-then to import the **PR-Monochromator** package you would use:
+To import this package you would use
 
 .. code-block:: pycon
 
    >>> from pr import monochromator
+
+To create a new package that is not part of a namespace_, run
+
+.. code-block:: console
+
+   msl create mypackage --no-namespace
+
+To import this package you would use
+
+.. code-block:: pycon
+
+   >>> import mypackage
 
 .. _authorize_cli:
 

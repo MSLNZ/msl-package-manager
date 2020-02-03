@@ -1,4 +1,4 @@
-${namespace}-${msl-package}
+${full-name}
 ${=}
 
 Write the readme...

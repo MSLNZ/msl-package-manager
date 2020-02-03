@@ -8,11 +8,11 @@ from .cli_argparse import add_argument_yes
 from .cli_argparse import add_argument_quiet
 from .cli_argparse import add_argument_disable_mslpm_version_check
 
-HELP = 'Create a new MSL package.'
+HELP = 'Create a new package.'
 
 DESCRIPTION = HELP + """
 
-To create a new MSL package you must specify the package name,
+To create a new package you must specify the package name,
 and optionally, the name and email address of the author, the
 directory where you to want to save the package and the namespace
 of the package.
@@ -20,35 +20,29 @@ of the package.
 
 EXAMPLE = """
 Example:
-  To create a new "MSL-MyPackage" template that contains the standard
-  directory structure for a new MSL repository you should specify 
-  "MyPackage" as shown by the following command:
+  To create a new package that is part of the msl namespace:
   
   $ msl create MyPackage
 
-  To set the values to use for the name and email address of the author:
+  To import the package, use:
 
-  $ msl create MyPackage --author Firstname M. Lastname --email my.email@address.com
+  >>> from msl import MyPackage
 
-  To specify the directory where to save the package and to automatically accept the 
-  default author name and email address, use:
+  To create a package that is part of another namespace, use:
 
-  $ msl create MyPackage --yes --dir /home/
+  $ msl create monochromator --namespace pr
 
-  If you create a package called "MyPackage" then all the text in the 
-  documentation will be displayed as "MSL-MyPackage"; however, to import the 
-  package you would use:
-
-  >>> from msl import mypackage
-
-  To create a package that is not part of the MSL namespace, but instead it
-  is part of the Photometry and Radiometry namespace, use:
-
-  $ msl create Monochromator --namespace pr
-
-  To import the "PR-Monochromator" package you would use:
+  To import this package, use:
 
   >>> from pr import monochromator
+  
+  To create a package that is not part of a namespace, use:
+  
+  $ msl create mypackage --no-namespace
+  
+  To import this package, use:
+
+  >>> import mypackage
 
 """
 
@@ -81,9 +75,13 @@ def add_parser_create(parser):
     )
     p.add_argument(
         '-n', '--namespace',
-        help='The namespace that the package belongs to, for example\n'
-             '"--namespace pr" will create a new package for the\n'
-             'Photometry and Radiometry namespace. Default is "msl".'
+        help='The namespace that the package belongs to. Default is "msl".'
+    )
+    p.add_argument(
+        '--no-namespace',
+        action='store_true',
+        default=False,
+        help='Do not create a namespace package.'
     )
     add_argument_quiet(p)
     add_argument_disable_mslpm_version_check(p)
@@ -93,7 +91,13 @@ def add_parser_create(parser):
 def execute(args, parser):
     """Executes the :ref:`create <create_cli>` command."""
     if args.names:
+        if args.no_namespace:
+            namespace = None
+        elif args.namespace:
+            namespace = args.namespace
+        else:
+            namespace = 'MSL'
         create(*args.names, yes=args.yes, author=args.author, email=args.email,
-               directory=args.dir, namespace=args.namespace)
+               directory=args.dir, namespace=namespace)
     else:
         log.error('You must specify the name of the new package')

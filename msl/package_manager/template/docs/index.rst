@@ -1,9 +1,9 @@
-.. _${namespace-lower}-${msl-package-lower}-welcome:
+.. _${full-name}-welcome:
 
-${namespace}-${msl-package}
+${full-name}
 ${=}
 
-Write the documentation for **${namespace}-${msl-package}**.
+Write the documentation for **${full-name}**.
 
 Contents
 ========
