@@ -172,19 +172,19 @@ def github(update_cache=False):
             return cached_pgks
         return dict()
 
-    # check if the user specified their github authorization credentials in the default file
-    try:
-        auth = os.environ.get('GITHUB_AUTHENTICATION', '').encode('utf-8')
-        if not auth:
-            with open(_GITHUB_AUTH_PATH, 'rb') as fp:
-                auth = fp.readline().strip()
-    except IOError:
-        headers = dict()
-    else:
-        headers = {
-            'Authorization': 'Basic ' + base64.b64encode(auth).decode('utf-8'),
-            'User-Agent': 'msl-package-manager/Python'
-        }
+    # check if the user specified their github authorization credentials
+    #
+    # the os.environ option is used for testing on travis and appveyor
+    # and it is not the recommended way for a user to store the credentials
+    auth = os.environ.get('GITHUB_AUTHORIZATION')
+    if not auth and os.path.isfile(_GITHUB_AUTH_PATH):
+        with open(_GITHUB_AUTH_PATH, 'rb') as fp:
+            line = fp.readline().strip()
+            auth = base64.b64encode(line).decode('utf-8')
+
+    headers = {'User-Agent': _PKG_NAME + '/Python'}
+    if auth:
+        headers['Authorization'] = 'Basic ' + auth
 
     log.debug('Getting the repositories from GitHub')
     repos = fetch('/orgs/MSLNZ/repos')
@@ -314,9 +314,6 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
                 msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
                 i = iend
 
-        #msg.append(' '.join('-' * width for width in w))
-
-
     log.info('\n'.join(msg))
 
 
@@ -393,7 +390,7 @@ def pypi(update_cache=False):
         out, err = p.communicate()
         if err:
             lines = err.splitlines()
-            if len(lines) == 1 and err.startswith(b'DEPRECATION: Python 2.7 will reach the end of its life'):
+            if len(lines) == 1 and err.startswith(b'DEPRECATION: Python 2.7'):
                 pass  # only the DEPRECATION warning was written to stderr
             else:
                 raise Exception(lines[-1].decode('utf-8'))
