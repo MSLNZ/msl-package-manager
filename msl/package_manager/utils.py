@@ -301,15 +301,20 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
                 if n > 0:
                     i += n
 
+                iend = i + w[2]
+
                 # check if the rest fits on 1 line
-                if len(description[i:i+w[2]]) < w[2]:
-                    msg.append(' ' * len(name_version) + description[i:i+w[2]].ljust(w[2]))
+                if len(description[i:iend]) < w[2]:
+                    msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
                     break
 
                 # don't split a line in the in the middle of a word
-                iend = min(len(description) - 1, i + w[2])
+                iend = min(len(description) - 1, iend)
                 while description[iend].strip():
                     iend -= 1
+                    if iend == i:
+                        iend = i + w[2]
+                        break
 
                 msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
                 i = iend
