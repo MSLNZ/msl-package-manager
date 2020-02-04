@@ -290,10 +290,13 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
         if len(description) < w[2]:
             msg.append(name_version + description)
         else:
-            # don't split a line in the in the middle of a word
+            # don't split a line in the middle of a word
             i = min(len(description) - 1, w[2])
             while description[i].strip():
                 i -= 1
+                if i <= 0:  # this should not occur
+                    i = w[2]
+                    break
             msg.append(name_version + description[:i].ljust(w[2]))
             while True:
                 # remove leading whitespace
@@ -308,27 +311,13 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
                     msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
                     break
 
-                # don't split a line in the in the middle of a word
+                # don't split a line in the middle of a word
                 iend = min(len(description) - 1, iend)
-
-                try:
-                    description[iend]
-                except IndexError:
-                    raise IndexError(
-                        '\ndescription={}\niend={}\nlen={}\ni={}\nw={}\nterm_w={}\nterm_h={}'.format(description, iend,
-                                                                                                     len(description),
-                                                                                                     i, w, term_w,
-                                                                                                     term_h))
-
                 while description[iend].strip():
                     iend -= 1
-                    if iend == i:
+                    if iend <= i:  # this should not occur
                         iend = i + w[2]
                         break
-                    try:
-                        description[iend]
-                    except IndexError:
-                        raise IndexError('\ndescription={}\niend={}\nlen={}\ni={}\nw={}\nterm_w={}\nterm_h={}'.format(description, iend, len(description), i, w, term_w, term_h))
 
                 msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
                 i = iend
