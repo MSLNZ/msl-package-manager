@@ -280,21 +280,40 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
 
     # log the results
     msg = [Fore.RESET]
-    msg.append(' '.join(header[i].ljust(w[i]) for i in range(len(header))))
+    msg.append(' '.join(header[i].center(w[i]) for i in range(len(header))))
     msg.append(' '.join('-' * width for width in w))
     for p in sorted(pkgs):
         description = pkgs[p]['description'] if pkgs[p]['description'] else ''
-        name_version = p.ljust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' '
-        msg.append(name_version + description[:w[2]].ljust(w[2]))
-        i = w[2]
-        while i < len(description):
-            # remove leading whitespace
-            desc = description[i:i+w[2]]
-            n = len(desc) - len(desc.lstrip())
-            if n > 0:
-                i += n
-            msg.append(' ' * len(name_version) + description[i:i+w[2]].ljust(w[2]))
-            i += w[2]
+        name_version = p.rjust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' '
+        if len(description) < w[2]:
+            msg.append(name_version + description)
+        else:
+            # don't split a line in the in the middle of a word
+            i = min(len(description) - 1, w[2])
+            while description[i].strip():
+                i -= 1
+            msg.append(name_version + description[:i].ljust(w[2]))
+            while True:
+                # remove leading whitespace
+                n = len(description[i:i+w[2]]) - len(description[i:i+w[2]].lstrip())
+                if n > 0:
+                    i += n
+
+                # check if the rest fits on 1 line
+                if len(description[i:i+w[2]]) < w[2]:
+                    msg.append(' ' * len(name_version) + description[i:i+w[2]].ljust(w[2]))
+                    break
+
+                # don't split a line in the in the middle of a word
+                iend = min(len(description) - 1, i + w[2])
+                while description[iend].strip():
+                    iend -= 1
+
+                msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
+                i = iend
+
+        #msg.append(' '.join('-' * width for width in w))
+
 
     log.info('\n'.join(msg))
 
