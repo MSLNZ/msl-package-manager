@@ -315,6 +315,10 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
                     if iend == i:
                         iend = i + w[2]
                         break
+                    try:
+                        description[iend]
+                    except IndexError:
+                        raise IndexError('\ndescription={}\niend={}\nlen={}\ni={}\nw={}\nterm_w={}\nterm_h={}'.format(description, iend, len(description), i, w, term_w, term_h))
 
                 msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
                 i = iend
