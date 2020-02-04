@@ -310,6 +310,16 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
 
                 # don't split a line in the in the middle of a word
                 iend = min(len(description) - 1, iend)
+
+                try:
+                    description[iend]
+                except IndexError:
+                    raise IndexError(
+                        '\ndescription={}\niend={}\nlen={}\ni={}\nw={}\nterm_w={}\nterm_h={}'.format(description, iend,
+                                                                                                     len(description),
+                                                                                                     i, w, term_w,
+                                                                                                     term_h))
+
                 while description[iend].strip():
                     iend -= 1
                     if iend == i:
