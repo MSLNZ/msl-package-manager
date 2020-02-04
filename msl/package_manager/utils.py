@@ -174,8 +174,11 @@ def github(update_cache=False):
 
     # check if the user specified their github authorization credentials in the default file
     try:
-        with open(_GITHUB_AUTH_PATH, 'rb') as fp:
-            auth = fp.readline().strip()
+        # this environment variable is needed for testing on travis and appveyor
+        auth = os.environ.get('GITHUB_AUTHENTICATION', '').encode('utf-8')
+        if not auth:
+            with open(_GITHUB_AUTH_PATH, 'rb') as fp:
+                auth = fp.readline().strip()
     except IOError:
         headers = dict()
     else:
