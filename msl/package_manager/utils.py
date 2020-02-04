@@ -276,7 +276,7 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     # want the description to spill over to the next line in a justified manner
     # to start where the description on the previous line started
     term_w, term_h = _get_terminal_size()
-    max_description_width = term_w - (w[0] + w[1]) - 2
+    max_description_width = max(len(header[2]), term_w - (w[0] + w[1]) - 2)
     if w[2] > max_description_width:
         w[2] = max_description_width
 
@@ -837,7 +837,7 @@ def _get_terminal_size():
             # needed for window's python in cygwin's xterm!
     if current_os in ['Linux', 'Darwin'] or current_os.startswith('CYGWIN'):
         tuple_xy = _get_terminal_size_linux()
-    if tuple_xy is None:
+    if tuple_xy is None or tuple_xy == (0, 0):
         tuple_xy = (80, 25)  # default value
     return tuple_xy
 
