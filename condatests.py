@@ -257,11 +257,10 @@ def main(*args):
             return
 
         activate = [] if IS_WINDOWS else ['source']
-        activate.extend([os.path.join(all_envs['base'], CONDA_DIR, 'activate'), name, '&&'])
-        cmd = activate + get_executable(path) + command
+        activate.extend([os.path.join(all_envs['base'], CONDA_DIR, 'activate'), name])
+        cmd = activate + ['&&'] + get_executable(path) + command + ['&&', 'conda', 'deactivate']
         print('Testing with the {!r} environment'.format(name))
         ret = subprocess.call(' '.join(cmd), shell=True, executable=executable)
-        subprocess.call(['conda', 'deactivate'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if name.startswith(CREATE_ENV_PREFIX):
             remove_env(name)
