@@ -92,9 +92,6 @@ conda_ were not compatible_ and so this script provided a way around this issue.
 
 You can either pass options from the :ref:`condatests-cli` or by creating a :ref:`condatests-ini`.
 
-.. attention::
-   ``python condatests.py`` must be executed from the `base` conda environment_
-
 .. _condatests-cli:
 
 command line

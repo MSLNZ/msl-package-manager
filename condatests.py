@@ -16,7 +16,7 @@ try:
 except ImportError:
     import ConfigParser as configparser  # Python 2
 
-IS_WINDOWS = sys.platform in {'win32', 'cygwin'}
+IS_WINDOWS = sys.platform == 'win32'
 if IS_WINDOWS:
     BIN, EXT = '', '.exe'
 else:
@@ -28,7 +28,24 @@ INI_PATH = 'condatests.ini'
 
 
 def get_conda_envs():
-    p = subprocess.Popen(['conda', 'info', '--json'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        p = subprocess.Popen(['conda', 'info', '--json'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except:
+        # if calling this script from a virtual environment then a FileNotFoundError is raised
+        # make sure conda is available
+        base_dir = os.path.dirname(sys.executable)
+        while True:
+            parent_dir = os.path.abspath(os.path.join(base_dir, os.pardir))
+            if len(parent_dir) <= 3:
+                sys.exit('conda is not available on PATH')
+
+            exe = os.path.join(parent_dir, 'Scripts' if IS_WINDOWS else BIN, 'conda'+EXT)
+            if os.path.isfile(exe):
+                os.environ['PATH'] += os.pathsep + os.path.dirname(exe)
+                return get_conda_envs()
+
+            base_dir = parent_dir
+
     out, err = p.communicate()
     if err:
         sys.exit(err.decode())
