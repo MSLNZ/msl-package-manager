@@ -273,7 +273,7 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     for p in sorted(pkgs):
         description = pkgs[p]['description']
         name_version = p.rjust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' '
-        if len(description) < w[2]:
+        if len(description) <= w[2]:
             msg.append(name_version + description)
         else:
             # don't split a line in the middle of a word
