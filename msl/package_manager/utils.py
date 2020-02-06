@@ -70,22 +70,30 @@ def get_email():
 
 
 def get_username():
-    """Automatically determine the name of the user.
+    """Determine the name of the user.
 
     If git_ is installed then it returns the ``user.name`` parameter from the user's git_
-    account. If git_ is not installed then use :func:`getpass.getuser` to determine
-    the username from an environment variable.
+    account. If git_ is not installed or if the ``user.name`` parameter does not exist
+    then :func:`getpass.getuser` is used to determine the username.
 
     Returns
     -------
     :class:`str`
         The user's name.
     """
+    uname = ''
     try:
-        p1 = subprocess.Popen(['git', 'config', 'user.name'], stdout=subprocess.PIPE)
-        return p1.communicate()[0].decode('utf-8').strip()
+        p = subprocess.Popen(['git', 'config', 'user.name'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if err:
+            raise IOError
+        uname = out.decode('utf-8').strip()
     except IOError:
+        pass
+
+    if not uname:
         return getpass.getuser()
+    return uname
 
 
 def github(update_cache=False):
