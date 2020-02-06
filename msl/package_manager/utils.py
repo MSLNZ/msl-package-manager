@@ -141,9 +141,7 @@ def github(update_cache=False):
 
     def fetch_latest_release(repo_name):
         reply = fetch('/repos/MSLNZ/{}/releases/latest'.format(repo_name))
-        if reply is None:
-            val = None
-        elif reply:
+        if reply:
             val = reply['name'] if reply['name'] else reply['tag_name']
             val = val.replace('v', '')
         else:
@@ -152,19 +150,11 @@ def github(update_cache=False):
 
     def fetch_tags(repo_name):
         reply = fetch('/repos/MSLNZ/{}/tags'.format(repo_name))
-        if reply is None:
-            val = None
-        else:
-            val = [tag['name'] for tag in reply]
-        pkgs[repo_name]['tags'] = val
+        pkgs[repo_name]['tags'] = [tag['name'] for tag in reply] if reply else []
 
     def fetch_branches(repo_name):
         reply = fetch('/repos/MSLNZ/{}/branches'.format(repo_name))
-        if reply is None:
-            val = None
-        else:
-            val = [branch['name'] for branch in reply]
-        pkgs[repo_name]['branches'] = val
+        pkgs[repo_name]['branches'] = [branch['name'] for branch in reply] if reply else []
 
     def reload_cache():
         cached_pgks = _inspect_github_pypi('github', False)[0]
@@ -196,6 +186,8 @@ def github(update_cache=False):
     pkgs = dict()
     for repo in repos:
         if repo['language'] == 'Python':
+            if repo['description'] is None:
+                repo['description'] = ''
             pkgs[repo['name']] = {'description': repo['description']}
 
     threads = [
@@ -207,12 +199,6 @@ def github(update_cache=False):
         t.start()
     for t in threads:
         t.join()
-
-    # check if there was an error in one of the threads
-    for repo_name, sub_dict in pkgs.items():
-        for key, value in sub_dict.items():
-            if value is None:
-                log.warning('The {!r} repository does not have a {!r}'.format(repo_name, key))
 
     with open(path, 'w') as fp:
         json.dump(pkgs, fp)
@@ -269,8 +255,8 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     for p in pkgs:
         w = [
             max(w[0], len(p)),
-            max(w[1], len(pkgs[p]['version']) if pkgs[p]['version'] else 0),
-            max(w[2], len(pkgs[p]['description']) if pkgs[p]['description'] else 0)
+            max(w[1], len(pkgs[p]['version'])),
+            max(w[2], len(pkgs[p]['description']))
         ]
 
     # want the description to spill over to the next line in a justified manner
@@ -285,7 +271,7 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     msg.append(' '.join(header[i].center(w[i]) for i in range(len(header))))
     msg.append(' '.join('-' * width for width in w))
     for p in sorted(pkgs):
-        description = pkgs[p]['description'] if pkgs[p]['description'] else ''
+        description = pkgs[p]['description']
         name_version = p.rjust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' '
         if len(description) < w[2]:
             msg.append(name_version + description)
