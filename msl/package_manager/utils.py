@@ -269,7 +269,7 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     for p in pkgs:
         w = [
             max(w[0], len(p)),
-            max(w[1], len(pkgs[p]['version'])),
+            max(w[1], len(pkgs[p]['version']) if pkgs[p]['version'] else 0),
             max(w[2], len(pkgs[p]['description']) if pkgs[p]['description'] else 0)
         ]
 
