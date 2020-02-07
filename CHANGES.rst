@@ -8,6 +8,7 @@ Version 2.4.0.dev0
 - Added
 
   * support for Python 3.8
+  * can now create a new package that is not part of a namespace
   * ``authorise`` as an alias for ``authorize`` for the CLI
   * the ``--create``, ``--requires`` and ``--ini`` arguments to ``condatests.py``
 
@@ -21,6 +22,10 @@ Version 2.4.0.dev0
 
 - Fixed
 
+  * call ``getpass.getuser()`` if git is installed but the `user.name` parameter has not been defined
+  * do not split the text in the Description field to the next line in the middle of a word
+    for the ``info()`` function
+  * can now run ``condatests.py`` from any conda environment not just the `base` environment
   * check if an MSL package was installed via pip in `editable` mode
   * issue `#6 <https://github.com/MSLNZ/msl-package-manager/issues/6>`_ - add support for specifying
     a version number when installing/updating
@@ -28,7 +33,7 @@ Version 2.4.0.dev0
     specifying an extras_require value when installing/updating
   * issue `#4 <https://github.com/MSLNZ/msl-package-manager/issues/4>`_ - error updating a package if the
     installed name != repository name
-  * the `test_require` kwarg in ``setup.py`` now specifies `pytest<5.0` for Python 2.7
+  * the `test_require` kwarg in ``setup.py`` now specifies `pytest<5.0` and `zipp<2.0.0` for Python 2.7
 
 - Removed
 
