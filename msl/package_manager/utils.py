@@ -386,7 +386,8 @@ def pypi(update_cache=False):
         return packages
 
     log.debug('Getting the packages from PyPI')
-    cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', 'gtc', '--disable-pip-version-check']
+    # when adding a package name to "pip search" remember to include a "match.group(1)" check for it below
+    cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', 'gtc', 'quantity-value', '--disable-pip-version-check']
     try:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
@@ -408,7 +409,9 @@ def pypi(update_cache=False):
     pkgs = dict()
     for line in stdout.splitlines():
         match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
-        if match and (match.group(1).lower().startswith('msl-') or match.group(1) == 'GTC'):
+        if match and (match.group(1).startswith('msl-')
+                      or match.group(1) == 'GTC'
+                      or match.group(1) == 'Quantity-Value'):
             pkgs[match.group(1)] = {
                 'version': match.group(2),
                 'description': match.group(3),
