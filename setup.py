@@ -141,8 +141,8 @@ pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
-if os.environ.get('READTHEDOCS') == 'True':
-    sphinx += install_requires
+# if os.environ.get('READTHEDOCS') == 'True':
+#     sphinx += install_requires
 
 tests_require = ['pytest-cov', 'colorama']
 if sys.version_info[:2] == (2, 7):
@@ -150,7 +150,7 @@ if sys.version_info[:2] == (2, 7):
 else:
     tests_require.append('pytest')
 
-version = fetch_init('__version__') + git_revision()
+version = fetch_init('__version__')  # + git_revision()
 
 setup(
     name=fetch_init('_PKG_NAME'),
