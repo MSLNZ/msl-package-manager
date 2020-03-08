@@ -144,7 +144,7 @@ def test_log_output(caplog):
             'Getting the packages from {}'.format(exec_path),
             '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  rpi-smartgadget    [GitHub]',
             '',
-            "Installing {}'rpi-smartgadget' from GitHub/master".format(u),
+            "Installing {}'rpi-smartgadget' from GitHub[master]".format(u),
 
             # check if smartgadget and msl-network are installed
             'Getting the packages from {}'.format(exec_path),
@@ -169,7 +169,7 @@ def test_log_output(caplog):
             'Getting the packages from {}'.format(exec_path),
             '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  smartgadget: 0.1.0.dev0 --> [branch:master]  [GitHub]',
             '',
-            "Updating {}'smartgadget' from GitHub/master".format(u),
+            "Updating {}'smartgadget' from GitHub[master]".format(u),
 
             # msl uninstall smartgadget network
             'Getting the packages from {}'.format(exec_path),

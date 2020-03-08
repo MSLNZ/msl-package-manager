@@ -209,8 +209,11 @@ def update(*names, **kwargs):
                     info['version'] = '==' + info['version']
                 package = [pkg + info['extras_require'] + info['version']]
             else:
-                utils.log.debug('Updating {!r} from GitHub/{}'.format(pkg, zip_name))
-                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
+                utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, zip_name))
+                if utils.has_git:
+                    repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], zip_name)
+                else:
+                    repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
                 if info['extras_require']:
                     repo += '#egg={}{}'.format(pkg, info['extras_require'])
                 package = [repo]
