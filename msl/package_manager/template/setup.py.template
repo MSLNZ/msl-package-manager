@@ -4,7 +4,6 @@ import sys
 import subprocess
 from distutils.cmd import Command
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 
 
 class ApiDocs(Command):
@@ -78,22 +77,6 @@ class BuildDocs(Command):
         sys.exit(0)
 
 
-class Install(install):
-    """
-    Ensures that the value of __version__ is correct if
-    installing the package from a non-release code base.
-    """
-    def run(self):
-        install.run(self)
-        try:
-            with open(self.install_libbase + '/${namespace}/${package}/__init__.py', mode='r+') as fp:
-                text = fp.read()
-                fp.seek(0)
-                fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
-        finally:
-            pass
-
-
 def read(filename):
     with open(filename) as fp:
         return fp.read()
@@ -134,11 +117,14 @@ def git_revision():
     return '+' + sha1[:7]
 
 
+# specify the packages that ${full-name} depends on
+install_requires = []
+
 testing = {'test', 'tests'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
-sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
+sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else []
 
 tests_require = ['pytest-cov']
 if sys.version_info[:2] == (2, 7):
@@ -161,8 +147,21 @@ setup(
     classifiers=[],  # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
     setup_requires=sphinx + pytest_runner,
     tests_require=tests_require,
-    install_requires=[],  # specify the packages that ${full-name} depends on
-    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs, 'install': Install},
+    install_requires=install_requires,
+    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     packages=find_packages(include=('${namespace}*',)),
     include_package_data=True,  # includes all files specified in MANIFEST.in when building the distribution
 )
+
+
+if 'dev' in version and {'install', 'update'}.intersection(sys.argv):
+    # ensure that the value of __version__ is correct if installing the package from a non-release code base
+    try:
+        cmd = [sys.executable, '-c', 'import ${installed-name} as p; print(p.__file__)']
+        path = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
+        with open(path.strip().decode(), mode='r+') as fp:
+            text = fp.read()
+            fp.seek(0)
+            fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
+    except:
+        pass

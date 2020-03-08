@@ -146,7 +146,8 @@ def create(*names, **kwargs):
             '${year}': time.strftime('%Y'),
             '${email}': str(email_address),
             '${=}': '='*(len(os.path.basename(msl_root))),  # used to underline the header in a *.rst file
-            '${sphinx-import}': 'from ' + namespace + ' import ' + safe_pkg if namespace else 'import ' + safe_pkg
+            '${sphinx-import}': 'from ' + namespace + ' import ' + safe_pkg if namespace else 'import ' + safe_pkg,
+            '${installed-name}': namespace + '.' + safe_pkg if namespace else safe_pkg,
         }
 
         for root, dirs, files in os.walk(template_dir):

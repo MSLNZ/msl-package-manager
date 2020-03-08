@@ -73,12 +73,12 @@ def test_create_msl_package():
 
     with open(os.path.join(root_dir, 'setup.py'), 'r') as fp:
         lines = fp.readlines()
-        assert "'msl',  # the path to" in lines[30]
-        assert "self.install_libbase + '/msl/package/__init__.py'" in lines[88]
-        assert "    init_text = read('msl/package/__init__.py')\n" == lines[103]
-        assert "    name='msl-package',\n" == lines[151]
-        assert "    url='https://github.com/MSLNZ/msl-package'" in lines[155]
-        assert "    packages=find_packages(include=('msl*',)),\n" == lines[165]
+        assert "'msl',  # the path to" in lines[29]
+        assert "    init_text = read('msl/package/__init__.py')\n" == lines[86]
+        assert "    name='msl-package',\n" == lines[137]
+        assert "    url='https://github.com/MSLNZ/msl-package'" in lines[141]
+        assert "    packages=find_packages(include=('msl*',)),\n" == lines[151]
+        assert "import msl.package as p" in lines[159]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), 'r') as fp:
         lines = fp.readlines()
@@ -155,12 +155,12 @@ def test_create_pr_single_photons():
 
         with open(os.path.join(root_dir, 'setup.py'), 'r') as fp:
             lines = fp.readlines()
-            assert "'pr',  # the path to" in lines[30]
-            assert "self.install_libbase + '/pr/Single_Photons/__init__.py'" in lines[88]
-            assert "    init_text = read('pr/Single_Photons/__init__.py')\n" == lines[103]
-            assert "    name='pr-Single-Photons',\n" == lines[151]
-            assert "    url='https://github.com/MSLNZ/pr-Single-Photons'" in lines[155]
-            assert "    packages=find_packages(include=('pr*',)),\n" == lines[165]
+            assert "'pr',  # the path to" in lines[29]
+            assert "    init_text = read('pr/Single_Photons/__init__.py')\n" == lines[86]
+            assert "    name='pr-Single-Photons',\n" == lines[137]
+            assert "    url='https://github.com/MSLNZ/pr-Single-Photons'" in lines[141]
+            assert "    packages=find_packages(include=('pr*',)),\n" == lines[151]
+            assert "import pr.Single_Photons as p" in lines[159]
 
         with open(os.path.join(root_dir, 'docs', 'conf.py'), 'r') as fp:
             lines = fp.readlines()
@@ -223,12 +223,12 @@ def test_create_no_namespace():
 
     with open(os.path.join(root_dir, 'setup.py'), 'r') as fp:
         lines = fp.readlines()
-        assert "'time_tagger',  # the path to" in lines[30]
-        assert "self.install_libbase + '/time_tagger/__init__.py'" in lines[88]
-        assert "    init_text = read('time_tagger/__init__.py')\n" == lines[103]
-        assert "    name='time-tagger',\n" == lines[151]
-        assert "    url='https://github.com/MSLNZ/time-tagger'" in lines[155]
-        assert "    packages=find_packages(include=('time_tagger',)),\n" == lines[165]
+        assert "'time_tagger',  # the path to" in lines[29]
+        assert "    init_text = read('time_tagger/__init__.py')\n" == lines[86]
+        assert "    name='time-tagger',\n" == lines[137]
+        assert "    url='https://github.com/MSLNZ/time-tagger'" in lines[141]
+        assert "    packages=find_packages(include=('time_tagger',)),\n" == lines[151]
+        assert "import time_tagger as p" in lines[159]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), 'r') as fp:
         lines = fp.readlines()

@@ -4,7 +4,6 @@ import sys
 import subprocess
 from distutils.cmd import Command
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 
 
 class ApiDocs(Command):
@@ -78,22 +77,6 @@ class BuildDocs(Command):
         sys.exit(0)
 
 
-class Install(install):
-    """
-    Ensures that the value of __version__ is correct if
-    installing the package from a non-release code base.
-    """
-    def run(self):
-        install.run(self)
-        try:
-            with open(self.install_libbase + '/msl/package_manager/__init__.py', mode='r+') as fp:
-                text = fp.read()
-                fp.seek(0)
-                fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
-        finally:
-            pass
-
-
 def read(filename):
     with open(filename) as fp:
         return fp.read()
@@ -140,9 +123,7 @@ testing = {'test', 'tests'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
-sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
-# if os.environ.get('READTHEDOCS') == 'True':
-#     sphinx += install_requires
+sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else []
 
 tests_require = ['pytest-cov', 'colorama']
 if sys.version_info[:2] == (2, 7):
@@ -150,7 +131,7 @@ if sys.version_info[:2] == (2, 7):
 else:
     tests_require.append('pytest')
 
-version = fetch_init('__version__')  # + git_revision()
+version = fetch_init('__version__') + git_revision()
 
 setup(
     name=fetch_init('_PKG_NAME'),
@@ -178,7 +159,7 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=tests_require,
     install_requires=install_requires,
-    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs, 'install': Install},
+    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     entry_points={
         'console_scripts': [
             'msl = msl.package_manager.cli:main',
@@ -188,3 +169,16 @@ setup(
     include_package_data=True,
     zip_safe=False,
 )
+
+
+if 'dev' in version and {'install', 'update'}.intersection(sys.argv):
+    # ensure that the value of __version__ is correct if installing the package from a non-release code base
+    try:
+        cmd = [sys.executable, '-c', 'import msl.package_manager as p; print(p.__file__)']
+        path = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
+        with open(path.strip().decode(), mode='r+') as fp:
+            text = fp.read()
+            fp.seek(0)
+            fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
+    except:
+        pass
