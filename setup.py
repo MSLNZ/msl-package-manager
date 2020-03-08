@@ -134,11 +134,15 @@ def git_revision():
     return '+' + sha1[:7]
 
 
+install_requires = ['setuptools', 'colorama']
+
 testing = {'test', 'tests'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] if needs_sphinx else []
+if os.environ.get('READTHEDOCS') == 'True':
+    sphinx += install_requires
 
 tests_require = ['pytest-cov', 'colorama']
 if sys.version_info[:2] == (2, 7):
@@ -173,7 +177,7 @@ setup(
     ],
     setup_requires=sphinx + pytest_runner,
     tests_require=tests_require,
-    install_requires=['setuptools', 'colorama'],
+    install_requires=install_requires,
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs, 'install': Install},
     entry_points={
         'console_scripts': [
