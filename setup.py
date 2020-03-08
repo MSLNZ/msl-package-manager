@@ -171,7 +171,7 @@ setup(
 )
 
 
-if 'dev' in version and {'install', 'update'}.intersection(sys.argv):
+if 'dev' in version and {'install', 'update', 'upgrade'}.intersection(sys.argv):
     # ensure that the value of __version__ is correct if installing the package from a non-release code base
     try:
         cmd = [sys.executable, '-c', 'import msl.package_manager as p; print(p.__file__)']
