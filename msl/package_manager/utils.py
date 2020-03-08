@@ -49,6 +49,13 @@ _package_name_regex = re.compile(
     r'(?P<package_name>[*]?[\w-]*[*]?[\w-]*)(?P<extras_require>\[.*\])?(?P<version_requested>[<!=>~].*)?'
 )
 
+try:
+    subprocess.check_output(['git', '--version'])
+except:
+    has_git = False
+else:
+    has_git = True
+
 
 def get_email():
     """Try to determine the user's email address.
@@ -62,11 +69,13 @@ def get_email():
     :class:`str` or :data:`None`
         The user's email address.
     """
-    try:
-        p2 = subprocess.Popen(['git', 'config', 'user.email'], stdout=subprocess.PIPE)
-        return p2.communicate()[0].decode('utf-8').strip()
-    except IOError:
-        return None
+    if has_git:
+        try:
+            email = subprocess.check_output(['git', 'config', 'user.email'])
+        except subprocess.CalledProcessError:
+            pass
+        else:
+            return email.strip().decode('utf-8')
 
 
 def get_username():
@@ -81,19 +90,14 @@ def get_username():
     :class:`str`
         The user's name.
     """
-    uname = ''
-    try:
-        p = subprocess.Popen(['git', 'config', 'user.name'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
-        if err:
-            raise IOError
-        uname = out.decode('utf-8').strip()
-    except IOError:
-        pass
-
-    if not uname:
-        return getpass.getuser()
-    return uname
+    if has_git:
+        try:
+            uname = subprocess.check_output(['git', 'config', 'user.name'])
+        except subprocess.CalledProcessError:
+            pass
+        else:
+            return uname.strip().decode('utf-8')
+    return getpass.getuser()
 
 
 def github(update_cache=False):
