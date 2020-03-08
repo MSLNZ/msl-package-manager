@@ -1,7 +1,10 @@
+import os
 import re
 import sys
+import subprocess
 from distutils.cmd import Command
 from setuptools import setup, find_packages
+from setuptools.command.install import install
 
 
 class ApiDocs(Command):
@@ -75,6 +78,22 @@ class BuildDocs(Command):
         sys.exit(0)
 
 
+class Install(install):
+    """
+    Ensures that the value of __version__ is correct if
+    installing the package from a non-release code base.
+    """
+    def run(self):
+        install.run(self)
+        try:
+            with open(self.install_libbase + '/${namespace}/${package}/__init__.py', mode='r+') as fp:
+                text = fp.read()
+                fp.seek(0)
+                fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
+        finally:
+            pass
+
+
 def read(filename):
     with open(filename) as fp:
         return fp.read()
@@ -84,6 +103,35 @@ def fetch_init(key):
     # open the __init__.py file to determine the value instead of importing the package to get the value
     init_text = read('${namespace}/${package}/__init__.py')
     return re.search(r'{}\s*=\s*(.*)'.format(key), init_text).group(1)[1:-1]
+
+
+def git_revision():
+    # returns the git revision hash value if 'dev' is in __version__ or an empty string otherwise
+    if 'dev' not in fetch_init('__version__'):
+        return ''
+
+    file_dir = os.path.dirname(os.path.abspath(__file__))
+    try:
+        # write all error messages to devnull
+        with open(os.devnull, 'w') as devnull:
+            sha1 = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=file_dir, stderr=devnull)
+    except:
+        try:
+            git_dir = file_dir + '/.git'
+            with open(git_dir + '/HEAD') as fp1:
+                text = fp1.readline().strip()
+                if text.startswith('ref:'):
+                    with open(git_dir + '/' + text.split()[1]) as fp2:
+                        sha1 = fp2.readline().strip()
+                else:  # detached HEAD
+                    sha1 = text
+        except:
+            return ''
+    else:
+        sha1 = sha1.strip().decode('ascii')
+
+    # Following PEP-440, the local version identifier starts with '+'
+    return '+' + sha1[:7]
 
 
 testing = {'test', 'tests'}.intersection(sys.argv)
@@ -98,9 +146,11 @@ if sys.version_info[:2] == (2, 7):
 else:
     tests_require.append('pytest')
 
+version = fetch_init('__version__') + git_revision()
+
 setup(
     name='${full-name}',
-    version=fetch_init('__version__'),
+    version=version,
     author=fetch_init('__author__'),
     author_email='info@measurement.govt.nz',
     url='https://github.com/MSLNZ/${full-name}',
@@ -112,7 +162,7 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=tests_require,
     install_requires=[],  # specify the packages that ${full-name} depends on
-    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
+    cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs, 'install': Install},
     packages=find_packages(include=('${namespace}*',)),
     include_package_data=True,  # includes all files specified in MANIFEST.in when building the distribution
 )
