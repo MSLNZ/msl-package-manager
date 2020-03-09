@@ -96,6 +96,7 @@ def install(*names, **kwargs):
                 repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(name, zip_name)
             else:
                 repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, zip_name, zip_extn)
+            repo += '#egg={}'.format(name)
             if values['extras_require']:
-                repo += '#egg={}{}'.format(name, values['extras_require'])
+                repo += values['extras_require']
             subprocess.call(exe + options + [repo])

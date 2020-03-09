@@ -214,8 +214,9 @@ def update(*names, **kwargs):
                     repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], zip_name)
                 else:
                     repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
+                repo += '#egg={}'.format(pkg)
                 if info['extras_require']:
-                    repo += '#egg={}{}'.format(pkg, info['extras_require'])
+                    repo += info['extras_require']
                 package = [repo]
 
             if utils._IS_WINDOWS and pkg == _PKG_NAME:
