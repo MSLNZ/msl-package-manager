@@ -90,35 +90,43 @@ def fetch_init(key):
 
 def get_version():
     init_version = fetch_init('__version__')
-    if 'dev' not in fetch_init('__version__'):
+    if 'dev' not in init_version:
         return init_version
 
-    file_dir = os.path.dirname(os.path.abspath(__file__))
-    try:
-        # write all error messages to devnull
-        with open(os.devnull, 'w') as devnull:
-            sha1 = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=file_dir, stderr=devnull)
-    except:
-        try:
-            git_dir = file_dir + '/.git'
-            with open(git_dir + '/HEAD') as fp1:
-                text = fp1.readline().strip()
-                if text.startswith('ref:'):
-                    with open(git_dir + '/' + text.split()[1]) as fp2:
-                        sha1 = fp2.readline().strip()
-                else:  # detached HEAD
-                    sha1 = text
-        except:
-            return init_version
+    if 'develop' in sys.argv or ('egg_info' in sys.argv and '--egg-base' not in sys.argv):
+        # then installing in editable (develop) mode
+        #   python setup.py develop
+        #   pip install -e .
+        suffix = 'editable'
     else:
-        sha1 = sha1.strip().decode('ascii')
+        file_dir = os.path.dirname(os.path.abspath(__file__))
+        try:
+            # write all error messages from git to devnull
+            with open(os.devnull, 'w') as devnull:
+                out = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=file_dir, stderr=devnull)
+        except:
+            try:
+                git_dir = os.path.join(file_dir, '.git')
+                with open(os.path.join(git_dir, 'HEAD'), mode='rt') as fp1:
+                    line = fp1.readline().strip()
+                    if line.startswith('ref:'):
+                        _, ref_path = line.split()
+                        with open(os.path.join(git_dir, ref_path), mode='rt') as fp2:
+                            sha1 = fp2.readline().strip()
+                    else:  # detached HEAD
+                        sha1 = line
+            except:
+                return init_version
+        else:
+            sha1 = out.strip().decode('ascii')
+
+        suffix = sha1[:7]
+
+    if init_version.endswith(suffix):
+        return init_version
 
     # following PEP-440, the local version identifier starts with '+'
-    git_revision = '+' + sha1[:7]
-
-    if not init_version.endswith(git_revision):
-        return init_version + git_revision
-    return init_version
+    return init_version + '+' + suffix
 
 
 install_requires = ['setuptools', 'colorama']
@@ -174,26 +182,23 @@ setup(
     zip_safe=False,
 )
 
-if 'dev' in version:
+if 'dev' in version and not version.endswith('editable'):
     # ensure that the value of __version__ is correct if installing the package from a non-release code base
     init_path = ''
-    if 'install' in sys.argv:
+    if sys.argv[0] == 'setup.py' and 'install' in sys.argv and not {'--help', '-h'}.intersection(sys.argv):
         # python setup.py install
         try:
             cmd = [sys.executable, '-c', 'import msl.package_manager as p; print(p.__file__)']
-            out = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
-            init_path = out.strip().decode()
+            output = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
+            init_path = output.strip().decode()
         except:
             pass
     elif 'egg_info' in sys.argv:
         # pip install
         init_path = os.path.dirname(sys.argv[0]) + '/msl/package_manager/__init__.py'
 
-    # do not update the __version__ in __init__.py if executing: pip install -e .
-    pip_editable_mode = os.path.dirname(sys.argv[0]).endswith('msl-package-manager')
-
-    if os.path.isfile(init_path) and not pip_editable_mode:
+    if init_path and os.path.isfile(init_path):
         with open(init_path, mode='r+') as fp:
-            text = fp.read()
+            source = fp.read()
             fp.seek(0)
-            fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
+            fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), source))
