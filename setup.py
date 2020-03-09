@@ -88,10 +88,10 @@ def fetch_init(key):
     return re.search(r'{}\s*=\s*(.*)'.format(key), init_text).group(1)[1:-1]
 
 
-def git_revision():
-    # returns the git revision hash value if 'dev' is in __version__ or an empty string otherwise
+def get_version():
+    init_version = fetch_init('__version__')
     if 'dev' not in fetch_init('__version__'):
-        return ''
+        return init_version
 
     file_dir = os.path.dirname(os.path.abspath(__file__))
     try:
@@ -109,12 +109,16 @@ def git_revision():
                 else:  # detached HEAD
                     sha1 = text
         except:
-            return ''
+            return init_version
     else:
         sha1 = sha1.strip().decode('ascii')
 
-    # Following PEP-440, the local version identifier starts with '+'
-    return '+' + sha1[:7]
+    # following PEP-440, the local version identifier starts with '+'
+    git_revision = '+' + sha1[:7]
+
+    if not init_version.endswith(git_revision):
+        return init_version + git_revision
+    return init_version
 
 
 install_requires = ['setuptools', 'colorama']
@@ -131,14 +135,14 @@ if sys.version_info[:2] == (2, 7):
 else:
     tests_require.append('pytest')
 
-version = fetch_init('__version__') + git_revision()
+version = get_version()
 
 setup(
-    name=fetch_init('_PKG_NAME'),
+    name='msl-package-manager',
     version=version,
     author=fetch_init('__author__'),
     author_email='info@measurement.govt.nz',
-    url='https://github.com/MSLNZ/' + fetch_init('_PKG_NAME'),
+    url='https://github.com/MSLNZ/msl-package-manager',
     description='Install, uninstall, update, list and create MSL packages',
     long_description=read('README.rst'),
     platforms='any',
@@ -170,15 +174,26 @@ setup(
     zip_safe=False,
 )
 
-
-if 'dev' in version and {'install', 'update', 'upgrade'}.intersection(sys.argv):
+if 'dev' in version:
     # ensure that the value of __version__ is correct if installing the package from a non-release code base
-    try:
-        cmd = [sys.executable, '-c', 'import msl.package_manager as p; print(p.__file__)']
-        path = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
-        with open(path.strip().decode(), mode='r+') as fp:
+    init_path = ''
+    if 'install' in sys.argv:
+        # python setup.py install
+        try:
+            cmd = [sys.executable, '-c', 'import msl.package_manager as p; print(p.__file__)']
+            out = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
+            init_path = out.strip().decode()
+        except:
+            pass
+    elif 'egg_info' in sys.argv:
+        # pip install
+        init_path = os.path.dirname(sys.argv[0]) + '/msl/package_manager/__init__.py'
+
+    # do not update the __version__ in __init__.py if executing: pip install -e .
+    pip_editable_mode = os.path.dirname(sys.argv[0]).endswith('msl-package-manager')
+
+    if os.path.isfile(init_path) and not pip_editable_mode:
+        with open(init_path, mode='r+') as fp:
             text = fp.read()
             fp.seek(0)
             fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), text))
-    except:
-        pass
