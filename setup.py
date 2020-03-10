@@ -85,7 +85,7 @@ def read(filename):
 def fetch_init(key):
     # open the __init__.py file to determine the value instead of importing the package to get the value
     init_text = read('msl/package_manager/__init__.py')
-    return re.search(r'{}\s*=\s*(.*)'.format(key), init_text).group(1)[1:-1]
+    return re.search(r'{}\s*=\s*(.*)'.format(key), init_text).group(1).strip('\'\"')
 
 
 def get_version():
@@ -201,4 +201,4 @@ if 'dev' in version and not version.endswith('editable'):
         with open(init_path, mode='r+') as fp:
             source = fp.read()
             fp.seek(0)
-            fp.write(re.sub(r'__version__\s*=.*', '__version__ = {!r}'.format(version), source))
+            fp.write(re.sub(r'__version__\s*=.*', "__version__ = '{}'".format(version), source))
