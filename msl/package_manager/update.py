@@ -30,7 +30,7 @@ def update(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`str`
+    *names
         The name(s) of the MSL package(s) to update. If not specified then
         update all MSL packages. The ``msl-`` prefix can be omitted (e.g.,
         ``'loadlib'`` is equivalent to ``'msl-loadlib'``). Also accepts

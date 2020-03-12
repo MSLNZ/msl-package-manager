@@ -14,7 +14,7 @@ def uninstall(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`str`
+    *names
         The name(s) of the MSL package(s) to uninstall. If not specified then
         uninstall all MSL packages (except for the **MSL Package Manager** --
         in which case use ``pip uninstall msl-package-manager``). The

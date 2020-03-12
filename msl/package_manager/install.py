@@ -26,7 +26,7 @@ def install(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`str`
+    *names
         The name(s) of the MSL package(s) to install. If not specified then
         install all MSL packages that begin with the ``msl-`` prefix. The
         ``msl-`` prefix can be omitted (e.g., ``'loadlib'`` is equivalent to

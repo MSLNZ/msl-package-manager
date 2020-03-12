@@ -12,7 +12,7 @@ def create(*names, **kwargs):
 
     Parameters
     ----------
-    *names : :class:`str`
+    *names
         The name(s) of the package(s) to create.
     **kwargs
         * author : :class:`str`
