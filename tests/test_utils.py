@@ -114,3 +114,7 @@ def test_create_install_list():
     assert pkgs['msl-network']['version_requested'] == '!=0.4.0'
     assert pkgs['msl-qt']['extras_require'] == '[pyside]'
     assert pkgs['msl-qt']['version_requested'] == '==0.1.0.dev0'
+
+
+def test_has_git():
+    assert utils.has_git

@@ -91,8 +91,12 @@ def install(*names, **kwargs):
                 name += values['version_requested']
             subprocess.call(exe + options + [name])
         else:
-            utils.log.debug('Installing {!r} from GitHub/{}'.format(name, zip_name))
-            repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, zip_name, zip_extn)
+            utils.log.debug('Installing {!r} from GitHub[{}]'.format(name, zip_name))
+            if utils.has_git:
+                repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(name, zip_name)
+            else:
+                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, zip_name, zip_extn)
+            repo += '#egg={}'.format(name)
             if values['extras_require']:
-                repo += '#egg={}{}'.format(name, values['extras_require'])
+                repo += values['extras_require']
             subprocess.call(exe + options + [repo])
