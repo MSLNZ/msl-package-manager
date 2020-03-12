@@ -1,8 +1,10 @@
 """
 Command line interface for the :ref:`authorize <authorize_cli>` command.
 """
-from .cli_argparse import add_argument_quiet
-from .cli_argparse import add_argument_disable_mslpm_version_check
+from .cli_argparse import (
+    add_argument_quiet,
+    add_argument_disable_mslpm_version_check,
+)
 from .authorize import (
     WARNING_MESSAGE,
     authorize,

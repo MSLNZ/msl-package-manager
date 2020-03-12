@@ -3,10 +3,12 @@ Command line interface for the :ref:`create <create_cli>` command.
 """
 from .utils import log
 from .create import create
-from .cli_argparse import add_argument_package_names
-from .cli_argparse import add_argument_yes
-from .cli_argparse import add_argument_quiet
-from .cli_argparse import add_argument_disable_mslpm_version_check
+from .cli_argparse import (
+    add_argument_package_names,
+    add_argument_yes,
+    add_argument_quiet,
+    add_argument_disable_mslpm_version_check,
+)
 
 HELP = 'Create a new package.'
 
