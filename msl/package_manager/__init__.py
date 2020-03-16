@@ -17,11 +17,13 @@ version_info = namedtuple('version_info', 'major minor micro releaselevel')(int(
 
 _PKG_NAME = 'msl-package-manager'
 
-from .utils import pypi
-from .utils import github
-from .utils import installed
-from .utils import info
-from .utils import set_log_level
+from .utils import (
+    pypi,
+    github,
+    installed,
+    info,
+    set_log_level,
+)
 from .update import update
 from .create import create
 from .install import install
