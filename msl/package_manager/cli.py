@@ -113,6 +113,14 @@ def parse_args(args):
         return True
 
     parser = configure_parser()
+    # Want to be able to support all options that "pip (un)install"
+    # supports without depending on the version of pip that is installed.
+    # There are possible 3 ways to do this:
+    #   1) create a new argparse with nargs=*
+    #   2) create a new argparse with nargs=REMAINDER
+    #   3) use parse_known_args() instead of parse_args()
+    # Option 3 was the preferred way because nargs=* and nargs=REMAINDER
+    # each had their limitations.
     parsed_args, pip_options = parser.parse_known_args(args=args)
 
     if parsed_args.quiet == 0:
