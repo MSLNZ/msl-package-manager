@@ -18,10 +18,12 @@ DESCRIPTION = """{} MSL packages.
 MSL packages are retrieved from GitHub repositories or from PyPI.
 """
 
-EXAMPLE = """
+EXAMPLE = """All other optional arguments are passed to "pip install --upgrade".
+
 Examples:
     msl {0} equipment qt
     msl {0} loadlib --tag v0.3.0
+    msl {0} io --no-deps
 """
 
 
@@ -55,4 +57,5 @@ def add_parser_update(parser, name='update'):
 def execute(args, parser):
     """Executes the :ref:`update <update_cli>` command."""
     if parser.contains_package_names():
-        return update(*args.names, yes=args.yes, branch=args.branch, tag=args.tag, update_cache=args.update_cache)
+        return update(*args.names, yes=args.yes, branch=args.branch,
+                      tag=args.tag, update_cache=args.update_cache, pip_options=args.pip_options)

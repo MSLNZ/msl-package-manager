@@ -47,19 +47,23 @@ def install(*names, **kwargs):
         * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before installing.
             The default is :data:`False` (ask before installing).
+        * pip_options : :class:`list` of :class:`str`
+            Optional arguments to pass to the ``pip install`` command,
+            e.g., ``['--retries', '10', '--user']``
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
     """
     # TODO Python 2.7 does not support named arguments after using *args
-    #  we can define yes=False, branch=None, tag=None, update_cache=False in the
-    #  function signature if we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache'})
+    #  we can define yes=False, branch=None, tag=None, update_cache=False, pip_options=None
+    #  in the function signature when we choose to drop support for Python 2.7
+    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache', 'pip_options'})
 
     yes = kwargs.get('yes', False)
     branch = kwargs.get('branch', None)
     tag = kwargs.get('tag', None)
     update_cache = kwargs.get('update_cache', False)
+    pip_options = kwargs.get('pip_options', [])
 
     zip_name = utils._get_github_zip_name(branch, tag)
     if zip_name is None:
@@ -81,7 +85,12 @@ def install(*names, **kwargs):
 
     zip_extn = 'zip' if utils._IS_WINDOWS else 'tar.gz'
     exe = [sys.executable, '-m', 'pip', 'install']
-    options = ['--disable-pip-version-check'] + ['--quiet'] * utils._NUM_QUIET
+
+    if '--quiet' not in pip_options or '-q' not in pip_options:
+        pip_options.extend(['--quiet'] * utils._NUM_QUIET)
+    if '--disable-pip-version-check' not in pip_options:
+        pip_options.append('--disable-pip-version-check')
+
     for name, values in packages.items():
         if name in pkgs_pypi and branch is None and tag is None:
             utils.log.debug('Installing {!r} from PyPI'.format(name))
@@ -89,7 +98,7 @@ def install(*names, **kwargs):
                 name += values['extras_require']
             if values['version_requested']:
                 name += values['version_requested']
-            subprocess.call(exe + options + [name])
+            subprocess.call(exe + pip_options + [name])
         else:
             utils.log.debug('Installing {!r} from GitHub[{}]'.format(name, zip_name))
             if utils.has_git:
@@ -99,4 +108,4 @@ def install(*names, **kwargs):
             repo += '#egg={}'.format(name)
             if values['extras_require']:
                 repo += values['extras_require']
-            subprocess.call(exe + options + [repo])
+            subprocess.call(exe + pip_options + [repo])

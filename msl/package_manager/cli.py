@@ -4,13 +4,17 @@ Main entry point to either :ref:`install <install_cli>`, :ref:`uninstall <uninst
 MSL packages using the command-line interface (CLI).
 """
 import os
+import re
 import sys
 import logging
+import subprocess
 from pkg_resources import parse_version
 
 from . import utils, __version__, _PKG_NAME
 
 PARSER = None
+
+_pip_options_regexg = re.compile(r'\s+(-[a-zA-Z])?,?\s+(--[-\w]+)\s+(<.*>)?\s')
 
 
 def configure_parser():
@@ -60,6 +64,80 @@ def configure_parser():
     return PARSER
 
 
+def parse_args(args):
+    """Parse arguments.
+
+    Parameters
+    ----------
+    args : :class:`list` of :class:`str`
+        The arguments to parse.
+
+    Returns
+    -------
+    An :class:`argparse.Namespace` or :data:`None` if the was an error.
+    """
+    def pip_options_valid(command):
+        # returns either True or False
+        valid_options = {}
+        out = subprocess.check_output([sys.executable, '-m', 'pip', 'help', command], stderr=subprocess.PIPE)
+        for short, long, value in _pip_options_regexg.findall(out.decode()):
+            if short:
+                valid_options[short] = value
+            valid_options[long] = value
+
+        pip_options_copy = pip_options[:]
+        for i, option in enumerate(pip_options_copy):
+            if not option.startswith('-'):
+                # make sure the previous item in pip_options accepts a value
+                # if it doesn't then append the option to parsed_args.names
+                # because the name of an msl package got mistakenly added to pip_options
+                if not valid_options.get(pip_options_copy[i-1]):
+                    name = pip_options.pop(pip_options.index(option))
+                    parsed_args.names.append(name)
+
+            elif option not in valid_options:
+                utils.log.error('No such option for "pip {}": {}'.format(command, option))
+                return False
+
+            # if the pip option requires a value then make sure the value did
+            # not end up in the parsed_args.names list and the value comes
+            # immediately after the appropriate item in the pip_options list
+            elif valid_options[option]:
+                arg_index = args.index(option) + 1
+                pip_index = pip_options_copy.index(option) + 1
+                if pip_index >= len(pip_options_copy) or args[arg_index] != pip_options_copy[pip_index]:
+                    names_index = parsed_args.names.index(args[arg_index])
+                    name = parsed_args.names.pop(names_index)
+                    pip_options.insert(pip_index, name)
+
+        return True
+
+    parser = configure_parser()
+    parsed_args, pip_options = parser.parse_known_args(args=args)
+
+    if parsed_args.quiet == 0:
+        utils.set_log_level(logging.INFO)
+    elif parsed_args.quiet == 1:
+        utils.set_log_level(logging.ERROR)
+    elif parsed_args.quiet == 2:
+        utils.set_log_level(logging.CRITICAL)
+    elif parsed_args.quiet == 3:
+        utils.set_log_level(logging.CRITICAL + 1)
+
+    if pip_options:
+        if parsed_args.cmd in ['install', 'update', 'upgrade']:
+            if not pip_options_valid('install'):
+                return
+        elif parsed_args.cmd in ['uninstall', 'remove']:
+            if not pip_options_valid('uninstall'):
+                return
+        else:
+            utils.log.warning('The following options are ignored: ' + ', '.join(p for p in pip_options))
+
+    parsed_args.pip_options = pip_options
+    return parsed_args
+
+
 def _main(*args):
     # parse the input
     if not args:
@@ -67,15 +145,9 @@ def _main(*args):
         if not args:
             args = ['--help']
 
-    parser = configure_parser()
-    args = parser.parse_args(args)
-
-    if args.quiet == 1:
-        utils.set_log_level(logging.ERROR)
-    elif args.quiet == 2:
-        utils.set_log_level(logging.CRITICAL)
-    elif args.quiet == 3:
-        utils.set_log_level(logging.CRITICAL + 1)
+    args = parse_args(args)
+    if not args:
+        return
 
     # when the msl-package-manager gets updated a msl.exe.old file gets created (on Windows)
     old = sys.exec_prefix + '/Scripts/msl.exe.old'
@@ -83,7 +155,7 @@ def _main(*args):
         os.remove(old)
 
     # execute the command
-    ret = args.func(args, parser)
+    ret = args.func(args, PARSER)
     if ret == 'updating_msl_package_manager':
         return
 

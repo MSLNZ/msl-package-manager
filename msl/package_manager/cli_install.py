@@ -20,10 +20,12 @@ DESCRIPTION = HELP + """
 MSL packages are retrieved from GitHub repositories or from PyPI.
 """
 
-EXAMPLE = """
+EXAMPLE = """All other optional arguments are passed to "pip install".
+
 Examples:
     msl install equipment
     msl install loadlib --tag v0.3.0
+    msl install io network --retries 10
 """
 
 
@@ -49,4 +51,5 @@ def add_parser_install(parser):
 def execute(args, parser):
     """Executes the :ref:`install <install_cli>` command."""
     if parser.contains_package_names():
-        install(*args.names, yes=args.yes, branch=args.branch, tag=args.tag, update_cache=args.update_cache)
+        install(*args.names, yes=args.yes, branch=args.branch,
+                tag=args.tag, update_cache=args.update_cache, pip_options=args.pip_options)

@@ -101,6 +101,13 @@ You can also use a wildcard, for example, to install all packages that start wit
 
    msl install pr-*
 
+You can also include all options that the ``pip install`` command accepts, run
+``pip help install`` for more details
+
+.. code-block:: console
+
+   msl install loadlib equipment qt --user --retries 10
+
 .. _uninstall_cli:
 
 uninstall
@@ -137,6 +144,14 @@ Uninstall multiple MSL packages
 .. code-block:: console
 
    msl uninstall loadlib equipment qt
+
+You can also include all options that the ``pip uninstall`` command accepts, run
+``pip help uninstall`` for more details
+
+.. code-block:: console
+
+   msl uninstall io qt --no-python-version-warning
+
 
 .. _update_cli:
 
@@ -188,6 +203,13 @@ Update multiple MSL packages
 .. code-block:: console
 
    msl update loadlib equipment qt
+
+You can also include all options that the ``pip install`` command accepts, run
+``pip help install`` for more details (the ``--upgrade`` option is automatically included by default)
+
+.. code-block:: console
+
+   msl update loadlib io --no-deps
 
 .. _list_cli:
 

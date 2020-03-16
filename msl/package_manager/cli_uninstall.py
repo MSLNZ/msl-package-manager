@@ -12,9 +12,11 @@ from .cli_argparse import (
 
 DESCRIPTION = '{} MSL packages.'
 
-EXAMPLE = """
+EXAMPLE = """All other optional arguments are passed to "pip uninstall".
+
 Examples:
-    msl {} loadlib
+    msl {0} loadlib
+    msl {0} qt --no-python-version-warning
 """
 
 
@@ -45,4 +47,4 @@ def add_parser_uninstall(parser, name='uninstall'):
 def execute(args, parser):
     """Executes the :ref:`uninstall <uninstall_cli>` command."""
     if parser.contains_package_names():
-        uninstall(*args.names, yes=args.yes)
+        uninstall(*args.names, yes=args.yes, pip_options=args.pip_options)

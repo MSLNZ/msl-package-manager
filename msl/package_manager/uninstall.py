@@ -24,13 +24,18 @@ def uninstall(*names, **kwargs):
         * yes : :class:`bool`
             If :data:`True` then don't ask for confirmation before uninstalling.
             The default is :data:`False` (ask before uninstalling).
+        * pip_options : :class:`list` of :class:`str`
+            Optional arguments to pass to the ``pip uninstall`` command,
+            e.g., ``['--no-python-version-warning']``
+
     """
     # TODO Python 2.7 does not support named arguments after using *args
-    #  we can define yes=False in the function signature
-    #  if we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', })
+    #  we can define yes=False, pip_options=None in the function signature
+    #  when we choose to drop support for Python 2.7
+    utils._check_kwargs(kwargs, {'yes', 'pip_options'})
 
     yes = kwargs.get('yes', False)
+    pip_options = kwargs.get('pip_options', [])
 
     packages = utils._create_uninstall_list(names)
     if not packages:
@@ -85,10 +90,17 @@ def uninstall(*names, **kwargs):
     utils.log.info('')
 
     exe = [sys.executable, '-m', 'pip', 'uninstall']
-    options = ['--disable-pip-version-check', '--yes'] + ['--quiet'] * utils._NUM_QUIET
+
+    if '--quiet' not in pip_options or '-q' not in pip_options:
+        pip_options.extend(['--quiet'] * utils._NUM_QUIET)
+    if '--disable-pip-version-check' not in pip_options:
+        pip_options.append('--disable-pip-version-check')
+    if '--yes' not in pip_options or '-y' not in pip_options:
+        pip_options.append('--yes')
+
     for pkg in packages:
         is_namespace, path, init, examples_init = check_if_namespace_package(pkg)
-        subprocess.call(exe + options + [pkg])
+        subprocess.call(exe + pip_options + [pkg])
         if is_namespace and os.path.isdir(path):
             with open(os.path.join(path, '__init__.py'), 'wt') as fp:
                 fp.writelines(init)
