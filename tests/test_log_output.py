@@ -173,7 +173,7 @@ def test_log_output(caplog):
 
             # msl uninstall smartgadget network
             'Getting the packages from {}'.format(exec_path),
-            '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  msl-network  0.4.1      \n  smartgadget  0.1.0.dev0 ',
+            '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  msl-network  0.5.0      \n  smartgadget  0.1.0.dev0 ',
             '',
 
             # checking that smartgadget and msl-network are not installed
