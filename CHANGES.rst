@@ -7,6 +7,7 @@ Version 2.4.0.dev0
 
 - Added
 
+  * the ``pip_options`` kwarg to the ``install``, ``update`` and ``uninstall`` functions
   * support for Python 3.8
   * can now create a new package that is not part of a namespace
   * ``authorise`` as an alias for ``authorize`` for the CLI
@@ -33,7 +34,8 @@ Version 2.4.0.dev0
     specifying an extras_require value when installing/updating
   * issue `#4 <https://github.com/MSLNZ/msl-package-manager/issues/4>`_ - error updating a package if the
     installed name != repository name
-  * the `test_require` kwarg in ``setup.py`` now specifies `pytest<5.0` and `zipp<2.0.0` for Python 2.7
+  * the `tests_require` list in ``setup.py`` now specifies `zipp<2.0`, `pyparsing<3.0` and
+    `pytest<5.0` for Python 2.7
 
 - Removed
 
