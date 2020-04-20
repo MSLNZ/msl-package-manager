@@ -25,15 +25,15 @@ First, import the **MSL Package Manager**
 install
 -------
 
-:obj:`~msl.package_manager.install.install` the **msl-equipment** and **msl-qt** packages
+:obj:`~msl.package_manager.install.install` the **msl-network** and **msl-qt** packages
 
 .. code-block:: pycon
 
-   >>> pm.install('equipment', 'qt')
+   >>> pm.install('network', 'qt')
    The following MSL packages will be INSTALLED:
 
-     msl-equipment: 0.1.0
-     msl-qt: 0.1.0
+   msl-network  0.5.0  [PyPI]
+   msl-qt              [GitHub]
 
    Proceed ([y]/n)?
 
@@ -49,7 +49,7 @@ uninstall
    >>> pm.uninstall('loadlib')
    The following MSL packages will be REMOVED:
 
-     msl-loadlib: 0.3.1
+     msl-loadlib  0.6.0
 
    Proceed ([y]/n)?
 
@@ -65,7 +65,7 @@ update
    >>> pm.update('loadlib')
    The following MSL packages will be UPDATED:
 
-     msl-loadlib: 0.3.1 --> 0.3.2
+     msl-loadlib  0.6.0 --> 0.7.0  [PyPI]
 
    Proceed ([y]/n)?
 
@@ -79,22 +79,26 @@ Display the information about the MSL packages that are installed, see :func:`~m
 .. code-block:: pycon
 
    >>> pm.info()
-   MSL Package         Version Description
+       MSL Package     Version                           Description
    ------------------- ------- ----------------------------------------------------------------------
-   msl-loadlib         0.3.1   Load a shared library (and access a 32-bit library from 64-bit Python)
-   msl-package-manager 1.4.0   Install, uninstall, update, list and create MSL packages
+           msl-loadlib 0.6.0   Load a shared library (and access a 32-bit library from 64-bit Python)
+   msl-package-manager 2.4.0   Install, uninstall, update, list and create MSL packages
 
 Display the information about the MSL repositories_ that are available
 
 .. code-block:: pycon
 
    >>> pm.info(from_github=True)
-   MSL Repository      Version Description
+      MSL Repository   Version                              Description
    ------------------- ------- ----------------------------------------------------------------------
-   msl-equipment       0.1.0   Manage and communicate with equipment in the laboratory
-   msl-loadlib         0.3.1   Load a shared library (and access a 32-bit library from 64-bit Python)
-   msl-package-manager 1.4.0   Install, uninstall, update, list and create MSL packages
-   msl-qt              0.1.0   Custom Qt components for the user interface
+                   GTC 1.2.1   The GUM Tree Calculator for Python
+        Quantity-Value 0.1.0   A package that supports physical quantity-correctness in Python code
+         msl-equipment         Manage and communicate with equipment in the laboratory
+                msl-io         Read and write data files
+           msl-loadlib 0.7.0   Load a shared library (and access a 32-bit library from 64-bit Python)
+           msl-network 0.5.0   Concurrent and asynchronous network I/O
+   msl-package-manager 2.4.0   Install, uninstall, update, list and create MSL packages
+                msl-qt         Custom Qt components for the user interface
 
 Get a dictionary of all MSL packages that are :func:`~msl.package_manager.utils.installed`
 
@@ -104,16 +108,21 @@ Get a dictionary of all MSL packages that are :func:`~msl.package_manager.utils.
    >>> for pkg, info in pkgs.items():
    ...     print(pkg, info)
    ...
-   msl-loadlib {'version': '0.3.1', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)', 'repo_name': 'msl-loadlib'}
-   msl-package-manager {'version': '1.4.0', 'description': 'Install, uninstall, update, list and create MSL packages', 'repo_name': 'msl-package-manager'}
+   msl-loadlib {'version': '0.6.0', 'description': 'Load a shared library (and access a 32-bit library from 64-bit Python)', 'repo_name': 'msl-loadlib'}
+   msl-package-manager {'version': '2.4.0', 'description': 'Install, uninstall, update, list and create MSL packages', 'repo_name': 'msl-package-manager'}
 
 Get a dictionary of all MSL repositories_ on GitHub, see :func:`~msl.package_manager.utils.github`
 
 .. code-block:: pycon
 
    >>> pkgs = pm.github()
-   >>> pkgs['msl-package-manager']
-   {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '1.4.0', 'tags': ['v1.4.0', 'v1.3.0', 'v1.2.0', 'v1.1.0', 'v1.0.3', 'v1.0.2', 'v1.0.1', 'v1.0.0', 'v0.1.0'], 'branches': ['develop', 'master']}
+   >>> for key, value in pkgs['msl-package-manager'].items():
+   ...     print('{}: {}'.format(key, value))
+   ...
+   description: Install, uninstall, update, list and create MSL packages
+   version: 2.4.0
+   tags: ['v2.4.0', 'v2.3.0', 'v2.2.0', 'v2.1.0', 'v2.0.0', 'v1.5.1', 'v1.5.0', 'v1.4.1', 'v1.4.0', 'v1.3.0', 'v1.2.0', 'v1.1.0', 'v1.0.3', 'v1.0.2', 'v1.0.1', 'v1.0.0', 'v0.1.0']
+   branches: ['master']
 
 Get a dictionary of all MSL packages_ on PyPI, see :func:`~msl.package_manager.utils.pypi`
 
@@ -121,7 +130,7 @@ Get a dictionary of all MSL packages_ on PyPI, see :func:`~msl.package_manager.u
 
    >>> pkgs = pm.pypi()
    >>> pkgs['msl-package-manager']
-   {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '1.4.0'}
+   {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '2.4.0'}
 
 .. _create_api:
 
@@ -133,7 +142,7 @@ create
 .. code-block:: pycon
 
    >>> pm.create('MyPackage', author='my name', email='my@email.com', directory='D:/create/here')
-   Created MSL-MyPackage in D:\create\here\msl-mypackage
+   Created msl-MyPackage in 'D:/create/here\\msl-MyPackage'
 
 .. _authorize_api:
 
