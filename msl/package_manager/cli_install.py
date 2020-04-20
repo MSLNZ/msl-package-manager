@@ -1,5 +1,5 @@
 """
-Command line interface for the :ref:`install <install_cli>` command.
+Command line interface for the :ref:`install <install-cli>` command.
 """
 from .install import install
 from .cli_argparse import (
@@ -30,7 +30,7 @@ Examples:
 
 
 def add_parser_install(parser):
-    """Add the :ref:`install <install_cli>` command to the parser."""
+    """Add the :ref:`install <install-cli>` command to the parser."""
     p = parser.add_parser(
         'install',
         help=HELP,
@@ -49,7 +49,7 @@ def add_parser_install(parser):
 
 
 def execute(args, parser):
-    """Executes the :ref:`install <install_cli>` command."""
+    """Executes the :ref:`install <install-cli>` command."""
     if parser.contains_package_names():
         install(*args.names, yes=args.yes, branch=args.branch,
                 tag=args.tag, update_cache=args.update_cache, pip_options=args.pip_options)

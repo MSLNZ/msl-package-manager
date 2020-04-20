@@ -1,17 +1,17 @@
-.. _create_readme:
+.. _create-readme:
 
 "create" ReadMe
 ===============
 
-The MSL package that is created by running the :ref:`msl create <create_cli>` command contains two scripts
-to help make development easier: :ref:`create_readme_setup` and :ref:`create_readme_condatests`.
+The MSL package that is created by running the :ref:`msl create <create-cli>` command contains two scripts
+to help make development easier: :ref:`create-readme-setup` and :ref:`create-readme-condatests`.
 
-.. _create_readme_setup:
+.. _create-readme-setup:
 
 setup.py
 --------
 
-The **setup.py** file (that is created by running :ref:`msl create <create_cli>`) includes additional commands
+The **setup.py** file (that is created by running :ref:`msl create <create-cli>`) includes additional commands
 that can be used to run unit tests and to create the documentation for your MSL package.
 
 .. note::
@@ -78,7 +78,7 @@ or
 
    python setup.py --help-commands
 
-.. _create_readme_condatests:
+.. _create-readme-condatests:
 
 condatests.py
 -------------
@@ -86,7 +86,7 @@ condatests.py
 .. important::
    The following assumes that you are using conda_ as your environment_ manager.
 
-Additionally, there is a **condatests.py** file that is created by running :ref:`msl create <create_cli>`. This
+Additionally, there is a **condatests.py** file that is created by running :ref:`msl create <create-cli>`. This
 script will run the tests in all specified conda environment_\s. At the time of writing this script, tox_ and
 conda_ were not compatible_ and so this script provided a way around this issue.
 
@@ -113,7 +113,7 @@ You can view the help for **condatests.py** by running
 
    python condatests.py --help
 
-Run the tests with all conda environment_\'s using ``python setup.py tests`` (see :ref:`create_readme_setup`).
+Run the tests with all conda environment_\'s using ``python setup.py tests`` (see :ref:`create-readme-setup`).
 This assumes that a :ref:`condatests-ini` does not exist (which could change the default options).
 
 .. code-block:: console
@@ -205,7 +205,6 @@ Specify the path to a `condatests.ini <condatests-ini_>`_ file
 
    python condatests.py --ini C:\Users\Me\my_condatests_config.ini
 
-
 .. _condatests-ini:
 
 configuration file
@@ -241,7 +240,7 @@ file is included in **.gitignore**.
 
 The following are example **condatests.ini** files.
 
-**Example 1**: Run ``python setup.py tests`` (see :ref:`create_readme_setup`) with all conda environment_\s except
+**Example 1**: Run ``python setup.py tests`` (see :ref:`create-readme-setup`) with all conda environment_\s except
 for the *base* environment_
 
 .. code-block:: ini

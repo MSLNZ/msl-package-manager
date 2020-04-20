@@ -1,5 +1,5 @@
 """
-Command line interface for the :ref:`authorize <authorize_cli>` command.
+Command line interface for the :ref:`authorize <authorize-cli>` command.
 """
 from .cli_argparse import (
     add_argument_quiet,
@@ -37,7 +37,7 @@ Example:
 
 
 def add_parser_authorize(parser, name='authorize'):
-    """Add the :ref:`authorize <authorize_cli>` command to the parser."""
+    """Add the :ref:`authorize <authorize-cli>` command to the parser."""
     p = parser.add_parser(
         name,
         help=HELP if name == 'authorize' else 'Alias for {}.'.format(name),
@@ -50,7 +50,7 @@ def add_parser_authorize(parser, name='authorize'):
 
 
 def execute(args, parser):
-    """Executes the :ref:`authorize <authorize_cli>` command."""
+    """Executes the :ref:`authorize <authorize-cli>` command."""
     print('To generate a personal access token do the following:')
     print('  1. Login to your GitHub account')
     print('  2. Go to Settings -> Developer settings -> Personal access tokens')

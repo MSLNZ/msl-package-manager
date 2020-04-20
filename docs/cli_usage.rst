@@ -3,7 +3,7 @@
 Command Line Interface
 ======================
 
-Once the MSL Package Manager has been :ref:`installed <install>` you will be able to install,
+Once the MSL Package Manager has been :ref:`installed <pm-install>` you will be able to install,
 uninstall, update, list and create MSL packages by using the command line interface.
 
 *You can also directly call these functions through the* :ref:`API <pm-api-usage>`.
@@ -13,7 +13,7 @@ uninstall, update, list and create MSL packages by using the command line interf
    ``pip uninstall msl-<packaage name>`` will break the namespace_. Therefore, it is
    recommended to use ``msl uninstall <packaage name>`` to uninstall MSL packages.
 
-.. _cache_note:
+.. _cache-note:
 .. note::
    The information about the MSL repositories_ that are available on GitHub and the MSL packages_ on PyPI are
    cached for 24 hours after you request information about a repository or package. After 24 hours a subsequent
@@ -32,7 +32,7 @@ or, for help about a specific command (for example, the *install* command), run
 
    msl install --help
 
-.. _install_cli:
+.. _install-cli:
 
 install
 -------
@@ -108,7 +108,7 @@ You can also include all options that the ``pip install`` command accepts, run
 
    msl install loadlib equipment qt --user --retries 10
 
-.. _uninstall_cli:
+.. _uninstall-cli:
 
 uninstall
 ---------
@@ -152,8 +152,7 @@ You can also include all options that the ``pip uninstall`` command accepts, run
 
    msl uninstall io qt --no-python-version-warning
 
-
-.. _update_cli:
+.. _update-cli:
 
 update
 ------
@@ -179,7 +178,7 @@ Update a specific MSL package, for example **msl-loadlib** (you can ignore the *
 
    msl update loadlib
 
-Update to a package that was released :ref:`\<24 hours ago <cache_note>`
+Update to a package that was released :ref:`\<24 hours ago <cache-note>`
 
 .. code-block:: console
 
@@ -211,7 +210,7 @@ You can also include all options that the ``pip install`` command accepts, run
 
    msl update loadlib io --no-deps
 
-.. _list_cli:
+.. _list-cli:
 
 list
 ----
@@ -234,13 +233,13 @@ List all MSL packages_ that are available on PyPI
 
    msl list --pypi
 
-Update the GitHub :ref:`cache <cache_note>` and then list all repositories_ that are available
+Update the GitHub :ref:`cache <cache-note>` and then list all repositories_ that are available
 
 .. code-block:: console
 
    msl list --github --update-cache
 
-Update the PyPI :ref:`cache <cache_note>` and then list all packages_ that are available
+Update the PyPI :ref:`cache <cache-note>` and then list all packages_ that are available
 
 .. code-block:: console
 
@@ -253,7 +252,7 @@ in JSON_ format
 
    msl list --github --json
 
-.. _create_cli:
+.. _create-cli:
 
 create
 ------
@@ -313,13 +312,13 @@ To import this package you would use
 
    >>> import mypackage
 
-.. _authorize_cli:
+.. _authorize-cli:
 
 authorize
 ---------
 
 When requesting information about the MSL repositories_ that are available on GitHub there is a limit_ to
-how often you can send requests to the GitHub API (this is the primary reason for :ref:`caching <cache_note>`
+how often you can send requests to the GitHub API (this is the primary reason for :ref:`caching <cache-note>`
 the information). If you have a GitHub account and include your username and a `personal access token`_ with each
 request then this limit_ is increased. If you do not have a GitHub account then you could
 `sign up <github_signup_>`_ to create an account.

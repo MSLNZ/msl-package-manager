@@ -1,5 +1,5 @@
 """
-Command line interface for the :ref:`create <create_cli>` command.
+Command line interface for the :ref:`create <create-cli>` command.
 """
 from .utils import log
 from .create import create
@@ -50,7 +50,7 @@ Example:
 
 
 def add_parser_create(parser):
-    """Add the :ref:`create <create_cli>` command to the parser."""
+    """Add the :ref:`create <create-cli>` command to the parser."""
     p = parser.add_parser(
         'create',
         help=HELP,
@@ -91,7 +91,7 @@ def add_parser_create(parser):
 
 
 def execute(args, parser):
-    """Executes the :ref:`create <create_cli>` command."""
+    """Executes the :ref:`create <create-cli>` command."""
     if args.names:
         if args.no_namespace:
             namespace = None

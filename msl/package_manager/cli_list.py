@@ -1,5 +1,5 @@
 """
-Command line interface for the :ref:`list <list_cli>` command.
+Command line interface for the :ref:`list <list-cli>` command.
 """
 from .utils import info
 from .cli_argparse import (
@@ -26,7 +26,7 @@ Examples:
 
 
 def add_parser_list(parser):
-    """Add the :ref:`list <list_cli>` command to the parser."""
+    """Add the :ref:`list <list-cli>` command to the parser."""
     p = parser.add_parser(
         'list',
         help=HELP,
@@ -60,5 +60,5 @@ def add_parser_list(parser):
 
 
 def execute(args, parser):
-    """Executes the :ref:`list <list_cli>` command."""
+    """Executes the :ref:`list <list-cli>` command."""
     info(args.github, args.pypi, args.update_cache, args.json)

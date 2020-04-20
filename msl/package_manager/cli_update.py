@@ -1,5 +1,5 @@
 """
-Command line interface for the :ref:`update <update_cli>` command.
+Command line interface for the :ref:`update <update-cli>` command.
 """
 from .update import update
 from .cli_argparse import (
@@ -28,7 +28,7 @@ Examples:
 
 
 def add_parser_update(parser, name='update'):
-    """Add the :ref:`update <update_cli>` command to the parser."""
+    """Add the :ref:`update <update-cli>` command to the parser."""
     if name == 'update':
         p = parser.add_parser(
             name,
@@ -55,7 +55,7 @@ def add_parser_update(parser, name='update'):
 
 
 def execute(args, parser):
-    """Executes the :ref:`update <update_cli>` command."""
+    """Executes the :ref:`update <update-cli>` command."""
     if parser.contains_package_names():
         return update(*args.names, yes=args.yes, branch=args.branch,
                       tag=args.tag, update_cache=args.update_cache, pip_options=args.pip_options)

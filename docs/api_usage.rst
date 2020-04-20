@@ -20,7 +20,7 @@ First, import the **MSL Package Manager**
       >>> import logging
       >>> pm.set_log_level(logging.INFO)
 
-.. _install_api:
+.. _install-api:
 
 install
 -------
@@ -37,7 +37,7 @@ install
 
    Proceed ([y]/n)?
 
-.. _uninstall_api:
+.. _uninstall-api:
 
 uninstall
 ---------
@@ -53,7 +53,7 @@ uninstall
 
    Proceed ([y]/n)?
 
-.. _update_api:
+.. _update-api:
 
 update
 ------
@@ -69,7 +69,7 @@ update
 
    Proceed ([y]/n)?
 
-.. _list_api:
+.. _list-api:
 
 list
 ----
@@ -132,7 +132,7 @@ Get a dictionary of all MSL packages_ on PyPI, see :func:`~msl.package_manager.u
    >>> pkgs['msl-package-manager']
    {'description': 'Install, uninstall, update, list and create MSL packages', 'version': '2.4.0'}
 
-.. _create_api:
+.. _create-api:
 
 create
 ------
@@ -144,7 +144,7 @@ create
    >>> pm.create('MyPackage', author='my name', email='my@email.com', directory='D:/create/here')
    Created msl-MyPackage in 'D:/create/here\\msl-MyPackage'
 
-.. _authorize_api:
+.. _authorize-api:
 
 authorize
 ---------

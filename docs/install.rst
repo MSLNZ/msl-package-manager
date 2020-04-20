@@ -1,4 +1,4 @@
-.. _install:
+.. _pm-install:
 
 Install the MSL Package Manager
 ===============================

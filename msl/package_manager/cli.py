@@ -1,6 +1,6 @@
 """
-Main entry point to either :ref:`install <install_cli>`, :ref:`uninstall <uninstall_cli>`,
-:ref:`update <update_cli>`, :ref:`list <list_cli>` or :ref:`create <create_cli>`
+Main entry point to either :ref:`install <install-cli>`, :ref:`uninstall <uninstall-cli>`,
+:ref:`update <update-cli>`, :ref:`list <list-cli>` or :ref:`create <create-cli>`
 MSL packages using the command-line interface (CLI).
 """
 import os
@@ -187,8 +187,8 @@ def _main(*args):
 
 def main(*args):
     """
-    Main entry point to either :ref:`install <install_cli>`, :ref:`uninstall <uninstall_cli>`,
-    :ref:`update <update_cli>`, :ref:`list <list_cli>` or :ref:`create <create_cli>`
+    Main entry point to either :ref:`install <install-cli>`, :ref:`uninstall <uninstall-cli>`,
+    :ref:`update <update-cli>`, :ref:`list <list-cli>` or :ref:`create <create-cli>`
     MSL packages using the CLI.
     """
     sys.exit(_main(*args))

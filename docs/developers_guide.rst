@@ -3,17 +3,18 @@
 ====================
 MSL Developers Guide
 ====================
-This guide shows you how to:
+This guide shows you how to [#f1]_:
 
-* :ref:`set up`
-* :ref:`commit changes`
-* :ref:`setup and condatests scripts`
-* :ref:`style guide`
+* :ref:`set-up`
+* :ref:`commit-changes`
+* :ref:`setup-and-condatests-scripts`
+* :ref:`style-guide`
 
-This guide describes *one way* to set up a Python environment and it does not intend to imply that the following
-is the *best way* to develop programs in the Python language [#f1]_.
+and describes *one way* to set up an environment to develop Python programs.
+The guide does not intend to imply that the following is the *best way* to
+develop programs in the Python language.
 
-.. _set up:
+.. _set-up:
 
 Install and set up Python, Git and PyCharm
 ------------------------------------------
@@ -21,23 +22,22 @@ This section uses the `MSL-LoadLib repository`_ as an example of a repository th
 to clone_ and import into `PyCharm <Community Edition of PyCharm_>`_.
 
 The following instructions are written for a Windows x64 operating system. To install the same software on
-64-bit `Ubuntu <https://www.ubuntu.com/>`_ run
+a Debian architecture, such as `Ubuntu <https://www.ubuntu.com/>`_, run
 
 .. code-block:: console
 
    sudo apt update
-   sudo apt install git
+   sudo apt install git snapd
    sudo snap install pycharm-community --classic
    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
    bash Miniconda*
 
 and answer the questions that you are asked. After running these commands you can follow the appropriate
-set-up steps below.
+steps below.
 
 .. attention::
    The screenshots below might not represent exactly what you see during the installation or configuration
-   procedure as this depends on the version of the software that you are installing or using. Hopefully
-   the screenshots are sufficient to guide you through the installation and configuration process.
+   procedure as this depends on the version of the software that you are using.
 
 1. Download a 64-bit version of Miniconda_.
 
@@ -92,9 +92,9 @@ set-up steps below.
 
       .. image:: _static/pycharm_installation2.png
 
-   b) Select the default editor theme *(you can change the theme later)* and click
+   b) Select the default editor theme *(you can also change the theme later)* and click
       **Skip Remaining and Set Defaults**
-    
+
       .. image:: _static/pycharm_installation3.png
 
    c) Select the **Git** option from **Check out from Version Control**
@@ -121,21 +121,21 @@ set-up steps below.
 
 9. Add the ``py37`` `virtual environment`_ that was created in Step 4 as the **Project Interpreter**
    *(NOTE: you can also create a new conda environment in Step 9d)*
-   
+
    a) Press ``CTRL+ALT+S`` to open the **Settings** window
-   
+
    b) Go to **Project Interpreter** and click on the *gear* button in the top-right corner
 
       .. image:: _static/pycharm_interpreter1.png
-   
+
    c) Select **Add**
-    
+
       .. image:: _static/pycharm_interpreter2.png
-      
+
    d) Select **Conda Environment** :math:`\rightarrow` **Existing environment** and select the
       ``py37`` `virtual environment`_ that was created in Step 4 and then click **OK**
       *You can also create a new environment if you want*
-   
+
       .. image:: _static/pycharm_interpreter3.png
 
    e) Click **Apply** then **OK**
@@ -145,7 +145,7 @@ set-up steps below.
 
 10. The **MSL-LoadLib** project is now shown in the **Project** window and you can begin to modify the code.
 
-.. _commit changes:
+.. _commit-changes:
 
 Commit changes to a repository
 ------------------------------
@@ -154,7 +154,7 @@ The following is only a very basic example of how to upload changes to the sourc
 on how to use git.
 
 .. note::
-   This section assumes that you followed the instructions from :ref:`set up`.
+   This section assumes that you followed the instructions from :ref:`set-up`.
 
 1. Make sure that the git Branch_ you are working on is up to date by performing a Pull_.
 
@@ -167,13 +167,13 @@ on how to use git.
 
       .. image:: _static/pycharm_github_pull_2.png
 
-2. Make changes to the code ...
+2. Make changes to the code.
 
 3. When you are happy with the changes that you have made you should Push_ the changes to the
    `MSL-LoadLib repository`_.
 
    a) Click on the green, check-mark button in the top-right corner to commit the changes
-   
+
       .. image:: _static/pycharm_github_commit1.png
 
    b) Select the file(s) that you want to upload to the `MSL-LoadLib repository`_, add a useful message for the
@@ -182,25 +182,25 @@ on how to use git.
       .. image:: _static/pycharm_github_commit2.png
 
    c) Finally, Push_ the changes to the `MSL-LoadLib repository`_.
-   
+
       .. image:: _static/pycharm_github_commit3.png
 
-.. _setup and condatests scripts:
+.. _setup-and-condatests-scripts:
 
 Use the setup.py and condatests.py scripts
 ------------------------------------------
-MSL packages come with two scripts to help make development easier: :ref:`create_readme_setup` and
-:ref:`create_readme_condatests`. See the :ref:`create_readme` page for an overview on how to use these scripts.
+MSL packages come with two scripts to help make development easier: :ref:`create-readme-setup` and
+:ref:`create-readme-condatests`. See the :ref:`create-readme` page for an overview on how to use these scripts.
 
-.. _style guide:
+.. _style-guide:
 
-Edit the source code using the style guide
-------------------------------------------
+Edit source code using the style guide
+--------------------------------------
 Please adhere to the following style guides when contributing to **MSL** packages. With multiple people contributing
 to the code base it will be easier to understand if there is a coherent structure to how the code is written:
 
 .. note::
-   This section assumes that you followed the instructions from :ref:`set up`.
+   This section assumes that you followed the instructions from :ref:`set-up`.
 
 * Follow the :pep:`8` style guide when possible *(by default, PyCharm will notify you if you do not)*.
 * Docstrings must be provided for all public classes, methods and functions.
@@ -232,10 +232,10 @@ to the code base it will be easier to understand if there is a coherent structur
 .. _Branch: https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell
 .. _Pull: https://git-scm.com/docs/git-pull
 .. _Push: https://git-scm.com/docs/git-push
-.. _django project: https://docs.djangoproject.com/en/1.10/topics/logging/
+.. _django project: https://docs.djangoproject.com/en/3.0/topics/logging/
 .. _MSLNZ: https://github.com/MSLNZ
 
 .. [#f1] Software is identified in this guide in order to specify the installation and configuration procedure
-         adequately. Such identification is not intended to imply recommendation or endorsement by the Measurement
-         Standards Laboratory of New Zealand, nor is it intended to imply that the software identified are
-         necessarily the best available for the purpose.
+   adequately. Such identification is not intended to imply recommendation or endorsement by the Measurement
+   Standards Laboratory of New Zealand, nor is it intended to imply that the software identified are
+   necessarily the best available for the purpose.
