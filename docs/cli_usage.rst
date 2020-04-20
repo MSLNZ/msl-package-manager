@@ -37,7 +37,7 @@ or, for help about a specific command (for example, the *install* command), run
 install
 -------
 
-Install all MSL packages that are available on the GitHub `repository <repositories_>`_
+Install all MSL packages that are available
 
 .. code-block:: console
 
