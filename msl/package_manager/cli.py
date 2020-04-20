@@ -74,7 +74,7 @@ def parse_args(args):
 
     Returns
     -------
-    An :class:`argparse.Namespace` or :data:`None` if the was an error.
+    An :class:`argparse.Namespace` or :data:`None` if there was an error.
     """
     def pip_options_valid(command):
         # returns either True or False
