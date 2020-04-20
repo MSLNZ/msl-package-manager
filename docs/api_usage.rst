@@ -89,7 +89,7 @@ Display the information about the MSL repositories_ that are available
 .. code-block:: pycon
 
    >>> pm.info(from_github=True)
-      MSL Repository   Version                              Description
+      MSL Repository   Version                           Description
    ------------------- ------- ----------------------------------------------------------------------
                    GTC 1.2.1   The GUM Tree Calculator for Python
         Quantity-Value 0.1.0   A package that supports physical quantity-correctness in Python code
