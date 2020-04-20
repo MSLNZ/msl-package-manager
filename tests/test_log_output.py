@@ -111,7 +111,7 @@ def test_log_output(caplog):
         'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
         'Getting the packages from {}'.format(exec_path),
-        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  msl-loadlib[java]: 0.5.0 --> 0.6.0  [PyPI]',
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  msl-loadlib[java]  0.5.0 --> 0.6.0  [PyPI]',
         '',
         "Updating {}'msl-loadlib' from PyPI".format(u),
 
@@ -167,7 +167,7 @@ def test_log_output(caplog):
             'Loaded the cached information about the PyPI packages',
             'Loaded the cached information about the GitHub repositories',
             'Getting the packages from {}'.format(exec_path),
-            '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  smartgadget: 0.1.0.dev0 --> [branch:master]  [GitHub]',
+            '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  smartgadget  0.1.0.dev0 --> [branch:master]  [GitHub]',
             '',
             "Updating {}'smartgadget' from GitHub[master]".format(u),
 

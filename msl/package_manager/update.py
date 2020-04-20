@@ -182,7 +182,7 @@ def update(*names, **kwargs):
 
         msg = '\n{}The following MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
         for pkg, info in pkgs_to_update.items():
-            pkg += info['extras_require'] + ': '
+            pkg += info['extras_require'] + '  '
             msg += '\n  ' + pkg.ljust(w[0]+2) + info['installed_version'].ljust(w[1]) + \
                    ' --> ' + info['version'].replace('==', '') + \
                    '  [{}]'.format('PyPI' if info['using_pypi'] else 'GitHub')
