@@ -17,6 +17,7 @@ import struct
 import fnmatch
 import getpass
 import logging
+import textwrap
 import platform
 import datetime
 import tempfile
@@ -271,12 +272,14 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
             max(w[2], len(pkgs[p]['description']))
         ]
 
-    # want the description to spill over to the next line in a justified manner
-    # to start where the description on the previous line started
-    term_w, term_h = _get_terminal_size()
-    max_description_width = max(len(header[2]), term_w - (w[0] + w[1]) - 2)
-    if w[2] > max_description_width:
-        w[2] = max_description_width
+    if 'PYCHARM_HOSTED' not in os.environ:
+        # if not executing within the PyCharm IDE then the description
+        # should wrap to the next line and begin where the description
+        # on the previous line started
+        term_w, term_h = _get_terminal_size()
+        max_description_width = max(len(header[2]), term_w - (w[0] + w[1]) - 2)
+        if w[2] > max_description_width:
+            w[2] = max_description_width
 
     # log the results
     msg = [Fore.RESET]
@@ -285,40 +288,14 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     for p in sorted(pkgs):
         description = pkgs[p]['description']
         name_version = p.rjust(w[0]) + ' ' + pkgs[p]['version'].ljust(w[1]) + ' '
-        if len(description) <= w[2]:
-            msg.append(name_version + description)
+        if not description:
+            msg.append(name_version)
         else:
-            # don't split a line in the middle of a word
-            i = min(len(description) - 1, w[2])
-            while description[i].strip():
-                i -= 1
-                if i <= 0:  # this should not occur
-                    i = w[2]
-                    break
-            msg.append(name_version + description[:i].ljust(w[2]))
-            while True:
-                # remove leading whitespace
-                n = len(description[i:i+w[2]]) - len(description[i:i+w[2]].lstrip())
-                if n > 0:
-                    i += n
-
-                iend = i + w[2]
-
-                # check if the rest fits on 1 line
-                if len(description[i:iend]) < w[2]:
-                    msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
-                    break
-
-                # don't split a line in the middle of a word
-                iend = min(len(description) - 1, iend)
-                while description[iend].strip():
-                    iend -= 1
-                    if iend <= i:  # this should not occur
-                        iend = i + w[2]
-                        break
-
-                msg.append(' ' * len(name_version) + description[i:iend].ljust(w[2]))
-                i = iend
+            padding = ' ' * len(name_version)
+            wrapped_lines = textwrap.wrap(description, width=w[2])
+            msg.append(name_version + wrapped_lines[0])
+            for line in wrapped_lines[1:]:
+                msg.append(padding + line)
 
     log.info('\n'.join(msg))
 
