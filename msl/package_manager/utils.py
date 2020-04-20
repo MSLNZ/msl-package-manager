@@ -101,7 +101,7 @@ def get_username():
 
 
 def github(update_cache=False):
-    """Get the MSL repositories_ that are available on GitHub.
+    """Get the information about the MSL repositories_ that are available on GitHub.
 
     Parameters
     ----------
@@ -114,7 +114,7 @@ def github(update_cache=False):
     Returns
     -------
     :class:`dict`
-        The MSL repositories_ that are available on GitHub.
+        The information about the MSL repositories_ that are available on GitHub.
     """
     packages, path = _inspect_github_pypi('github', update_cache)
     if packages:
@@ -219,7 +219,7 @@ def github(update_cache=False):
 
 
 def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
-    """Show the information about MSL packages.
+    """Show information about MSL packages.
 
     The information about the packages can be either those that are installed or
     those that are available as repositories_ on GitHub or as packages_ on PyPI.
@@ -229,9 +229,9 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
     Parameters
     ----------
     from_github : :class:`bool`, optional
-        Whether to show the MSL repositories_ that are available on GitHub.
+        Whether to show the information about the MSL repositories_ that are available on GitHub.
     from_pypi : :class:`bool`, optional
-        Whether to show the MSL packages_ that are available on PyPI.
+        Whether to show the information about the MSL packages_ that are available on PyPI.
     update_cache : :class:`bool`, optional
         The information about the MSL packages_ that are available on PyPI and about
         the repositories_ that are available on GitHub are cached to use for subsequent
@@ -324,12 +324,12 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
 
 
 def installed():
-    """Get the MSL packages that are installed.
+    """Get the information about the MSL packages that are installed.
 
     Returns
     -------
     :class:`dict`
-        The MSL packages that are installed.
+        The information about the MSL packages that are installed.
     """
     log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
 
@@ -370,7 +370,7 @@ def installed():
 
 
 def pypi(update_cache=False):
-    """Get the MSL packages_ that are available on PyPI.
+    """Get the information about the MSL packages_ that are available on PyPI.
 
     Parameters
     ----------
@@ -383,7 +383,7 @@ def pypi(update_cache=False):
     Returns
     -------
     :class:`dict`
-        The MSL packages_ that are available on PyPI.
+        The information about the MSL packages_ that are available on PyPI.
     """
     packages, path = _inspect_github_pypi('pypi', update_cache)
     if packages:
