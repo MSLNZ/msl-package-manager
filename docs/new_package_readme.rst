@@ -104,7 +104,7 @@ command line
 * ``--exclude`` - the conda environment_\s to exclude (supports regex)
 * ``--requires`` - additional packages to install for the tests (can also be a path to a file_)
 * ``--command`` - the command to execute with each conda environment_
-* ``--ini`` - the path to the :ref:`condatests-ini`
+* ``--ini`` - the path to a :ref:`condatests-ini`
 * ``--list`` - list the conda environment_\s that will be used for the tests and then exit
 
 You can view the help for **condatests.py** by running
@@ -199,7 +199,7 @@ List the conda environment_\s that include *dev* in the environment_ name and th
 
    python condatests.py --include dev --list
 
-Specify the path to a  `condatests-ini`_
+Specify the path to a `condatests.ini <condatests-ini_>`_ file
 
 .. code-block:: console
 
@@ -236,7 +236,7 @@ that will be used for the tests and then exit
 
    python condatests.py --show
 
-Since every developer can name their environment_\s to be anything that they want the **condatests.ini**
+Since every developer can name their environment_\s to be anything that they want, the **condatests.ini**
 file is included in **.gitignore**.
 
 The following are example **condatests.ini** files.
