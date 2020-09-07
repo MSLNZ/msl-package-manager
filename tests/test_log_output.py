@@ -48,33 +48,26 @@ def test_log_output(caplog):
     # make sure that MSL-LoadLib is not installed
     assert 'msl-loadlib' not in installed()
 
-    if sys.version_info[:2] >= (3, 5):
-        # rpi-smartgadget requires msl-network which require Python 3.5+
+    # install a package that is not part of the msl namespace
+    install('Quantity-Value<0.2', yes=True)
 
-        # msl install rpi-smartgadget
-        install('rpi-smartgadget', yes=True)
+    # make sure that Quantity-Value is installed
+    assert 'Quantity-Value' in installed()
 
-        # make sure that smartgadget and msl-network are installed
-        installed_ = installed()
-        assert 'smartgadget' in installed_
-        assert 'msl-network' in installed_
+    # update Quantity-Value -> invalid branch
+    update('Quantity-Value', yes=True, branch='invalid')
 
-        # update rpi-smartgadget -> invalid branch
-        update('smartgadget', yes=True, branch='invalid')
+    # update Quantity-Value -> invalid tag
+    update('Quantity-Value', yes=True, tag='invalid')
 
-        # update rpi-smartgadget -> invalid tag
-        update('smartgadget', yes=True, tag='invalid')
+    # update Quantity-Value -> tag=v0.1.0
+    update('Quantity-Value', yes=True, tag='v0.1.0')
 
-        # update rpi-smartgadget
-        update('smartgadget', yes=True, branch='master')
+    # uninstall Quantity-Value
+    uninstall('Quantity-Value', yes=True)
 
-        # uninstall rpi-smartgadget
-        uninstall('smartgadget', 'network', yes=True)
-
-        # make sure that smartgadget and msl-network are not installed
-        installed_ = installed()
-        assert 'smartgadget' not in installed_
-        assert 'msl-network' not in installed_
+    # make sure that Quantity-Value is not installed
+    assert 'Quantity-Value' not in installed()
 
     #
     # the expected logging messages
@@ -134,51 +127,48 @@ def test_log_output(caplog):
 
         # check if msl-loadlib is installed
         'Getting the packages from {}'.format(exec_path),
+
+        # install Quantity-Value
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  Quantity-Value  <0.2  [PyPI]',
+        '',
+        "Installing {}'Quantity-Value' from PyPI".format(u),
+
+        # check if Quantity-Value is installed
+        'Getting the packages from {}'.format(exec_path),
+
+        # update Quantity-Value -> invalid branch
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        "Cannot update {}'Quantity-Value' -- The 'invalid' branch does not exist".format(u),
+        '\x1b[39mNo MSL packages to update\x1b[39m',
+
+        # update Quantity-Value -> invalid tag
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        "Cannot update {}'Quantity-Value' -- The 'invalid' tag does not exist".format(u),
+        '\x1b[39mNo MSL packages to update\x1b[39m',
+
+        # update Quantity-Value -> tag=v0.1.0
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  Quantity-Value  0.1.0 --> [tag:v0.1.0]  [GitHub]',
+        '',
+        "Updating {}'Quantity-Value' from GitHub[v0.1.0]".format(u),
+
+        # msl uninstall Quantity-Value
+        'Getting the packages from {}'.format(exec_path),
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  Quantity-Value  0.1.0 ',
+        '',
+
+        # checking that Quantity-Value is not installed
+        'Getting the packages from {}'.format(exec_path),
     ]
-
-    if sys.version_info[:2] >= (3, 5):
-        expected.extend([
-            # install rpi-smartgadget
-            'Loaded the cached information about the PyPI packages',
-            'Loaded the cached information about the GitHub repositories',
-            'Getting the packages from {}'.format(exec_path),
-            '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  rpi-smartgadget    [GitHub]',
-            '',
-            "Installing {}'rpi-smartgadget' from GitHub[master]".format(u),
-
-            # check if smartgadget and msl-network are installed
-            'Getting the packages from {}'.format(exec_path),
-
-            # update rpi-smartgadget -> invalid branch
-            'Loaded the cached information about the PyPI packages',
-            'Loaded the cached information about the GitHub repositories',
-            'Getting the packages from {}'.format(exec_path),
-            "Cannot update 'smartgadget' -- The 'invalid' branch does not exist",
-            '\x1b[39mNo MSL packages to update\x1b[39m',
-
-            # update rpi-smartgadget -> invalid tag
-            'Loaded the cached information about the PyPI packages',
-            'Loaded the cached information about the GitHub repositories',
-            'Getting the packages from {}'.format(exec_path),
-            "Cannot update 'smartgadget' -- The 'invalid' tag does not exist",
-            '\x1b[39mNo MSL packages to update\x1b[39m',
-
-            # update rpi-smartgadget -> master branch
-            'Loaded the cached information about the PyPI packages',
-            'Loaded the cached information about the GitHub repositories',
-            'Getting the packages from {}'.format(exec_path),
-            '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  smartgadget  0.1.0.dev0 --> [branch:master]  [GitHub]',
-            '',
-            "Updating {}'smartgadget' from GitHub[master]".format(u),
-
-            # msl uninstall smartgadget network
-            'Getting the packages from {}'.format(exec_path),
-            '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  msl-network  0.5.0      \n  smartgadget  0.1.0.dev0 ',
-            '',
-
-            # checking that smartgadget and msl-network are not installed
-            'Getting the packages from {}'.format(exec_path),
-    ])
 
     for index, record in enumerate(caplog.records):
         assert expected[index] == record.message
