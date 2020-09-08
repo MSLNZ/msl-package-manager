@@ -142,7 +142,7 @@ sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else 
 
 tests_require = ['pytest-cov', 'colorama']
 if sys.version_info[:2] == (2, 7):
-    tests_require.extend(['zipp~=1.2', 'pyparsing~=2.4', 'pytest~=4.6'])
+    tests_require.extend(['zipp<2.0', 'pyparsing<3.0', 'pytest~=4.6'])
 else:
     tests_require.append('pytest')
 
