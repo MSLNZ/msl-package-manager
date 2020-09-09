@@ -373,11 +373,11 @@ def pypi(update_cache=False):
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         if err:
-            lines = err.splitlines()
-            if len(lines) == 1 and re.match(r'DEPRECATION: Python \d.\d reached the end of its life', err.decode()):
-                pass  # only the DEPRECATION warning was written to stderr
+            lines = err.decode('utf-8').splitlines()
+            if len(lines) == 1 and lines[0].startswith('DEPRECATION: Python {0}.{1}'.format(*sys.version_info)):
+                pass  # ignore pip's end of life deprecation warning
             else:
-                raise Exception(lines[-1].decode('utf-8'))
+                raise Exception(lines[-1])
     except Exception as e:
         log.error('Error searching for packages on PyPI -- {}'.format(e))
         return _inspect_github_pypi('pypi', False)[0]
