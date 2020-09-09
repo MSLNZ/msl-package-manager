@@ -374,12 +374,12 @@ def pypi(update_cache=False):
         out, err = p.communicate()
         if err:
             lines = err.splitlines()
-            if len(lines) == 1 and err.startswith(b'DEPRECATION: Python 2.7'):
+            if len(lines) == 1 and re.match(r'DEPRECATION: Python \d.\d reached the end of its life', err.decode()):
                 pass  # only the DEPRECATION warning was written to stderr
             else:
                 raise Exception(lines[-1].decode('utf-8'))
     except Exception as e:
-        log.error('Cannot connect to PyPI -- {}'.format(e))
+        log.error('Error searching for packages on PyPI -- {}'.format(e))
         return _inspect_github_pypi('pypi', False)[0]
     else:
         stdout = out.decode('utf-8').strip()
@@ -392,7 +392,7 @@ def pypi(update_cache=False):
         match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
         if match and (match.group(1).startswith('msl-')
                       or match.group(1) == 'GTC'
-                      or match.group(1) == 'Quantity-Value'):
+                      or match.group(1) == 'Quantity-Value'):  # <-- add here for the "pip search" comment above
             pkgs[match.group(1)] = {
                 'version': match.group(2),
                 'description': match.group(3),
