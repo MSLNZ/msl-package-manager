@@ -42,32 +42,33 @@ def test_log_output(caplog):
     uninstall('colorama', yes=True)
     import colorama  # still installed
 
+    # install a package that is not part of the msl namespace
+    install('GTC<1.3', yes=True)
+
+    # make sure that GTC is installed
+    assert 'GTC' in installed()
+
+    # update GTC -> invalid branch
+    update('GTC', yes=True, branch='invalid')
+
+    # update GTC -> invalid tag
+    update('GTC', yes=True, tag='invalid')
+
+    # update GTC -> tag=v0.1.0
+    update('GTC', yes=True, tag='v1.3.1')
+
+    # uninstall GTC
+    uninstall('GTC', yes=True)
+
+    # make sure that GTC is not installed but msl-loadlib is still installed
+    assert 'GTC' not in installed()
+    assert 'msl-loadlib' in installed()
+
     # uninstall MSL-LoadLib
     uninstall('loadlib', yes=True)
 
     # make sure that MSL-LoadLib is not installed
     assert 'msl-loadlib' not in installed()
-
-    # install a package that is not part of the msl namespace
-    install('Quantity-Value<0.2', yes=True)
-
-    # make sure that Quantity-Value is installed
-    assert 'Quantity-Value' in installed()
-
-    # update Quantity-Value -> invalid branch
-    update('Quantity-Value', yes=True, branch='invalid')
-
-    # update Quantity-Value -> invalid tag
-    update('Quantity-Value', yes=True, tag='invalid')
-
-    # update Quantity-Value -> tag=v0.1.0
-    update('Quantity-Value', yes=True, tag='v0.1.0')
-
-    # uninstall Quantity-Value
-    uninstall('Quantity-Value', yes=True)
-
-    # make sure that Quantity-Value is not installed
-    assert 'Quantity-Value' not in installed()
 
     #
     # the expected logging messages
@@ -120,53 +121,56 @@ def test_log_output(caplog):
         "No MSL packages match 'colorama'",
         'No MSL packages to uninstall',
 
+        # install GTC
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  GTC  <1.3  [PyPI]',
+        '',
+        "Installing {}'GTC' from PyPI".format(u),
+
+        # check if GTC is installed
+        'Getting the packages from {}'.format(exec_path),
+
+        # update GTC -> invalid branch
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        "Cannot update {}'GTC' -- The 'invalid' branch does not exist".format(u),
+        '\x1b[39mNo MSL packages to update\x1b[39m',
+
+        # update GTC -> invalid tag
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        "Cannot update {}'GTC' -- The 'invalid' tag does not exist".format(u),
+        '\x1b[39mNo MSL packages to update\x1b[39m',
+
+        # update GTC -> tag=v0.1.0
+        'Loaded the cached information about the PyPI packages',
+        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from {}'.format(exec_path),
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  GTC  1.2.1 --> [tag:v1.3.1]  [GitHub]',
+        '',
+        "Updating {}'GTC' from GitHub[v1.3.1]".format(u),
+
+        # msl uninstall GTC
+        'Getting the packages from {}'.format(exec_path),
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  GTC  1.3.1 ',
+        '',
+
+        # checking that GTC is not installed
+        'Getting the packages from {}'.format(exec_path),
+
+        # checking that msl-loadlib is still installed
+        'Getting the packages from {}'.format(exec_path),
+
         # msl uninstall loadlib
         'Getting the packages from {}'.format(exec_path),
         '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  msl-loadlib  0.6.0 ',
         '',
 
-        # check if msl-loadlib is installed
-        'Getting the packages from {}'.format(exec_path),
-
-        # install Quantity-Value
-        'Loaded the cached information about the PyPI packages',
-        'Loaded the cached information about the GitHub repositories',
-        'Getting the packages from {}'.format(exec_path),
-        '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  Quantity-Value  <0.2  [PyPI]',
-        '',
-        "Installing {}'Quantity-Value' from PyPI".format(u),
-
-        # check if Quantity-Value is installed
-        'Getting the packages from {}'.format(exec_path),
-
-        # update Quantity-Value -> invalid branch
-        'Loaded the cached information about the PyPI packages',
-        'Loaded the cached information about the GitHub repositories',
-        'Getting the packages from {}'.format(exec_path),
-        "Cannot update {}'Quantity-Value' -- The 'invalid' branch does not exist".format(u),
-        '\x1b[39mNo MSL packages to update\x1b[39m',
-
-        # update Quantity-Value -> invalid tag
-        'Loaded the cached information about the PyPI packages',
-        'Loaded the cached information about the GitHub repositories',
-        'Getting the packages from {}'.format(exec_path),
-        "Cannot update {}'Quantity-Value' -- The 'invalid' tag does not exist".format(u),
-        '\x1b[39mNo MSL packages to update\x1b[39m',
-
-        # update Quantity-Value -> tag=v0.1.0
-        'Loaded the cached information about the PyPI packages',
-        'Loaded the cached information about the GitHub repositories',
-        'Getting the packages from {}'.format(exec_path),
-        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  Quantity-Value  0.1.0 --> [tag:v0.1.0]  [GitHub]',
-        '',
-        "Updating {}'Quantity-Value' from GitHub[v0.1.0]".format(u),
-
-        # msl uninstall Quantity-Value
-        'Getting the packages from {}'.format(exec_path),
-        '\n\x1b[39mThe following MSL packages will be \x1b[36mREMOVED\x1b[39m:\n\n  Quantity-Value  0.1.0 ',
-        '',
-
-        # checking that Quantity-Value is not installed
+        # check that msl-loadlib is not installed
         'Getting the packages from {}'.format(exec_path),
     ]
 
