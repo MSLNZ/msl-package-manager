@@ -5,6 +5,15 @@ Release Notes
 Version 2.4.1.dev0
 ==================
 
+- Added
+
+  * support for Python 3.9
+
+- Changed
+
+  * no longer use the XMLRPC API to get the information about
+    the MSL packages that are available on PyPI
+
 Version 2.4.0 (2020.04.20)
 ==========================
 
