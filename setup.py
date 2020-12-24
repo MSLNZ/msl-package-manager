@@ -141,8 +141,8 @@ needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else []
 
 tests_require = ['pytest-cov', 'colorama']
-if sys.version_info[:2] == (2, 7):
-    tests_require.extend(['zipp<2.0', 'pyparsing<3.0', 'pytest~=4.6'])
+if sys.version_info[:2] <= (3, 5):
+    tests_require.extend(['zipp<2.0', 'importlib-metadata<3.0', 'pyparsing<3.0', 'pytest~=4.6'])
 else:
     tests_require.append('pytest')
 
