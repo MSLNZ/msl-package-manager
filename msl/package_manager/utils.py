@@ -27,12 +27,10 @@ import collections
 import pkg_resources
 try:
     from importlib import reload
-except ImportError:
-    from imp import reload  # Python 2
-try:
-    from urllib2 import urlopen, Request, HTTPError  # Python 2
-except ImportError:
-    from urllib.request import urlopen, Request, HTTPError
+    from urllib.request import urlopen, Request, HTTPError, URLError
+except ImportError:  # then Python 2
+    from imp import reload
+    from urllib2 import urlopen, Request, HTTPError, URLError
 
 from colorama import Fore, Style, Back, init
 
@@ -147,7 +145,7 @@ def github(update_cache=False):
             else:
                 msg = 'Unhandled HTTP error...'
             log.error('Error requesting {} from GitHub -- {}\n{}'.format(url, err, msg))
-        except IOError as err:
+        except URLError as err:
             log.error('Error requesting {} from GitHub -- {}'.format(url, err))
         else:
             return json.loads(response.read().decode('utf-8'))
@@ -366,43 +364,59 @@ def pypi(update_cache=False):
     if packages:
         return packages
 
-    log.debug('Getting the packages from PyPI')
-    # when adding a package name to "pip search" remember to include a "match.group(1)" check for it below
-    cmd = [sys.executable, '-m', 'pip', 'search', 'msl-', 'gtc', 'quantity-value', '--disable-pip-version-check']
-    try:
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
-        if err:
-            lines = err.decode('utf-8').splitlines()
-            if len(lines) == 1 and lines[0].startswith('DEPRECATION: Python {0}.{1}'.format(*sys.version_info)):
-                pass  # ignore pip's end of life deprecation warning
-            else:
-                raise Exception(lines[-1])
-    except Exception as e:
-        log.error('Error searching for packages on PyPI -- {}'.format(e))
-        return _inspect_github_pypi('pypi', False)[0]
-    else:
-        stdout = out.decode('utf-8').strip()
-        if not stdout:
-            log.error('PyPI did not return any MSL packages')
-            return _inspect_github_pypi('pypi', False)[0]
+    def request(endpoint):
+        # send a request to the PyPI endpoint
+        try:
+            reply = urlopen(Request('https://pypi.org' + endpoint, headers=headers))
+        except URLError as err:
+            log.error('Error requesting {!r} -- {}'.format(endpoint, err))
+        else:
+            return reply.read().decode('utf-8')
+
+    def use_json_api():
+        # use the JSON API as a backup way to get the package information from PyPI
+        projects = ('msl-package-manager', 'msl-network', 'msl-loadlib', 'GTC', 'Quantity-Value')
+        for project in projects:
+            reply = request('/pypi/{}/json'.format(project))
+            if reply:
+                info = json.loads(reply).get('info')
+                if info:
+                    pkgs[project] = {
+                        'version': info.get('version', 'UNKNOWN'),
+                        'description': info.get('summary', 'UNKNOWN')
+                    }
 
     pkgs = dict()
-    for line in stdout.splitlines():
-        match = re.match(r'(.*)\s+\((.*)\)\s+-\s+(.*)', line)
-        if match and (match.group(1).startswith('msl-')
-                      or match.group(1) == 'GTC'
-                      or match.group(1) == 'Quantity-Value'):  # <-- add here for the "pip search" comment above
-            pkgs[match.group(1)] = {
-                'version': match.group(2),
-                'description': match.group(3),
+    log.debug('Getting the packages from PyPI')
+    headers = {'User-Agent': _PKG_NAME + '/Python'}
+
+    # use the /search endpoint before the /json endpoint since searching does not
+    # depend on knowing in advance what MSL packages are available on PyPI
+    reply = request('/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22&o=')
+    if reply:
+        items = re.findall(
+            r'<span class="package-snippet__name">(?P<name>.+)</span>\s+'
+            r'<span class="package-snippet__version">(?P<version>.+)</span>\s+'
+            r'<span class="package-snippet__released">.+\s+(?P<released>.+)\s+.+\s+.+\s+'
+            r'<p class="package-snippet__description">(?P<description>.+)</p>',
+            reply,
+        )
+        for item in items:
+            name, version, released, description = item
+            pkgs[name] = {
+                'version': version,
+                'description': description,
             }
+        if not pkgs:
+            log.critical('PyPI regex pattern is invalid for the /search endpoint')
+            use_json_api()
+    else:
+        use_json_api()
 
     if not pkgs:
-        log.critical('The regex pattern for the PyPI packages is no longer valid')
         return _inspect_github_pypi('pypi', False)[0]
 
-    with open(path, 'w') as fp:
+    with open(path, mode='wt') as fp:
         json.dump(pkgs, fp)
 
     return _sort_packages(pkgs)
