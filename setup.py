@@ -133,18 +133,13 @@ def get_version():
 
 
 install_requires = ['setuptools', 'colorama']
+tests_require = ['pytest', 'pytest-cov']
 
 testing = {'test', 'tests'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else []
-
-tests_require = ['pytest-cov', 'colorama']
-if sys.version_info[:2] <= (3, 5):
-    tests_require.extend(['zipp<2.0', 'importlib-metadata<3.0', 'pyparsing<3.0', 'pytest~=4.6'])
-else:
-    tests_require.append('pytest')
 
 version = get_version()
 
@@ -175,6 +170,7 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=tests_require,
     install_requires=install_requires,
+    extras_require={'tests': tests_require},
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     entry_points={
         'console_scripts': [
