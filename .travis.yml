@@ -1,4 +1,4 @@
-dist: xenial  # https://docs.travis-ci.com/user/reference/linux
+dist: focal  # https://docs.travis-ci.com/user/reference/linux
 language: python
 
 os: osx
@@ -32,10 +32,10 @@ jobs:
       env: PYTHON=3.7.9
     - os: osx
       language: shell
-      env: PYTHON=3.8.6
+      env: PYTHON=3.8.7
     - os: osx
       language: shell
-      env: PYTHON=3.9.0
+      env: PYTHON=3.9.1
 
 before_install:
   - |
