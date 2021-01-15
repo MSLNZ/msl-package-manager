@@ -113,7 +113,7 @@ You can view the help for **condatests.py** by running
 
    python condatests.py --help
 
-Run the tests with all conda environment_\'s using ``python setup.py tests`` (see :ref:`create-readme-setup`).
+Run the tests with all conda environment_\'s using the ``python -m pytest`` command.
 This assumes that a :ref:`condatests-ini` does not exist (which could change the default options).
 
 .. code-block:: console
@@ -154,7 +154,7 @@ version and for Python 3.7.4 and exclude all environment_\s that already exist
 
 .. code-block:: console
 
-   python condatests.py --create 2 3.6 3.7.4 --exclude *
+   python condatests.py --create 2 3.6 3.7.4 --exclude .
 
 You can also mix the ``--create``, ``--include`` and ``--exclude`` arguments
 
@@ -187,7 +187,7 @@ List all conda environment_\s that will be used for the tests and then exit
 
    python condatests.py --list
 
-Show is an alias for `list`
+You can also use `--show` as an alias for `--list`
 
 .. code-block:: console
 
@@ -240,7 +240,7 @@ file is included in **.gitignore**.
 
 The following are example **condatests.ini** files.
 
-**Example 1**: Run ``python setup.py tests`` (see :ref:`create-readme-setup`) with all conda environment_\s except
+**Example 1**: Run ``python -m pytest`` (see :ref:`create-readme-setup`) with all conda environment_\s except
 for the *base* environment_
 
 .. code-block:: ini
@@ -248,7 +248,7 @@ for the *base* environment_
    [envs]
    exclude=base
 
-**Example 2**: Run ``python setup.py tests`` with all conda environment_\s that include the text *py* in the name
+**Example 2**: Run ``python -m pytest`` with all conda environment_\s that include the text *py* in the name
 of the environment_ but exclude the environment_\s that contain *py33* in the name (recall that a regex
 search is used to filter the environment_ names)
 
@@ -258,7 +258,7 @@ search is used to filter the environment_ names)
    include=py
    exclude=py33
 
-**Example 3**: Run ``python setup.py tests`` only with newly-created conda environment_\s, exclude all
+**Example 3**: Run ``python -m pytest`` only with newly-created conda environment_\s, exclude all
 environment_\s that already exist and ensure that *scipy* is installed in each new environment_
 (if the `minor` or `micro` version numbers of the Python environment_\s are not specified then the latest
 Python version that is available to conda will be installed)
@@ -270,7 +270,7 @@ Python version that is available to conda will be installed)
    exclude=.
    requires=scipy
 
-**Example 4**: Run ``python setup.py tests`` with newly-created conda environment_\s and all conda environment_\s
+**Example 4**: Run ``python -m pytest`` with newly-created conda environment_\s and all conda environment_\s
 that already exist that contain the text *dev* in the name of the environment_ except for the *dev33* environment_
 
 .. code-block:: ini
