@@ -41,6 +41,3 @@ junit.xml
 coverage.xml
 .pytest_cache/
 condatests.ini
-
-# ignore all scripts in the junk/ folder
-junk/
