@@ -96,7 +96,7 @@ def get_version():
     if 'dev' not in init_version:
         return init_version
 
-    if ('develop' in sys.argv) or ('msl-package-manager' in sys.argv[0]):
+    if ('develop' in sys.argv) or (os.path.join('msl-package-manager', 'setup.py') in sys.argv[0]):
         # then installing in editable (develop) mode
         #   python setup.py develop
         #   pip install -e .

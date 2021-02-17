@@ -75,7 +75,7 @@ def test_create_msl_package():
         lines = fp.readlines()
         assert "'msl',  # the path to" in lines[32]
         assert "    init_text = read('msl/package/__init__.py')\n" == lines[89]
-        assert "'msl-package' in sys.argv[0]" in lines[98]
+        assert "(os.path.join('msl-package', 'setup.py') in sys.argv[0])" in lines[98]
         assert "    name='msl-package',\n" == lines[149]
         assert "    url='https://github.com/MSLNZ/msl-package'" in lines[153]
         assert "    packages=find_packages(include=('msl*',)),\n" == lines[164]
@@ -159,7 +159,7 @@ def test_create_pr_single_photons():
             lines = fp.readlines()
             assert "'pr',  # the path to" in lines[32]
             assert "    init_text = read('pr/Single_Photons/__init__.py')\n" == lines[89]
-            assert "'pr-Single-Photons' in sys.argv[0]" in lines[98]
+            assert "(os.path.join('pr-Single-Photons', 'setup.py') in sys.argv[0])" in lines[98]
             assert "    name='pr-Single-Photons',\n" == lines[149]
             assert "    url='https://github.com/MSLNZ/pr-Single-Photons'" in lines[153]
             assert "    packages=find_packages(include=('pr*',)),\n" == lines[164]
@@ -229,7 +229,7 @@ def test_create_no_namespace():
         lines = fp.readlines()
         assert "'time_tagger',  # the path to" in lines[32]
         assert "    init_text = read('time_tagger/__init__.py')\n" == lines[89]
-        assert "'time-tagger' in sys.argv[0]" in lines[98]
+        assert "(os.path.join('time-tagger', 'setup.py') in sys.argv[0])" in lines[98]
         assert "    name='time-tagger',\n" == lines[149]
         assert "    url='https://github.com/MSLNZ/time-tagger'" in lines[153]
         assert "    packages=find_packages(include=('time_tagger',)),\n" == lines[164]
