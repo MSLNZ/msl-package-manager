@@ -204,8 +204,6 @@ def update(*names, **kwargs):
 
         if '--upgrade' not in pip_options or '-U' not in pip_options:
             pip_options.append('--upgrade')
-        if '--force-reinstall' not in pip_options:
-            pip_options.append('--force-reinstall')
         if '--quiet' not in pip_options or '-q' not in pip_options:
             pip_options.extend(['--quiet'] * utils._NUM_QUIET)
         if '--disable-pip-version-check' not in pip_options:
@@ -217,6 +215,7 @@ def update(*names, **kwargs):
                 if info['version'] and info['version'][0] not in '<!=>~':
                     info['version'] = '==' + info['version']
                 package = [pkg + info['extras_require'] + info['version']]
+                pip_github_options = []
             else:
                 utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, zip_name))
                 if utils.has_git:
@@ -227,6 +226,7 @@ def update(*names, **kwargs):
                 if info['extras_require']:
                     repo += info['extras_require']
                 package = [repo]
+                pip_github_options = ['--force-reinstall', '--no-deps']
 
             if utils._IS_WINDOWS and pkg == _PKG_NAME:
                 # On Windows, an executable cannot replace itself while it is running. However,
@@ -235,7 +235,7 @@ def update(*names, **kwargs):
                 filename = sys.exec_prefix + '/Scripts/msl.exe'
                 os.rename(filename, filename + '.old')
 
-            subprocess.call(exe + pip_options + package)
+            subprocess.call(exe + pip_options + pip_github_options + package)
 
         if updating_msl_package_manager:
             return 'updating_msl_package_manager'
