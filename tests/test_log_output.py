@@ -54,7 +54,7 @@ def test_log_output(caplog):
     # update GTC -> invalid tag
     update('GTC', yes=True, tag='invalid')
 
-    # update GTC -> tag=v0.1.0
+    # update GTC -> tag=v1.3.1
     update('GTC', yes=True, tag='v1.3.1')
 
     # uninstall GTC
@@ -146,7 +146,7 @@ def test_log_output(caplog):
         "Cannot update {}'GTC' -- The 'invalid' tag does not exist".format(u),
         '\x1b[39mNo MSL packages to update\x1b[39m',
 
-        # update GTC -> tag=v0.1.0
+        # update GTC -> tag=v1.3.1
         'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
         'Getting the packages from {}'.format(exec_path),
