@@ -223,10 +223,12 @@ def update(*names, **kwargs):
                 else:
                     repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
                 repo += '#egg={}'.format(pkg)
+                pip_github_options = ['--force-reinstall']
                 if info['extras_require']:
                     repo += info['extras_require']
+                else:
+                    pip_github_options.append('--no-deps')
                 package = [repo]
-                pip_github_options = ['--force-reinstall', '--no-deps']
 
             if utils._IS_WINDOWS and pkg == _PKG_NAME:
                 # On Windows, an executable cannot replace itself while it is running. However,
