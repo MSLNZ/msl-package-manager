@@ -11,6 +11,10 @@ Version 2.4.1.dev0
 
 - Changed
 
+  * only include the ``--force-reinstall`` flag when updating a package from
+    GitHub (previously this flag was included when updating from PyPI as well)
+  * include the ``--no-deps`` flag if no `extras require` option is specified
+    when updating a package from GitHub
   * no longer use the XMLRPC API to get the information about
     the MSL packages that are available on PyPI
 
