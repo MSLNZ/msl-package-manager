@@ -3,7 +3,7 @@
 ====================
 MSL Developers Guide
 ====================
-This guide shows you how to [#f1]_:
+This guide [#f1]_ shows you how to:
 
 * :ref:`set-up`
 * :ref:`commit-changes`
