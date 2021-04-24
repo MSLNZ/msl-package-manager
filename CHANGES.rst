@@ -5,6 +5,10 @@ Release Notes
 Version 2.4.2 (in development)
 ==============================
 
+- Changed
+
+  * the default name of a repository branch is now `main` for the
+    ``install`` and ``update`` commands
 
 Version 2.4.1 (2021.02.20)
 ==========================
