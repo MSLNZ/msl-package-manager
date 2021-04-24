@@ -122,7 +122,7 @@ Get a dictionary of all MSL repositories_ on GitHub, see :func:`~msl.package_man
    description: Install, uninstall, update, list and create MSL packages
    version: 2.4.0
    tags: ['v2.4.0', 'v2.3.0', 'v2.2.0', 'v2.1.0', 'v2.0.0', 'v1.5.1', 'v1.5.0', 'v1.4.1', 'v1.4.0', 'v1.3.0', 'v1.2.0', 'v1.1.0', 'v1.0.3', 'v1.0.2', 'v1.0.1', 'v1.0.0', 'v0.1.0']
-   branches: ['master']
+   branches: ['main']
 
 Get a dictionary of all MSL packages_ on PyPI, see :func:`~msl.package_manager.utils.pypi`
 

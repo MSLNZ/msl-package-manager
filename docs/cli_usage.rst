@@ -55,7 +55,7 @@ Install a specific MSL package, for example **msl-loadlib** (you can ignore the 
 
    msl install loadlib
 
-Install a package from a specific GitHub branch (by default the **master** branch is used if the package
+Install a package from a specific GitHub branch (by default the **main** branch is used if the package
 is not available on PyPI)
 
 .. code-block:: console
@@ -184,7 +184,7 @@ Update to a package that was released :ref:`\<24 hours ago <cache-note>`
 
    msl update loadlib --update-cache
 
-Update a package from a specific GitHub branch (by default the **master** branch is used if the package
+Update a package from a specific GitHub branch (by default the **main** branch is used if the package
 is not available on PyPI)
 
 .. code-block:: console

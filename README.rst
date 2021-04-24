@@ -38,11 +38,11 @@ The documentation for **MSL Package Manager** can be found here_.
 .. |pypi| image:: https://badge.fury.io/py/msl-package-manager.svg
    :target: https://badge.fury.io/py/msl-package-manager
 
-.. |travis| image:: https://img.shields.io/travis/MSLNZ/msl-package-manager/master.svg?label=Travis-CI
+.. |travis| image:: https://img.shields.io/travis/MSLNZ/msl-package-manager/main.svg?label=Travis-CI
    :target: https://travis-ci.org/MSLNZ/msl-package-manager
 
-.. |appveyor| image:: https://img.shields.io/appveyor/ci/jborbely/msl-package-manager/master.svg?label=AppVeyor
-   :target: https://ci.appveyor.com/project/jborbely/msl-package-manager/branch/master
+.. |appveyor| image:: https://img.shields.io/appveyor/ci/jborbely/msl-package-manager/main.svg?label=AppVeyor
+   :target: https://ci.appveyor.com/project/jborbely/msl-package-manager/branch/main
 
 .. _setuptools: https://pypi.org/project/setuptools/
 .. _colorama: https://pypi.org/project/colorama/

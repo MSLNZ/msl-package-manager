@@ -634,7 +634,7 @@ def _get_github_zip_name(branch, tag):
         log.error('Cannot specify both a branch ({}) and a tag ({}).'.format(branch, tag))
         return None
     elif branch is None and tag is None:
-        return 'master'
+        return 'main'
     elif branch is not None:
         return branch
     elif tag is not None:

@@ -16,9 +16,9 @@ def install(*names, **kwargs):
     .. note::
        If the MSL packages_ are available on PyPI then PyPI is used as the default
        URI_ to install the package. If you want to force the installation to occur
-       from the ``master`` branch of the GitHub `repository <https://github.com/MSLNZ>`_
-       then set ``branch='master'``. If the package is not available on PyPI
-       then the ``master`` branch is used as the default installation URI_.
+       from the ``main`` branch of the GitHub `repository <https://github.com/MSLNZ>`_
+       then set ``branch='main'``. If the package is not available on PyPI
+       then the ``main`` branch is used as the default installation URI_.
 
     .. _repositories: https://github.com/MSLNZ
     .. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
@@ -34,7 +34,7 @@ def install(*names, **kwargs):
     **kwargs
         * branch : :class:`str`
             The name of a GitHub branch to use for the installation. If :data:`None`,
-            and no `tag` value has been specified, then installs from the ``master``
+            and no `tag` value has been specified, then installs from the ``main``
             branch. Default is :data:`None`.
         * tag : :class:`str`
             The name of a GitHub tag to use for the installation. Default is :data:`None`.
