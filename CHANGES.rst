@@ -2,13 +2,19 @@
 Release Notes
 =============
 
-Version 2.4.2 (in development)
+Version 2.5.0 (in development)
 ==============================
+
+- Added
+
+  * ability to update all outdated, non-MSL packages from PyPI
 
 - Changed
 
   * the default name of a repository branch is now `main` for the
     ``install`` and ``update`` commands
+  * use the conda-forge channel (instead of the anaconda channel) when
+    installing packages in condatests.py
 
 Version 2.4.1 (2021.02.20)
 ==========================
