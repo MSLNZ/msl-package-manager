@@ -24,6 +24,12 @@ def install(*names, **kwargs):
     .. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
     .. _URI: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 
+    .. versionchanged:: 2.4.0
+        Added the `pip_options` keyword argument.
+
+    .. versionchanged:: 2.5.0
+        The default name of a repository branch changed to ``main``.
+
     Parameters
     ----------
     *names
@@ -32,22 +38,22 @@ def install(*names, **kwargs):
         ``msl-`` prefix can be omitted (e.g., ``'loadlib'`` is equivalent to
         ``'msl-loadlib'``). Also accepts shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
-        * branch : :class:`str`
+        * branch -- :class:`str`
             The name of a GitHub branch to use for the installation. If :data:`None`,
             and no `tag` value has been specified, then installs from the ``main``
             branch. Default is :data:`None`.
-        * tag : :class:`str`
+        * tag -- :class:`str`
             The name of a GitHub tag to use for the installation. Default is :data:`None`.
-        * update_cache : :class:`bool`
+        * update_cache -- :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
             calls to this function. After 24 hours the cache is automatically updated. Set
             `update_cache` to be :data:`True` to force the cache to be updated when you call
             this function. Default is :data:`False`.
-        * yes : :class:`bool`
+        * yes -- :class:`bool`
             If :data:`True` then don't ask for confirmation before installing.
             The default is :data:`False` (ask before installing).
-        * pip_options : :class:`list` of :class:`str`
+        * pip_options -- :class:`list` of :class:`str`
             Optional arguments to pass to the ``pip install`` command,
             e.g., ``['--retries', '10', '--user']``
 

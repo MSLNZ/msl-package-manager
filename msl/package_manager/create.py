@@ -15,23 +15,23 @@ def create(*names, **kwargs):
     *names
         The name(s) of the package(s) to create.
     **kwargs
-        * author : :class:`str`
-            The name of the author to use for the new package. If :data:`None` then uses
-            :func:`.utils.get_username` to determine the author's name.
+        * author -- :class:`str`
+            The name of the author to use for the new package. If :data:`None`
+            then uses :func:`.utils.get_username` to determine the author's name.
             Default is :data:`None`.
-        * directory : :class:`str`
+        * directory -- :class:`str`
             The directory to create the new package(s) in. If :data:`None`
             then creates the new package(s) in the current working directory.
             Default is :data:`None`.
-        * email : :class:`str`
+        * email -- :class:`str`
             The author's email address. If :data:`None` then uses
             :func:`.utils.get_email` to determine the author's email address.
             Default is :data:`None`.
-        * namespace : :class:`str`
+        * namespace -- :class:`str`
             The namespace that the package belongs to. If `namespace` is :data:`None`
             or an empty string then create a new package that is not part of a namespace.
             Default is the ``'msl'`` namespace.
-        * yes : :class:`bool`
+        * yes -- :class:`bool`
             If :data:`True` then don't ask for verification for the `author` name
             and for the `email` address. This argument is only used if you do not
             specify the `author` or the `email` value. The verification step allows

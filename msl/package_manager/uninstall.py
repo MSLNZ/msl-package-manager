@@ -12,6 +12,9 @@ from . import utils
 def uninstall(*names, **kwargs):
     """Uninstall MSL packages.
 
+    .. versionchanged:: 2.4.0
+        Added the `pip_options` keyword argument.
+
     Parameters
     ----------
     *names
@@ -21,10 +24,10 @@ def uninstall(*names, **kwargs):
         ``msl-`` prefix can be omitted (e.g., ``'loadlib'`` is equivalent to
         ``'msl-loadlib'``). Also accepts shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
-        * yes : :class:`bool`
+        * yes -- :class:`bool`
             If :data:`True` then don't ask for confirmation before uninstalling.
             The default is :data:`False` (ask before uninstalling).
-        * pip_options : :class:`list` of :class:`str`
+        * pip_options -- :class:`list` of :class:`str`
             Optional arguments to pass to the ``pip uninstall`` command,
             e.g., ``['--no-python-version-warning']``
 
