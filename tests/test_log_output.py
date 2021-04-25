@@ -43,7 +43,7 @@ def test_log_output(caplog):
     import colorama  # still installed
 
     # install a package that is not part of the msl namespace
-    install('GTC<1.3', yes=True)
+    install('GTC<1.3', yes=True, pip_options=['--no-deps'])
 
     # make sure that GTC is installed
     assert 'GTC' in installed()
