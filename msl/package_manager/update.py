@@ -2,6 +2,7 @@
 Update MSL packages.
 """
 import os
+import re
 import sys
 import subprocess
 from pkg_resources import parse_version
@@ -28,6 +29,13 @@ def update(*names, **kwargs):
     .. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
     .. _URI: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 
+    .. versionchanged:: 2.4.0
+        Added the `pip_options` keyword argument.
+
+    .. versionchanged:: 2.5.0
+        Added the `include_non_msl` keyword argument and the default
+        name of a repository branch changed to ``main``.
+
     Parameters
     ----------
     *names
@@ -36,24 +44,28 @@ def update(*names, **kwargs):
         ``'loadlib'`` is equivalent to ``'msl-loadlib'``). Also accepts
         shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
-        * branch : :class:`str`
+        * branch -- :class:`str`
             The name of a GitHub branch to use for the update. If :data:`None`, and no
             `tag` value has also been specified, then updates the package using the
             ``main`` branch. Default is :data:`None`.
-        * tag : :class:`str`
+        * tag -- :class:`str`
             The name of a GitHub tag to use for the update. Default is :data:`None`.
-        * update_cache : :class:`bool`
+        * update_cache -- :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
             calls to this function. After 24 hours the cache is automatically updated. Set
             `update_cache` to be :data:`True` to force the cache to be updated when you call
             this function. Default is :data:`False`.
-        * yes : :class:`bool`
+        * yes -- :class:`bool`
             If :data:`True` then don't ask for confirmation before updating.
             The default is :data:`False` (ask before updating).
-        * pip_options : :class:`list` of :class:`str`
+        * pip_options -- :class:`list` of :class:`str`
             Optional arguments to pass to the ``pip install --upgrade`` command,
             e.g., ``['--upgrade-strategy', 'eager']``
+        * include_non_msl -- :class:`bool`
+            If :data:`True` then also update all non-MSL packages.
+            The default is :data:`False` (only update the specified
+            MSL packages). Warning, enable this option with caution.
 
         .. attention::
            Cannot specify both a `branch` and a `tag` simultaneously.
@@ -64,13 +76,14 @@ def update(*names, **kwargs):
     # TODO Python 2.7 does not support named arguments after using *args
     #  we can define yes=False, branch=None, tag=None, update_cache=False, pip_options=None
     #  in the function signature when we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache', 'pip_options'})
+    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache', 'pip_options', 'include_non_msl'})
 
     yes = kwargs.get('yes', False)
     branch = kwargs.get('branch', None)
     tag = kwargs.get('tag', None)
     update_cache = kwargs.get('update_cache', False)
     pip_options = kwargs.get('pip_options', [])
+    include_non_msl = kwargs.get('include_non_msl', False)
 
     zip_name = utils._get_github_zip_name(branch, tag)
     if zip_name is None:
@@ -80,16 +93,26 @@ def update(*names, **kwargs):
     pkgs_pypi = utils.pypi(update_cache=update_cache)
     pkgs_github = utils.github(update_cache=update_cache)
     pkgs_installed = utils.installed()
-    if not pkgs_github and not pkgs_pypi:
+    pkgs_non_msl = utils.outdated_pypi_packages(pkgs_installed) if include_non_msl else {}
+    if not pkgs_github and not pkgs_pypi and not pkgs_non_msl:
         return
 
     if not names:
-        packages = pkgs_installed  # update all installed packages
+        # update all installed MSL packages only if not updating non-MSL packages
+        packages = pkgs_installed if not pkgs_non_msl else {}
     else:
         packages = utils._check_wildcards_and_prefix(names, pkgs_installed)
 
+    w_non_msl = [0, 0]
+    if pkgs_non_msl:
+        for name, values in pkgs_non_msl.items():
+            w_non_msl = [
+                max(w_non_msl[0], len(name)),
+                max(w_non_msl[1], len(values['installed_version']))
+            ]
+
     w = [0, 0]
-    pkgs_to_update = dict()
+    msl_pkgs_to_update = dict()
     for name, values in packages.items():
 
         err_msg = 'Cannot update {!r} -- '.format(name)
@@ -116,7 +139,7 @@ def update(*names, **kwargs):
                 utils.log.error(no_repo_err_msg)
                 continue
             if tag in repo['tags']:
-                pkgs_to_update[name] = {
+                msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
@@ -131,7 +154,7 @@ def update(*names, **kwargs):
                 utils.log.error(no_repo_err_msg)
                 continue
             if branch in repo['branches']:
-                pkgs_to_update[name] = {
+                msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
@@ -156,7 +179,7 @@ def update(*names, **kwargs):
                 continue
             elif values.get('version_requested'):
                 # this elif must come before the parse_version check
-                pkgs_to_update[name] = {
+                msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
@@ -164,7 +187,7 @@ def update(*names, **kwargs):
                     'repo_name': repo_name,
                 }
             elif parse_version(version) > parse_version(installed_version):
-                pkgs_to_update[name] = {
+                msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
                     'extras_require': extras_require,
@@ -177,70 +200,100 @@ def update(*names, **kwargs):
 
         w = [max(w[0], len(name+extras_require)), max(w[1], len(installed_version))]
 
-    if pkgs_to_update:
-        pkgs_to_update = utils._sort_packages(pkgs_to_update)
+    msl_pkgs_to_update = utils._sort_packages(msl_pkgs_to_update)
 
-        msg = '\n{}The following MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
-        for pkg, info in pkgs_to_update.items():
+    if not msl_pkgs_to_update and not pkgs_non_msl:
+        utils.log.info('{0}No packages to update{0}'.format(Fore.RESET))
+        return
+
+    msg = ''
+    if msl_pkgs_to_update:
+        msg += '\n{}The following MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
+        for pkg, info in msl_pkgs_to_update.items():
             pkg += info['extras_require'] + '  '
             msg += '\n  ' + pkg.ljust(w[0]+2) + info['installed_version'].ljust(w[1]) + \
                    ' --> ' + info['version'].replace('==', '') + \
                    '  [{}]'.format('PyPI' if info['using_pypi'] else 'GitHub')
 
-        utils.log.info(msg)
-        if not (yes or utils._ask_proceed()):
-            return
+    if pkgs_non_msl:
+        if msg:
+            msg += '\n'
+        msg += '\n{}The following non-MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
+        for pkg, info in pkgs_non_msl.items():
+            msg += '\n    ' + pkg.ljust(w_non_msl[0]+2) + info['installed_version'].ljust(w_non_msl[1]) + \
+                   ' --> ' + info['version'] + '  [PyPI]'
 
-        utils.log.info('')
+    utils.log.info(msg)
+    if not (yes or utils._ask_proceed()):
+        return
 
-        # If updating the msl-package-manager then update it last
-        updating_msl_package_manager = _PKG_NAME in pkgs_to_update
-        if updating_msl_package_manager:
-            value = pkgs_to_update.pop(_PKG_NAME)
-            pkgs_to_update[_PKG_NAME] = value  # using an OrderedDict so this item will be last
+    utils.log.info('')
 
-        zip_extn = 'zip' if utils._IS_WINDOWS else 'tar.gz'
-        exe = [sys.executable, '-m', 'pip', 'install']
+    # If updating the msl-package-manager then update it last
+    updating_msl_package_manager = _PKG_NAME in msl_pkgs_to_update
+    if updating_msl_package_manager:
+        value = msl_pkgs_to_update.pop(_PKG_NAME)
+        msl_pkgs_to_update[_PKG_NAME] = value  # using an OrderedDict so this item will be last
 
-        if '--upgrade' not in pip_options or '-U' not in pip_options:
-            pip_options.append('--upgrade')
-        if '--quiet' not in pip_options or '-q' not in pip_options:
-            pip_options.extend(['--quiet'] * utils._NUM_QUIET)
-        if '--disable-pip-version-check' not in pip_options:
-            pip_options.append('--disable-pip-version-check')
+    zip_extn = 'zip' if utils._IS_WINDOWS else 'tar.gz'
+    exe = [sys.executable, '-m', 'pip', 'install']
 
-        for pkg, info in pkgs_to_update.items():
-            if info['using_pypi']:
-                utils.log.debug('Updating {!r} from PyPI'.format(pkg))
-                if info['version'] and info['version'][0] not in '<!=>~':
-                    info['version'] = '==' + info['version']
-                package = [pkg + info['extras_require'] + info['version']]
-                pip_github_options = []
+    if '--upgrade' not in pip_options or '-U' not in pip_options:
+        pip_options.append('--upgrade')
+    if '--quiet' not in pip_options or '-q' not in pip_options:
+        pip_options.extend(['--quiet'] * utils._NUM_QUIET)
+    if '--disable-pip-version-check' not in pip_options:
+        pip_options.append('--disable-pip-version-check')
+
+    # install MSL packages
+    for pkg, info in msl_pkgs_to_update.items():
+        if info['using_pypi']:
+            utils.log.debug('Updating {!r} from PyPI'.format(pkg))
+            if info['version'] and info['version'][0] not in '<!=>~':
+                info['version'] = '==' + info['version']
+            package = [pkg + info['extras_require'] + info['version']]
+            pip_github_options = []
+        else:
+            utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, zip_name))
+            if utils.has_git:
+                repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], zip_name)
             else:
-                utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, zip_name))
-                if utils.has_git:
-                    repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], zip_name)
-                else:
-                    repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
-                repo += '#egg={}'.format(pkg)
-                pip_github_options = ['--force-reinstall']
-                if info['extras_require']:
-                    repo += info['extras_require']
-                else:
-                    pip_github_options.append('--no-deps')
-                package = [repo]
+                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
+            repo += '#egg={}'.format(pkg)
+            pip_github_options = ['--force-reinstall']
+            if info['extras_require']:
+                repo += info['extras_require']
+            else:
+                pip_github_options.append('--no-deps')
+            package = [repo]
 
-            if utils._IS_WINDOWS and pkg == _PKG_NAME:
-                # On Windows, an executable cannot replace itself while it is running. However,
-                # an executable can be renamed while it is running. Therefore, we rename msl.exe
-                # to msl.exe.old and then a new msl.exe file can be created during the update
-                filename = sys.exec_prefix + '/Scripts/msl.exe'
-                os.rename(filename, filename + '.old')
+        if utils._IS_WINDOWS and pkg == _PKG_NAME:
+            # On Windows, an executable cannot replace itself while it is running. However,
+            # an executable can be renamed while it is running. Therefore, we rename msl.exe
+            # to msl.exe.old and then a new msl.exe file can be created during the update
+            filename = sys.exec_prefix + '/Scripts/msl.exe'
+            os.rename(filename, filename + '.old')
 
-            subprocess.call(exe + pip_options + pip_github_options + package)
+        subprocess.call(exe + pip_options + pip_github_options + package)
 
-        if updating_msl_package_manager:
-            return 'updating_msl_package_manager'
+    # install non-MSL packages
+    if pkgs_non_msl:
+        packages = []
+        for k, v in pkgs_non_msl.items():
+            version = v['version']
+            if version[0] not in '<!=>~':
+                version = ''
+            packages.append('{}{}'.format(k, version))
+        utils.log.debug('Updating non-MSL packages from PyPI')
+        p = subprocess.Popen(exe + pip_options + packages, stderr=subprocess.PIPE)
+        _, err = p.communicate()
+        if err:
+            message = err.decode().rstrip()
+            utils.log.error(message)
+            pattern = r'requires (\S+), but you have'
+            for requires in re.findall(pattern, message):
+                utils.log.warning('Rolling back to {!r}'.format(requires))
+                subprocess.call(exe + pip_options + [requires])
 
-    else:
-        utils.log.info('{0}No MSL packages to update{0}'.format(Fore.RESET))
+    if updating_msl_package_manager:
+        return 'updating_msl_package_manager'

@@ -23,6 +23,7 @@ from .utils import (
     installed,
     info,
     set_log_level,
+    outdated_pypi_packages,
 )
 from .update import update
 from .create import create

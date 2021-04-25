@@ -51,11 +51,25 @@ def add_parser_update(parser, name='update'):
     add_argument_quiet(p)
     add_argument_update_cache(p)
     add_argument_disable_mslpm_version_check(p)
+    p.add_argument(
+        '-o', '--non-msl',
+        action='store_true',
+        default=False,
+        help='{} all non-MSL packages that are outdated.\n'
+             'Warning, use this option with caution.'.format(name.title())
+    )
     p.set_defaults(func=execute)
 
 
 def execute(args, parser):
     """Executes the :ref:`update <update-cli>` command."""
-    if parser.contains_package_names():
-        return update(*args.names, yes=args.yes, branch=args.branch,
-                      tag=args.tag, update_cache=args.update_cache, pip_options=args.pip_options)
+    if parser.contains_package_names(quiet=args.non_msl) or args.non_msl:
+        return update(
+            *args.names,
+            yes=args.yes,
+            branch=args.branch,
+            tag=args.tag,
+            update_cache=args.update_cache,
+            pip_options=args.pip_options,
+            include_non_msl=args.non_msl
+        )

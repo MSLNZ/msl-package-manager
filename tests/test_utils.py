@@ -118,3 +118,13 @@ def test_create_install_list():
 
 def test_has_git():
     assert utils.has_git
+
+
+def test_outdated_pypi_packages():
+    outdated = utils.outdated_pypi_packages()
+    for info in outdated.values():
+        assert info['installed_version']
+        assert isinstance(info['using_pypi'], bool) and info['using_pypi']
+        assert info['extras_require'] == ''
+        assert info['version']
+        assert info['repo_name'] == ''

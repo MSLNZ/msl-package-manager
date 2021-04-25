@@ -26,12 +26,30 @@ class ArgumentParser(argparse.ArgumentParser):
         """:class:`str`: Returns the name of the command, e.g., ``install``, ``list``, ..."""
         return self.prog.split()[-1]
 
-    def contains_package_names(self):
-        """:class:`bool`: Whether package names were specified or the ``--all`` flag was used."""
+    def contains_package_names(self, quiet=False):
+        """Check whether package names were specified or the ``--all`` flag was used.
+
+        .. versionchanged:: 2.5.0
+           Added the `quiet` keyword argument.
+
+        Parameters
+        ----------
+        quiet : :class:`bool`
+            Whether to suppress the error message from being shown.
+
+        Returns
+        -------
+        :class:`bool`
+            Whether package names were specified or the ``--all`` flag was used.
+        """
         args = self.parse_known_args()[0]
         if not args.all and not args.names:
-            log.error('You must specify the MSL package name(s) to {} or use '
-                      'the --all flag'.format(args.cmd))
+            if not quiet:
+                non_msl_flag = ''
+                if args.cmd in ['update', 'upgrade']:
+                    non_msl_flag = ' and/or the --non-msl flag'
+                log.error('You must specify the MSL package name(s) to {} or use '
+                          'the --all flag{}'.format(args.cmd, non_msl_flag))
             return False
         return True
 

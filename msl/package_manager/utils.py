@@ -320,12 +320,14 @@ def installed():
             repo_name = dist.project_name
 
         description = ''
+        requires = []
         if dist.has_metadata(dist.PKG_INFO):
             for line in dist.get_metadata_lines(dist.PKG_INFO):
                 if line.startswith('Summary:'):
                     description = line[8:].strip()  # can be UNKNOWN
                 elif line.startswith('Home-page:') and 'github.com/MSLNZ' in line:
                     repo_name = line.split('/')[-1]
+                    requires = dist.requires()
                     if description:
                         break
 
@@ -338,10 +340,71 @@ def installed():
         pkgs[dist.project_name] = {
             'version': dist.version,
             'description': description,
-            'repo_name': repo_name
+            'repo_name': repo_name,
+            'requires': requires,
         }
 
     return _sort_packages(pkgs)
+
+
+def outdated_pypi_packages(msl_installed=None):
+    """Check PyPI for all non-MSL packages that are outdated.
+
+    .. versionadded:: 2.5.0
+
+    Parameters
+    ----------
+    msl_installed : :class:`dict`, optional
+        The MSL packages that are installed. If not specified
+        then calls :func:`installed` to determine the
+        installed packages.
+
+    Returns
+    -------
+    :class:`dict`
+        The information about the PyPI packages that are outdated.
+    """
+    try:
+        output = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated'])
+    except subprocess.CalledProcessError:
+        outdated_packages = []
+    else:
+        lines = output.decode().splitlines()
+        header = [item.lower() for item in lines[0].split()]
+        outdated_packages = [dict(zip(header, line.split())) for line in lines[2:]]
+
+    if not msl_installed:
+        msl_installed = installed()
+
+    pkgs_to_update = {}
+    for msl_project_name, item in msl_installed.items():
+        for outdated in outdated_packages:
+            package = outdated['package']
+            if package == 'pip':
+                continue
+            for r in item['requires']:
+                if r.project_name.startswith(package):
+                    # cannot update a package to the latest version
+                    # on PyPI if the installed MSL package specifies
+                    # that it only supports a specific version range
+                    if r.specifier:
+                        pkgs_to_update[package] = {
+                            'installed_version': outdated['version'],
+                            'using_pypi': True,
+                            'extras_require': '',
+                            'version': str(r.specifier),
+                            'repo_name': '',
+                        }
+            if package not in pkgs_to_update and package not in msl_installed:
+                pkgs_to_update[package] = {
+                    'installed_version': outdated['version'],
+                    'using_pypi': True,
+                    'extras_require': '',
+                    'version': outdated['latest'],
+                    'repo_name': '',
+                }
+
+    return _sort_packages(pkgs_to_update)
 
 
 def pypi(update_cache=False):
