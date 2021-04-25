@@ -8,7 +8,7 @@ from collections import namedtuple
 
 __author__ = 'Measurement Standards Laboratory of New Zealand'
 __copyright__ = '\xa9 2017 - 2021, ' + __author__
-__version__ = '2.4.2.dev0'
+__version__ = '2.5.0.dev0'
 
 _v = re.search(r'(\d+)\.(\d+)\.(\d+)[.-]?(.*)', __version__).groups()
 
