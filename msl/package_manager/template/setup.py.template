@@ -125,7 +125,7 @@ def get_version():
 
         suffix = sha1[:7]
 
-    if init_version.endswith(suffix):
+    if not suffix or init_version.endswith(suffix):
         return init_version
 
     # following PEP-440, the local version identifier starts with '+'
