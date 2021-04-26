@@ -72,14 +72,15 @@ def test_create_msl_package():
         assert '    --ignore msl/examples\n' == lines[19]
 
     with open(os.path.join(root_dir, 'setup.py'), 'r') as fp:
-        lines = fp.readlines()
+        lines = [line.rstrip() for line in fp.readlines()]
         assert "'msl',  # the path to" in lines[33]
-        assert "    init_text = read('msl/package/__init__.py')\n" == lines[90]
-        assert "    name='msl-package',\n" == lines[150]
-        assert "    url='https://github.com/MSLNZ/msl-package'" in lines[154]
-        assert "    packages=find_packages(include=('msl*',)),\n" == lines[165]
-        assert "import msl.package as p" in lines[175]
-        assert "/msl/package/__init__.py" in lines[182]
+        assert "    init_text = read('msl/package/__init__.py')" == lines[90]
+        assert "# specify the packages that msl-package depends on" == lines[140]
+        assert "    name='msl-package'," == lines[155]
+        assert "    url='https://github.com/MSLNZ/msl-package'" in lines[159]
+        assert "    packages=find_packages(include=('msl*',))," == lines[170]
+        assert "import msl.package as p" in lines[180]
+        assert "/msl/package/__init__.py" in lines[185]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), 'r') as fp:
         lines = fp.readlines()
@@ -155,14 +156,15 @@ def test_create_pr_single_photons():
             assert '    --ignore pr/examples\n' == lines[19]
 
         with open(os.path.join(root_dir, 'setup.py'), 'r') as fp:
-            lines = fp.readlines()
+            lines = [line.rstrip() for line in fp.readlines()]
             assert "'pr',  # the path to" in lines[33]
-            assert "    init_text = read('pr/Single_Photons/__init__.py')\n" == lines[90]
-            assert "    name='pr-Single-Photons',\n" == lines[150]
-            assert "    url='https://github.com/MSLNZ/pr-Single-Photons'" in lines[154]
-            assert "    packages=find_packages(include=('pr*',)),\n" == lines[165]
-            assert "import pr.Single_Photons as p" in lines[175]
-            assert "/pr/Single_Photons/__init__.py" in lines[182]
+            assert "    init_text = read('pr/Single_Photons/__init__.py')" == lines[90]
+            assert "# specify the packages that pr-Single-Photons depends on" == lines[140]
+            assert "    name='pr-Single-Photons'," == lines[155]
+            assert "    url='https://github.com/MSLNZ/pr-Single-Photons'" in lines[159]
+            assert "    packages=find_packages(include=('pr*',))," == lines[170]
+            assert "import pr.Single_Photons as p" in lines[180]
+            assert "/pr/Single_Photons/__init__.py" in lines[185]
 
         with open(os.path.join(root_dir, 'docs', 'conf.py'), 'r') as fp:
             lines = fp.readlines()
@@ -224,14 +226,15 @@ def test_create_no_namespace():
         assert '    --ignore time_tagger/examples\n' != lines[19]
 
     with open(os.path.join(root_dir, 'setup.py'), 'r') as fp:
-        lines = fp.readlines()
+        lines = [line.rstrip() for line in fp.readlines()]
         assert "'time_tagger',  # the path to" in lines[33]
-        assert "    init_text = read('time_tagger/__init__.py')\n" == lines[90]
-        assert "    name='time-tagger',\n" == lines[150]
-        assert "    url='https://github.com/MSLNZ/time-tagger'" in lines[154]
-        assert "    packages=find_packages(include=('time_tagger',)),\n" == lines[165]
-        assert "import time_tagger as p" in lines[175]
-        assert "/time_tagger/__init__.py" in lines[182]
+        assert "    init_text = read('time_tagger/__init__.py')" == lines[90]
+        assert "# specify the packages that time-tagger depends on" == lines[140]
+        assert "    name='time-tagger'," == lines[155]
+        assert "    url='https://github.com/MSLNZ/time-tagger'" in lines[159]
+        assert "    packages=find_packages(include=('time_tagger',))," == lines[170]
+        assert "import time_tagger as p" in lines[180]
+        assert "/time_tagger/__init__.py" in lines[185]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), 'r') as fp:
         lines = fp.readlines()
