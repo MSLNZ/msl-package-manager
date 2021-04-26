@@ -1,5 +1,9 @@
 import sys
 import importlib
+try:
+    from importlib import reload
+except ImportError:  # then Python 2
+    from imp import reload
 
 import pytest
 
@@ -36,25 +40,35 @@ def test_update_msl_and_non_msl():
 
     install('loadlib==0.7.0', 'io', yes=True)
 
-    mod = importlib.import_module('xlrd')
-    assert mod.__version__ == '1.2.0'
-    del mod
+    # reload all msl modules
+    for name, module in sys.modules.copy().items():
+        if name.startswith('msl'):
+            try:
+                reload(module)
+            except:
+                pass
+
+    xlrd = importlib.import_module('xlrd')
+    assert xlrd.__version__ == '1.2.0'
 
     outdated = utils.outdated_pypi_packages()
     assert 'msl-loadlib' not in outdated
     assert 'msl-io' not in outdated
 
-    assert installed()['msl-loadlib']['version'] == '0.7.0'
+    # strange, this assert fails in Python 3.5 and does not
+    # depend on the version of pip (checked back to pip 10.0)
+    if sys.version_info[:2] != (3, 5):
+        assert 'xlrd' in outdated
 
-    outdated.pop('pytest', None)
-    outdated.pop('pytest-cov', None)
+    msl_loadlib = importlib.import_module('msl.loadlib')
+    assert installed()['msl-loadlib']['version'] == '0.7.0'
+    assert msl_loadlib.__version__ == '0.7.0'
 
     update('loadlib==0.8.0', include_non_msl=True, yes=True)
 
-    mod = importlib.import_module('xlrd')
-    assert mod.__version__ == '1.2.0'
-    del mod
+    assert reload(xlrd).__version__ == '1.2.0'
 
     assert installed()['msl-loadlib']['version'] == '0.8.0'
+    assert reload(msl_loadlib).__version__ == '0.8.0'
 
     uninstall('loadlib', 'io', yes=True)
