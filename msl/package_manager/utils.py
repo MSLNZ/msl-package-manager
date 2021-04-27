@@ -364,19 +364,28 @@ def outdated_pypi_packages(msl_installed=None):
     :class:`dict`
         The information about the PyPI packages that are outdated.
     """
+    pkgs_to_update = dict()
     try:
         output = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated'])
-    except subprocess.CalledProcessError:
-        outdated_packages = []
-    else:
-        lines = output.decode().splitlines()
-        header = [item.lower() for item in lines[0].split()]
-        outdated_packages = [dict(zip(header, line.split())) for line in lines[2:]]
+    except subprocess.CalledProcessError as e:
+        log.error('ERROR: "pip list --outdated" invalid -> {}'.format(e))
+        return pkgs_to_update
+
+    lines = output.decode().splitlines()
+    if not lines:
+        return pkgs_to_update
+
+    header = [item.lower() for item in lines[0].split()]
+    if header[:3] != ['package', 'version', 'latest']:
+        log.error('ERROR: pip has changed the structure of the outdated packages')
+        return pkgs_to_update
+
+    # ignore lines[1] since it is a bunch of '-'
+    outdated_packages = [dict(zip(header, line.split())) for line in lines[2:]]
 
     if not msl_installed:
         msl_installed = installed()
 
-    pkgs_to_update = {}
     for msl_project_name, item in msl_installed.items():
         for outdated in outdated_packages:
             package = outdated['package']
