@@ -391,19 +391,27 @@ def outdated_pypi_packages(msl_installed=None):
             package = outdated['package']
             if package == 'pip':
                 continue
-            for r in item['requires']:
-                if r.project_name.startswith(package):
+
+            for msl_requirement in item['requires']:
+                if msl_requirement.project_name.startswith(package):
                     # cannot update a package to the latest version
                     # on PyPI if the installed MSL package specifies
-                    # that it only supports a specific version range
-                    if r.specifier:
-                        pkgs_to_update[package] = {
-                            'installed_version': outdated['version'],
-                            'using_pypi': True,
-                            'extras_require': '',
-                            'version': str(r.specifier),
-                            'repo_name': '',
-                        }
+                    # that it only supports a specific version
+                    if msl_requirement.specifier:
+                        specifier = str(msl_requirement.specifier)
+                        if package in pkgs_to_update:
+                            if specifier not in pkgs_to_update[package]['version']:
+                                # multiple version constraints
+                                pkgs_to_update[package]['version'] += ','+specifier
+                        else:
+                            pkgs_to_update[package] = {
+                                'installed_version': outdated['version'],
+                                'using_pypi': True,
+                                'extras_require': '',
+                                'version': specifier,
+                                'repo_name': '',
+                            }
+
             if package not in pkgs_to_update and package not in msl_installed:
                 pkgs_to_update[package] = {
                     'installed_version': outdated['version'],
