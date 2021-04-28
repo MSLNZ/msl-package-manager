@@ -53,6 +53,7 @@ def test_version_suffix():
     # in cloud-based testing platforms
     if 'msl-package-manager' in packages:
         assert packages['msl-package-manager']['version'].endswith('+editable')
+        assert packages['msl-package-manager']['version'].count('+') == 1
 
     uninstall('loadlib', yes=True)
     assert 'msl-loadlib' not in installed()
@@ -64,6 +65,7 @@ def test_version_suffix():
     assert 'msl-loadlib' in packages
     version = packages['msl-loadlib']['version']
     assert re.search(r'\+[a-z0-9]{7}$', version)
+    assert version.count('+') == 1
     assert reload(msl_loadlib).__version__ == version
 
     uninstall('loadlib', yes=True)
