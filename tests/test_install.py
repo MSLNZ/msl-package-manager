@@ -6,6 +6,8 @@ try:
 except ImportError:  # then Python 2
     from imp import reload
 
+import pytest
+
 from msl.package_manager import (
     install,
     installed,
@@ -22,6 +24,10 @@ def teardown_module():
     cleanup()
 
 
+@pytest.mark.skipif(
+    sys.version_info[:2] == (2, 7) and sys.platform == 'darwin',
+    reason='hyphen gets appended to msl-loadlib version (0.7.0-)'
+)
 def test_version_suffix():
     cleanup()
 
