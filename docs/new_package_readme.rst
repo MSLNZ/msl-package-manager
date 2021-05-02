@@ -317,9 +317,9 @@ files that might exist) with the specified conda environment_\s.
 .. _wheel: https://pythonwheels.com/
 .. _coverage: https://coverage.readthedocs.io/en/latest/index.html
 .. _git: https://git-scm.com
-.. _environment: https://conda.io/docs/using/envs.html
+.. _environment: https://conda.io/projects/conda/en/latest/user-guide/concepts/environments.html
 .. _tox: https://tox.readthedocs.io/en/latest/
-.. _conda: https://conda.readthedocs.io/en/latest/
+.. _conda: https://docs.conda.io/en/latest/
 .. _pipe: https://en.wikipedia.org/wiki/Pipeline_(Unix)
 .. _file: https://docs.conda.io/projects/conda/en/latest/commands/install.html#Named%20Arguments
 .. _pip: https://pip.pypa.io/en/stable/
