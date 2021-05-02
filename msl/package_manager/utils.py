@@ -868,7 +868,7 @@ def _getLogger(name=None, fmt='%(message)s'):
     """Create the default stream logger"""
     init(autoreset=True)  # initialize colorama
     logger = logging.getLogger(name)
-    handler = _ColourStreamHandler(sys.stdout)
+    handler = _ColourStreamHandler(stream=sys.stdout)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(logging.Formatter(fmt))
     logger.addHandler(handler)
