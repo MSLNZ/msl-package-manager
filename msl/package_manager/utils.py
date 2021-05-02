@@ -36,7 +36,7 @@ from colorama import Fore, Style, Back, init
 
 from . import _PKG_NAME
 
-_NUM_QUIET = 0
+_pip_quiet = 0
 _IS_WINDOWS = sys.platform in {'win32', 'cygwin'}
 
 if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.msl')):
@@ -510,16 +510,16 @@ def set_log_level(level):
     level : :class:`int`
         A value from one of the :py:ref:`levels`.
     """
-    global _NUM_QUIET
+    global _pip_quiet
 
-    if level <= logging.WARNING:
-        _NUM_QUIET = 0
+    if level <= logging.INFO:
+        _pip_quiet = 0
+    elif level == logging.WARNING:
+        _pip_quiet = 1
     elif level == logging.ERROR:
-        _NUM_QUIET = 1
-    elif level == logging.CRITICAL:
-        _NUM_QUIET = 2
+        _pip_quiet = 2
     else:
-        _NUM_QUIET = 3
+        _pip_quiet = 3
 
     log.setLevel(level)
 

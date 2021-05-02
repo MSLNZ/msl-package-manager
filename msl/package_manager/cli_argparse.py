@@ -93,8 +93,8 @@ def add_argument_quiet(parser):
         action='count',
         default=0,
         help='Give less output. Option is additive, and can\n'
-             'be used up to 3 times (which corresponds to silencing\n'
-             'WARNING, ERROR and CRITICAL logging levels).'
+             'be used up to 4 times (which corresponds to silencing\n'
+             'DEBUG, INFO, WARNING and ERROR logging levels).'
     )
 
 

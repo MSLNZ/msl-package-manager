@@ -241,7 +241,7 @@ def update(*names, **kwargs):
     if '--upgrade' not in pip_options or '-U' not in pip_options:
         pip_options.append('--upgrade')
     if '--quiet' not in pip_options or '-q' not in pip_options:
-        pip_options.extend(['--quiet'] * utils._NUM_QUIET)
+        pip_options.extend(['--quiet'] * utils._pip_quiet)
     if '--disable-pip-version-check' not in pip_options:
         pip_options.append('--disable-pip-version-check')
 

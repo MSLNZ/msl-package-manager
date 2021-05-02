@@ -124,12 +124,14 @@ def parse_args(args):
     parsed_args, pip_options = parser.parse_known_args(args=args)
 
     if parsed_args.quiet == 0:
-        utils.set_log_level(logging.INFO)
+        utils.set_log_level(logging.DEBUG)
     elif parsed_args.quiet == 1:
-        utils.set_log_level(logging.ERROR)
+        utils.set_log_level(logging.INFO)
     elif parsed_args.quiet == 2:
-        utils.set_log_level(logging.CRITICAL)
+        utils.set_log_level(logging.WARNING)
     elif parsed_args.quiet == 3:
+        utils.set_log_level(logging.ERROR)
+    elif parsed_args.quiet == 4:
         utils.set_log_level(logging.CRITICAL + 1)
 
     if pip_options:

@@ -478,63 +478,78 @@ def test_quiet():
 
     args = get_args('list')
     assert args.quiet == 0
-    assert utils.log.level == logging.INFO
-    assert utils._NUM_QUIET == 0
+    assert utils.log.level == logging.DEBUG
+    assert utils._pip_quiet == 0
 
     args = get_args('list --quiet')
     assert args.quiet == 1
-    assert utils.log.level == logging.ERROR
-    assert utils._NUM_QUIET == 1
+    assert utils.log.level == logging.INFO
+    assert utils._pip_quiet == 0
 
     args = get_args('list -q')
     assert args.quiet == 1
-    assert utils.log.level == logging.ERROR
-    assert utils._NUM_QUIET == 1
+    assert utils.log.level == logging.INFO
+    assert utils._pip_quiet == 0
 
     args = get_args('list --quiet --quiet')
     assert args.quiet == 2
-    assert utils.log.level == logging.CRITICAL
-    assert utils._NUM_QUIET == 2
+    assert utils.log.level == logging.WARNING
+    assert utils._pip_quiet == 1
 
     args = get_args('list -q -q')
     assert args.quiet == 2
-    assert utils.log.level == logging.CRITICAL
-    assert utils._NUM_QUIET == 2
+    assert utils.log.level == logging.WARNING
+    assert utils._pip_quiet == 1
 
     args = get_args('list -qq')
     assert args.quiet == 2
-    assert utils.log.level == logging.CRITICAL
-    assert utils._NUM_QUIET == 2
+    assert utils.log.level == logging.WARNING
+    assert utils._pip_quiet == 1
 
     args = get_args('list --quiet --quiet --quiet')
     assert args.quiet == 3
-    assert utils.log.level > logging.CRITICAL
-    assert utils._NUM_QUIET == 3
+    assert utils.log.level == logging.ERROR
+    assert utils._pip_quiet == 2
 
     args = get_args('list -q -q -q')
     assert args.quiet == 3
-    assert utils.log.level > logging.CRITICAL
-    assert utils._NUM_QUIET == 3
+    assert utils.log.level == logging.ERROR
+    assert utils._pip_quiet == 2
 
     args = get_args('list -qqq')
     assert args.quiet == 3
+    assert utils.log.level == logging.ERROR
+    assert utils._pip_quiet == 2
+
+    args = get_args('list --quiet --quiet --quiet --quiet')
+    assert args.quiet == 4
     assert utils.log.level > logging.CRITICAL
-    assert utils._NUM_QUIET == 3
+    assert utils._pip_quiet == 3
+
+    args = get_args('list -q -q -q -q')
+    assert args.quiet == 4
+    assert utils.log.level > logging.CRITICAL
+    assert utils._pip_quiet == 3
+
+    args = get_args('list -qqqq')
+    assert args.quiet == 4
+    assert utils.log.level > logging.CRITICAL
+    assert utils._pip_quiet == 3
 
     args = get_args('list --quiet --quiet --quiet --quiet --quiet')
     assert args.quiet == 5
     assert utils.log.level > logging.CRITICAL
-    assert utils._NUM_QUIET == 3  # 3 is the maximum
+    assert utils._pip_quiet == 3  # 3 is the maximum
 
     args = get_args('list -q -q -q -q -q')
     assert args.quiet == 5
     assert utils.log.level > logging.CRITICAL
-    assert utils._NUM_QUIET == 3  # 3 is the maximum
+    assert utils._pip_quiet == 3  # 3 is the maximum
 
     args = get_args('list -qqqqq')
     assert args.quiet == 5
     assert utils.log.level > logging.CRITICAL
-    assert utils._NUM_QUIET == 3  # 3 is the maximum
+    assert utils._pip_quiet == 3  # 3 is the maximum
 
 
 def test_authorize():

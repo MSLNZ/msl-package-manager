@@ -95,7 +95,7 @@ def uninstall(*names, **kwargs):
     exe = [sys.executable, '-m', 'pip', 'uninstall']
 
     if '--quiet' not in pip_options or '-q' not in pip_options:
-        pip_options.extend(['--quiet'] * utils._NUM_QUIET)
+        pip_options.extend(['--quiet'] * utils._pip_quiet)
     if '--disable-pip-version-check' not in pip_options:
         pip_options.append('--disable-pip-version-check')
     if '--yes' not in pip_options or '-y' not in pip_options:
