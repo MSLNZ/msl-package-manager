@@ -39,10 +39,11 @@ from . import _PKG_NAME
 _pip_quiet = 0
 _IS_WINDOWS = sys.platform in {'win32', 'cygwin'}
 
-if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.msl')):
-    os.mkdir(os.path.join(os.path.expanduser('~'), '.msl'))
+_HOME_DIR = os.path.join(os.path.expanduser('~'), '.msl')
+if not os.path.isdir(_HOME_DIR):
+    os.mkdir(_HOME_DIR)
 
-_GITHUB_AUTH_PATH = os.path.join(os.path.expanduser('~'), '.msl', '.mslpm-github-auth')
+_GITHUB_AUTH_PATH = os.path.join(_HOME_DIR, '.mslpm-github-auth')
 
 _package_name_regex = re.compile(
     r'(?P<package_name>[*]?[\w-]*[*]?[\w-]*)(?P<extras_require>\[.*\])?(?P<version_requested>[<!=>~].*)?'
