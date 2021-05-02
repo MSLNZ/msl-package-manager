@@ -1,8 +1,7 @@
 import os
 import re
 import sys
-import tempfile
-import subprocess
+from subprocess import check_output
 from setuptools import (
     setup,
     find_packages,
@@ -38,11 +37,10 @@ class ApiDocs(Command):
         if sphinx.version_info[:2] < (1, 7):
             from sphinx.apidoc import main
         else:
-            from sphinx.ext.apidoc import main  # Sphinx also changed the location of apidoc.main
+            from sphinx.ext.apidoc import main
             command.pop(0)
 
         main(command)
-        sys.exit(0)
 
 
 class BuildDocs(Command):
@@ -60,8 +58,6 @@ class BuildDocs(Command):
         pass
 
     def run(self):
-        import sphinx
-
         command = [
             None,  # in Sphinx < 1.7.0 the first command-line argument was parsed, in 1.7.0 it became argv[1:]
             '-b', 'html',  # the builder to use, e.g., create a HTML version of the documentation
@@ -71,14 +67,14 @@ class BuildDocs(Command):
             './docs/_build/html',  # where to save the output files
         ]
 
+        import sphinx
         if sphinx.version_info[:2] < (1, 7):
             from sphinx import build_main
         else:
-            from sphinx.cmd.build import build_main  # Sphinx also changed the location of build_main
+            from sphinx.cmd.build import build_main
             command.pop(0)
 
         build_main(command)
-        sys.exit(0)
 
 
 def read(filename):
@@ -87,38 +83,33 @@ def read(filename):
 
 
 def fetch_init(key):
-    # open the __init__.py file to determine the value instead of importing the package to get the value
-    init_text = read('msl/package_manager/__init__.py')
-    return re.search(r'{}\s*=\s*(.*)'.format(key), init_text).group(1).strip('\'\"')
+    # open the __init__.py file to determine a value instead of importing the package
+    return re.search(r'{}\s*=\s*(.+)'.format(key), read(init_original)).group(1).strip('\'\"')
 
 
 def get_version():
     init_version = fetch_init('__version__')
-    if 'dev' not in init_version or \
-            {'bdist_wheel', 'sdist', 'build'}.intersection(sys.argv):
+    if 'dev' not in init_version or testing:
         return init_version
 
-    if 'install' not in sys.argv and (
-            'develop' in sys.argv or
-            sys.argv == ['-c', 'egg_info'] or
-            not __file__.startswith(os.path.realpath(tempfile.gettempdir()))
-    ):
+    if 'develop' in sys.argv:
         # then installing in editable (develop) mode
         #   python setup.py develop
         #   pip install -e .
         # following PEP-440, the local version identifier starts with '+'
         return init_version + '+editable'
 
-    file_dir = os.path.dirname(os.path.abspath(__file__))
+    # append the commit hash to __version__
+    setup_dir = os.path.dirname(os.path.realpath(__file__))
     try:
         # write all error messages from git to devnull
-        with open(os.devnull, 'w') as devnull:
-            out = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=file_dir, stderr=devnull)
+        with open(os.devnull, mode='w') as devnull:
+            out = check_output(['git', 'rev-parse', 'HEAD'], cwd=setup_dir, stderr=devnull)
             sha1 = out.strip().decode()
     except:
         # the git executable is not available, manually parse .git directory
         try:
-            git_dir = os.path.join(file_dir, '.git')
+            git_dir = os.path.join(setup_dir, '.git')
             with open(os.path.join(git_dir, 'HEAD'), mode='rt') as fp1:
                 line = fp1.readline().strip()
                 if line.startswith('ref:'):
@@ -135,7 +126,23 @@ def get_version():
         return init_version
 
     # following PEP-440, the local version identifier starts with '+'
-    return init_version + '+' + suffix
+    dev_version = init_version + '+' + suffix
+
+    with open(init_original) as fp:
+        init_source = fp.read()
+
+    if os.path.isfile(init_backup):
+        os.remove(init_backup)
+    os.rename(init_original, init_backup)
+
+    with open(init_original, mode='wt') as fp:
+        fp.write(re.sub(
+            r'__version__\s*=.+',
+            "__version__ = '{}'".format(dev_version),
+            init_source
+        ))
+
+    return dev_version
 
 
 install_requires = ['setuptools', 'colorama']
@@ -147,6 +154,8 @@ pytest_runner = ['pytest-runner'] if testing else []
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
 sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else []
 
+init_original = 'msl/package_manager/__init__.py'
+init_backup = init_original + '.backup'
 version = get_version()
 
 setup(
@@ -188,21 +197,6 @@ setup(
     zip_safe=False,
 )
 
-if 'dev' in version and not version.endswith('editable'):
-    # ensure that the value of __version__ is correct if installing the package from an unreleased code base
-    init_path = ''
-    if sys.argv[:2] == ['setup.py', 'install']:
-        # python setup.py install
-        if not {'--help', '-h'}.intersection(sys.argv):
-            cmd = [sys.executable, '-c', 'import msl.package_manager as p; print(p.__file__)']
-            output = subprocess.check_output(cmd, cwd=os.path.dirname(sys.executable))
-            init_path = output.strip().decode()
-    else:
-        # pip install
-        init_path = os.path.dirname(__file__) + '/msl/package_manager/__init__.py'
-
-    if init_path and os.path.isfile(init_path):
-        with open(init_path, mode='r+') as fp:
-            source = fp.read()
-            fp.seek(0)
-            fp.write(re.sub(r'__version__\s*=.*', "__version__ = '{}'".format(version), source))
+if os.path.isfile(init_backup):
+    os.remove(init_original)
+    os.rename(init_backup, init_original)
