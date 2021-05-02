@@ -12,7 +12,7 @@ from setuptools import (
 class ApiDocs(Command):
     """
     A custom command that calls sphinx-apidoc
-    see: https://www.sphinx-doc.org/en/latest/man/sphinx-apidoc.html
+    see: https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html
     """
     description = 'builds the api documentation using sphinx-apidoc'
     user_options = []
@@ -46,7 +46,7 @@ class ApiDocs(Command):
 class BuildDocs(Command):
     """
     A custom command that calls sphinx-build
-    see: https://www.sphinx-doc.org/en/latest/man/sphinx-build.html
+    see: https://www.sphinx-doc.org/en/master/man/sphinx-build.html
     """
     description = 'builds the documentation using sphinx-build'
     user_options = []

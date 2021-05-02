@@ -313,7 +313,7 @@ files that might exist) with the specified conda environment_\s.
 
 .. _compatible: https://github.com/tox-dev/tox/issues/273
 .. _pytest: https://doc.pytest.org/en/latest/
-.. _sphinx: https://www.sphinx-doc.org/en/latest/#
+.. _sphinx: https://www.sphinx-doc.org/en/master/
 .. _wheel: https://pythonwheels.com/
 .. _coverage: https://coverage.readthedocs.io/en/latest/index.html
 .. _git: https://git-scm.com
@@ -323,5 +323,5 @@ files that might exist) with the specified conda environment_\s.
 .. _pipe: https://en.wikipedia.org/wiki/Pipeline_(Unix)
 .. _file: https://docs.conda.io/projects/conda/en/latest/commands/install.html#Named%20Arguments
 .. _pip: https://pip.pypa.io/en/stable/
-.. _sphinx-apidoc: https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html
-.. _sphinx-build: https://www.sphinx-doc.org/en/latest/man/sphinx-build.html
+.. _sphinx-apidoc: https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html
+.. _sphinx-build: https://www.sphinx-doc.org/en/master/man/sphinx-build.html
