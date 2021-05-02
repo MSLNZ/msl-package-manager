@@ -856,11 +856,10 @@ class _ColourStreamHandler(logging.StreamHandler):
 
     def emit(self, record):
         _ColourStreamHandler.previous_message = record.getMessage()
+        stream = sys.stdout if record.levelno < logging.WARNING else sys.stderr
         try:
-            message = self.format(record)
-            self.stream.write(self.COLOURS[record.levelname] + message)
-            self.stream.write(getattr(self, 'terminator', '\n'))
-            self.flush()
+            stream.write(self.COLOURS[record.levelname] + self.format(record) + '\n')
+            stream.flush()
         except:
             self.handleError(record)
 
@@ -869,7 +868,7 @@ def _getLogger(name=None, fmt='%(message)s'):
     """Create the default stream logger"""
     init(autoreset=True)  # initialize colorama
     logger = logging.getLogger(name)
-    handler = _ColourStreamHandler(stream=sys.stdout)
+    handler = _ColourStreamHandler()
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(logging.Formatter(fmt))
     logger.addHandler(handler)

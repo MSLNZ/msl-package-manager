@@ -12,7 +12,8 @@ Version 2.5.0 (in development)
 
 - Changed
 
-  * direct logging messages to ``sys.stdout`` instead of ``sys.stderr``
+  * direct logging messages less than ``WARNING`` to ``sys.stdout`` and
+    greater than or equal to ``WARNING`` to ``sys.stderr``
   * the default name of a repository branch is now `main` for the
     ``install`` and ``update`` commands
   * use the conda-forge channel (instead of the anaconda channel) when
