@@ -7,10 +7,12 @@ Version 2.5.0 (in development)
 
 - Added
 
+  * a ``docs`` key to ``extras_require`` in setup.py
   * ability to update all outdated, non-MSL packages from PyPI
 
 - Changed
 
+  * direct logging messages to ``sys.stdout`` instead of ``sys.stderr``
   * the default name of a repository branch is now `main` for the
     ``install`` and ``update`` commands
   * use the conda-forge channel (instead of the anaconda channel) when
