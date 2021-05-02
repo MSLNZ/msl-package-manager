@@ -20,8 +20,9 @@ that can be used to run unit tests and to create the documentation for your MSL 
    environment_. Therefore, the first time that you run the following commands it will take longer to finish
    executing the command because these packages (and their own dependencies) need to be downloaded then installed.
    If you prefer to install these packages directly into your environment_ you can run
-   ``conda install pytest pytest-cov pytest-runner sphinx sphinx_rtd_theme``, or if you are not using conda_ as
-   your package manager then replace ``conda`` with ``pip``.
+   ``conda install pytest pytest-cov pytest-runner sphinx sphinx_rtd_theme``, or if you are using pip_ as
+   your package manager then run ``pip install --editable .[docs,tests]`` from the directory where the
+   **setup.py** file is located.
 
 The following command will run all test modules that pytest_ finds as well as testing all the example code that is
 located within the docstrings of the source code and in the **.rst** files in the **docs/** directory. To modify the
@@ -44,7 +45,7 @@ of the code have been executed during the tests.
    See the :ref:`condatests-ini` section for an example if you want to run pytest_ with custom options without
    modifying any of these configuration files.
 
-Create the documentation files, uses `sphinx-build <https://www.sphinx-doc.org/en/latest/man/sphinx-build.html>`_.
+Create the documentation files, uses sphinx-build_.
 The documentation can be viewed by opening **docs/_build/html/index.html**
 
 .. code-block:: console
@@ -52,7 +53,7 @@ The documentation can be viewed by opening **docs/_build/html/index.html**
    python setup.py docs
 
 Automatically create the API documentation from the docstrings in the source code, uses
-`sphinx-apidoc <https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html>`_. The files are saved to
+sphinx-apidoc_. The files are saved to
 **docs/_autosummary**
 
 .. code-block:: console
@@ -321,3 +322,6 @@ files that might exist) with the specified conda environment_\s.
 .. _conda: https://conda.readthedocs.io/en/latest/
 .. _pipe: https://en.wikipedia.org/wiki/Pipeline_(Unix)
 .. _file: https://docs.conda.io/projects/conda/en/latest/commands/install.html#Named%20Arguments
+.. _pip: https://pip.pypa.io/en/stable/
+.. _sphinx-apidoc: https://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html
+.. _sphinx-build: https://www.sphinx-doc.org/en/latest/man/sphinx-build.html

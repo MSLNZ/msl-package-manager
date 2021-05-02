@@ -147,12 +147,13 @@ def get_version():
 
 install_requires = ['setuptools', 'colorama']
 tests_require = ['pytest', 'pytest-cov']
+docs_require = ['sphinx', 'sphinx_rtd_theme']
 
 testing = {'test', 'tests'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
 
 needs_sphinx = {'doc', 'docs', 'apidoc', 'apidocs'}.intersection(sys.argv)
-sphinx = ['sphinx', 'sphinx_rtd_theme'] + install_requires if needs_sphinx else []
+sphinx = docs_require + install_requires if needs_sphinx else []
 
 init_original = 'msl/package_manager/__init__.py'
 init_backup = init_original + '.backup'
@@ -185,7 +186,7 @@ setup(
     setup_requires=sphinx + pytest_runner,
     tests_require=tests_require,
     install_requires=install_requires,
-    extras_require={'tests': tests_require},
+    extras_require={'tests': tests_require, 'docs': docs_require},
     cmdclass={'docs': BuildDocs, 'apidocs': ApiDocs},
     entry_points={
         'console_scripts': [
