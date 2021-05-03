@@ -21,8 +21,7 @@ that can be used to run unit tests and to create the documentation for your MSL 
    executing the command because these packages (and their own dependencies) need to be downloaded then installed.
    If you prefer to install these packages directly into your environment_ you can run
    ``conda install pytest pytest-cov pytest-runner sphinx sphinx_rtd_theme``, or if you are using pip_ as
-   your package manager then run ``pip install --editable .[docs,tests]`` from the directory where the
-   **setup.py** file is located.
+   your package manager then replace ``conda`` with ``pip``.
 
 The following command will run all test modules that pytest_ finds as well as testing all the example code that is
 located within the docstrings of the source code and in the **.rst** files in the **docs/** directory. To modify the
