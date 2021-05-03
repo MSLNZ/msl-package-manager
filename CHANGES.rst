@@ -12,6 +12,8 @@ Version 2.5.0 (in development)
 
 - Changed
 
+  * use 4x additive ``--quiet`` flag (for silencing ``DEBUG``,
+    ``INFO``, ``WARNING`` and ``ERROR`` logging levels)
   * direct logging messages less than ``WARNING`` to ``sys.stdout`` and
     greater than or equal to ``WARNING`` to ``sys.stderr``
   * the default name of a repository branch is now `main` for the
