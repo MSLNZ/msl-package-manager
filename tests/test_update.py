@@ -72,3 +72,52 @@ def test_update_msl_and_non_msl():
     assert reload(msl_loadlib).__version__ == '0.8.0'
 
     uninstall('loadlib', 'io', yes=True)
+    installed_ = installed()
+    assert 'msl-loadlib' not in installed_
+    assert 'msl-io' not in installed_
+
+
+def test_from_commit():
+    cleanup()
+
+    commit1 = 'b2581039e4e3f2ffe2599927d589809efbb9a1ff'
+    commit2 = '12591bade80321c3a165f7a7364ef13f568d622b'
+
+    install('loadlib', yes=True, commit=commit1)
+
+    # reload all msl modules
+    for name, module in sys.modules.copy().items():
+        if name.startswith('msl'):
+            try:
+                reload(module)
+            except:
+                pass
+
+    # the version ends with the expected commit hash
+    packages = installed()
+    expected = '0.9.0.dev0+{}'.format(commit1[:7])
+    assert 'msl-loadlib' in packages
+    assert packages['msl-loadlib']['version'] == expected
+    msl_loadlib = importlib.import_module('msl.loadlib')
+    assert msl_loadlib.__version__ == expected
+
+    update('loadlib', yes=True, commit=commit2)
+
+    # reload all msl modules
+    for name, module in sys.modules.copy().items():
+        if name.startswith('msl'):
+            try:
+                reload(module)
+            except:
+                pass
+
+    # the version ends with the expected commit hash
+    packages = installed()
+    expected = '0.9.1.dev0+{}'.format(commit2[:7])
+    assert 'msl-loadlib' in packages
+    assert packages['msl-loadlib']['version'] == expected
+    msl_loadlib = importlib.import_module('msl.loadlib')
+    assert msl_loadlib.__version__ == expected
+
+    uninstall('loadlib', yes=True)
+    assert 'msl-loadlib' not in installed()

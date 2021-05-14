@@ -39,11 +39,13 @@ def install(*names, **kwargs):
         ``'msl-loadlib'``). Also accepts shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
         * branch -- :class:`str`
-            The name of a GitHub branch to use for the installation. If :data:`None`,
-            and no `tag` value has been specified, then installs from the ``main``
-            branch. Default is :data:`None`.
+            The name of a git branch to install. If not specified and neither a
+            `tag` nor `commit` was specified then the ``main`` branch is used to
+            install a package if it is not available on PyPI.
+        * commit -- :class:`str`
+            The hash value of a git commit to install a package.
         * tag -- :class:`str`
-            The name of a GitHub tag to use for the installation. Default is :data:`None`.
+            The name of a git tag to install a package.
         * update_cache -- :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
@@ -57,33 +59,38 @@ def install(*names, **kwargs):
             Optional arguments to pass to the ``pip install`` command,
             e.g., ``['--retries', '10', '--user']``
 
-        .. attention::
-           Cannot specify both a `branch` and a `tag` simultaneously.
     """
     # TODO Python 2.7 does not support named arguments after using *args
-    #  we can define yes=False, branch=None, tag=None, update_cache=False, pip_options=None
+    #  we can define yes=False, branch=None, ...
     #  in the function signature when we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache', 'pip_options'})
+    utils._check_kwargs(kwargs, {'yes', 'branch', 'commit', 'tag', 'update_cache', 'pip_options'})
 
     yes = kwargs.get('yes', False)
     branch = kwargs.get('branch', None)
+    commit = kwargs.get('commit', None)
     tag = kwargs.get('tag', None)
     update_cache = kwargs.get('update_cache', False)
     pip_options = kwargs.get('pip_options', [])
 
-    zip_name = utils._get_github_zip_name(branch, tag)
-    if zip_name is None:
+    if commit and not utils.has_git:
+        utils.log.error('Cannot install from a commit because git is not installed')
+        return
+
+    github_suffix = utils._get_github_url_suffix(branch=branch, commit=commit, tag=tag)
+    if github_suffix is None:
         return
 
     # keep the order of the log messages consistent: pypi -> github -> local
     # utils._create_install_list() does github -> local
     pkgs_pypi = utils.pypi(update_cache)
-    packages = utils._create_install_list(names, branch, tag, update_cache)
+    packages = utils._create_install_list(names, branch, commit, tag, update_cache)
     if not packages:
         utils.log.info('No MSL packages to install')
         return
 
-    utils._log_install_uninstall_message(packages, 'INSTALLED', branch, tag, pkgs_pypi)
+    utils._log_install_uninstall_message(
+        packages, 'INSTALLED', branch=branch, commit=commit, tag=tag, pkgs_pypi=pkgs_pypi
+    )
     if not (yes or utils._ask_proceed()):
         return
 
@@ -98,7 +105,7 @@ def install(*names, **kwargs):
         pip_options.append('--disable-pip-version-check')
 
     for name, values in packages.items():
-        if name in pkgs_pypi and branch is None and tag is None:
+        if name in pkgs_pypi and not (branch or commit or tag):
             utils.log.debug('Installing {!r} from PyPI'.format(name))
             if values['extras_require']:
                 name += values['extras_require']
@@ -106,11 +113,11 @@ def install(*names, **kwargs):
                 name += values['version_requested']
             subprocess.call(exe + pip_options + [name])
         else:
-            utils.log.debug('Installing {!r} from GitHub[{}]'.format(name, zip_name))
-            if utils.has_git:
-                repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(name, zip_name)
+            utils.log.debug('Installing {!r} from GitHub[{}]'.format(name, github_suffix))
+            if commit or utils.has_git:
+                repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(name, github_suffix)
             else:
-                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, zip_name, zip_extn)
+                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, github_suffix, zip_extn)
             repo += '#egg={}'.format(name)
             if values['extras_require']:
                 repo += values['extras_require']

@@ -590,7 +590,7 @@ def _check_wildcards_and_prefix(names, pkgs):
     return _packages
 
 
-def _create_install_list(names, branch, tag, update_cache):
+def _create_install_list(names, branch, commit, tag, update_cache):
     """Create a list of package names to ``install`` that are GitHub repositories_.
 
     Parameters
@@ -598,9 +598,11 @@ def _create_install_list(names, branch, tag, update_cache):
     names : :class:`tuple` of :class:`str`
         The name of a single GitHub repository or multiple repository names.
     branch : :class:`str` or :data:`None`
-        The name of a GitHub branch.
+        The name of a git branch.
+    commit : :class:`str` or :data:`None`
+        The hash value of a git commit.
     tag : :class:`str` or :data:`None`
-        The name of a GitHub tag.
+        The name of a git tag.
     update_cache : :class:`bool`
         Whether to force the GitHub cache to be updated when you call this function.
 
@@ -609,8 +611,8 @@ def _create_install_list(names, branch, tag, update_cache):
     :class:`dict`
         The MSL packages to ``install``.
     """
-    zip_name = _get_github_zip_name(branch, tag)
-    if zip_name is None:
+    github_suffix = _get_github_url_suffix(branch, commit, tag)
+    if github_suffix is None:
         return
 
     # keep the order of the log messages consistent: pypi -> github -> local
@@ -629,7 +631,7 @@ def _create_install_list(names, branch, tag, update_cache):
     pkgs = {}
     for name, value in packages.items():
         if name in pkgs_installed or name in repo_names:
-            log.warning('The {!r} package is already installed'.format(name))
+            log.warning('The {!r} package is already installed -- use the update command'.format(name))
         elif name not in pkgs_github:
             log.error('Cannot install {!r} -- the package does not exist'.format(name))
         elif branch is not None and branch not in pkgs_github[name]['branches']:
@@ -695,33 +697,39 @@ def _get_input(msg):
         return input(msg)
 
 
-def _get_github_zip_name(branch, tag):
-    """Returns the name of a zip file in the GitHub archive.
+def _get_github_url_suffix(branch=None, commit=None, tag=None):
+    """Returns the URL suffix.
 
     Parameters
     ----------
     branch : :class:`str` or :data:`None`
-        The name of a GitHub branch.
+        The name of a git branch.
+    commit : :class:`str` or :data:`None`
+        The hash value of a git commit.
     tag : :class:`str` or :data:`None`
-        The name of a GitHub tag.
+        The name of a git tag.
 
     Returns
     -------
     :class:`str` or :data:`None`
-        The name of the zip file or :data:`None` if both `branch`
-        and `tag` were specified.
+        The suffix or :data:`None` if more than 1 of
+        `branch`, `tag` or `commit` were enabled.
     """
-    if branch is not None and tag is not None:
-        log.error('Cannot specify both a branch ({}) and a tag ({}).'.format(branch, tag))
-        return None
-    elif branch is None and tag is None:
-        return 'main'
-    elif branch is not None:
+    count = [bool(branch), bool(commit), bool(tag)].count(True)
+    if count == 0:
+        return 'main'  # default branch
+
+    if count > 1:
+        log.error('Can only specify a branch, a commit or a tag (not multiple options simultaneously)')
+        return
+
+    if branch:
         return branch
-    elif tag is not None:
-        return tag
-    else:
-        assert False, 'This branch ({}) and tag ({}) combo has not been handled'.format(branch, tag)
+
+    if commit:
+        return commit
+
+    return tag
 
 
 def _inspect_github_pypi(where, update_cache):
@@ -768,7 +776,7 @@ def _inspect_github_pypi(where, update_cache):
     return dict(), path
 
 
-def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None):
+def _log_install_uninstall_message(packages, action, branch=None, commit=None, tag=None, pkgs_pypi=None):
     """Print the ``install`` or ``uninstall`` summary for what is going to happen.
 
     Parameters
@@ -778,13 +786,13 @@ def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None
     action : :class:`str`
         The text to show in color and in upper case about what's happening.
     branch : :class:`str` or :data:`None`
-        The name of a GitHub branch to use for the ``install``.
-        *Only used when installing packages*.
+        The name of a git branch to use. Only used when installing packages.
+    commit : :class:`str` or :data:`None`
+        The hash value of a git commit to use. Only used when installing packages.
     tag : :class:`str` or :data:`None`
-        The name of a GitHub tag to use for the ``install``.
-        *Only used when installing packages*.
+        The name of a git tag to use. Only used when installing packages.
     pkgs_pypi : :class:`dict`
-        Packages that are on PyPI. Only used when installing.
+        Packages that are on PyPI. Only used when installing packages.
     """
     pkgs = _sort_packages(packages)
 
@@ -807,12 +815,14 @@ def _log_install_uninstall_message(packages, action, branch, tag, pkgs_pypi=None
         if values.get('version_requested'):
             version = values['version_requested'].replace('==', '')
         else:
-            version = '' if branch is not None or tag is not None else values['version']
+            version = '' if (branch or commit or tag) else values['version']
         msg += '\n  {}  {} '.format(name.ljust(w[0]), version.ljust(w[1]))
         if action == 'REMOVED':
             continue
         if branch is not None:
             msg += ' [branch:{}]'.format(branch)
+        elif commit is not None:
+            msg += ' [commit:{}]'.format(commit[:7])
         elif tag is not None:
             msg += ' [tag:{}]'.format(tag)
         elif pkg in pkgs_pypi:

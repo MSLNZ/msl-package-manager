@@ -46,7 +46,7 @@ def uninstall(*names, **kwargs):
         return
 
     # use the word REMOVE since it visibly looks different than UNINSTALL and INSTALL do
-    utils._log_install_uninstall_message(packages, 'REMOVED', None, None)
+    utils._log_install_uninstall_message(packages, 'REMOVED')
     if not (yes or utils._ask_proceed()):
         return
 

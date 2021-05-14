@@ -4,7 +4,14 @@ import logging
 
 import pytest
 
-from msl.package_manager import install, update, uninstall, installed, _PKG_NAME
+from msl.package_manager import (
+    install,
+    update,
+    uninstall,
+    installed,
+    _PKG_NAME,
+    utils,
+)
 
 
 # see the docs for the caplog fixture
@@ -98,7 +105,7 @@ def test_log_output(caplog):
         'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
         'Getting the packages from {}'.format(exec_path),
-        "The {}'msl-loadlib' package is already installed".format(u),
+        "The {}'msl-loadlib' package is already installed -- use the update command".format(u),
         'No MSL packages to install',
 
         # msl update loadlib[java]==0.6.0
@@ -176,3 +183,32 @@ def test_log_output(caplog):
 
     for index, record in enumerate(caplog.records):
         assert expected[index] == record.message
+
+
+def test_branch_commit_tag(caplog):
+    caplog.clear()
+    with caplog.at_level(logging.DEBUG, logger=_PKG_NAME):
+        options = [
+            (False, True, True),
+            (True, False, True),
+            (True, True, False),
+            (True, True, True),
+        ]
+        for b, c, t in options:
+            install('does-not-matter', branch=b, commit=c, tag=t)
+            update('does-not-matter', branch=b, commit=c, tag=t)
+        for m in caplog.messages:
+            assert m == 'Can only specify a branch, a commit or a tag (not multiple options simultaneously)'
+
+    cached_has_git = bool(utils.has_git)
+    utils.has_git = False
+
+    caplog.clear()
+    install('does-not-matter', commit='does-not-matter')
+    assert caplog.messages[0] == 'Cannot install from a commit because git is not installed'
+
+    caplog.clear()
+    update('does-not-matter', commit='does-not-matter')
+    assert caplog.messages[0] == 'Cannot update from a commit because git is not installed'
+
+    utils.has_git = cached_has_git

@@ -11,6 +11,7 @@ from .cli_argparse import (
     add_argument_yes,
     add_argument_quiet,
     add_argument_disable_mslpm_version_check,
+    add_argument_commit,
 )
 
 DESCRIPTION = """{} MSL packages.
@@ -46,8 +47,9 @@ def add_parser_update(parser, name='update'):
     add_argument_package_names(p)
     add_argument_all(p)
     add_argument_yes(p)
-    add_argument_tag(p)
     add_argument_branch(p)
+    add_argument_commit(p)
+    add_argument_tag(p)
     add_argument_quiet(p)
     add_argument_update_cache(p)
     add_argument_disable_mslpm_version_check(p)
@@ -68,6 +70,7 @@ def execute(args, parser):
             *args.names,
             yes=args.yes,
             branch=args.branch,
+            commit=args.commit,
             tag=args.tag,
             update_cache=args.update_cache,
             pip_options=args.pip_options,

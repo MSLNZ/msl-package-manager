@@ -68,9 +68,7 @@ def add_argument_branch(parser):
     """Add a ``--branch`` argument to the parser."""
     parser.add_argument(
         '-b', '--branch',
-        help='The GitHub branch to use to {} the package(s).\n'
-             'Cannot specify both the branch and the tag.'
-             .format(parser.get_command_name()),
+        help='The git branch to use to {} the package(s).'.format(parser.get_command_name()),
     )
 
 
@@ -102,9 +100,7 @@ def add_argument_tag(parser):
     """Add a ``--tag`` argument to the parser."""
     parser.add_argument(
         '-t', '--tag',
-        help='The GitHub tag to use to {} the package(s).\n'
-             'Cannot specify both the tag and the branch.'
-             .format(parser.get_command_name()),
+        help='The git tag to use to {} the package(s).'.format(parser.get_command_name()),
     )
 
 
@@ -142,4 +138,13 @@ def add_argument_disable_mslpm_version_check(parser):
         default=False,
         help='Don\'t check if there is a new version of the\n'
              'MSL-Package-Manager available.',
+    )
+
+
+def add_argument_commit(parser):
+    """Add a ``--commit`` argument to the parser."""
+    parser.add_argument(
+        '-c', '--commit',
+        help='The hash value of a git commit to use to {}\n'
+             'a package.'.format(parser.get_command_name()),
     )

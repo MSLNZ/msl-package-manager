@@ -45,11 +45,11 @@ def update(*names, **kwargs):
         shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
         * branch -- :class:`str`
-            The name of a GitHub branch to use for the update. If :data:`None`, and no
-            `tag` value has also been specified, then updates the package using the
-            ``main`` branch. Default is :data:`None`.
+            The name of a git branch to update the package(s) to.
+        * commit -- :class:`str`
+            The hash value of a git commit to update a package to.
         * tag -- :class:`str`
-            The name of a GitHub tag to use for the update. Default is :data:`None`.
+            The name of a git tag to update a package to.
         * update_cache -- :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
@@ -67,26 +67,28 @@ def update(*names, **kwargs):
             The default is :data:`False` (only update the specified
             MSL packages). Warning, enable this option with caution.
 
-        .. attention::
-           Cannot specify both a `branch` and a `tag` simultaneously.
-
         .. important::
-           If you specify a `branch` or a `tag` then the update will be forced.
+           If you specify a `branch`, `commit` or `tag` then the update will be forced.
     """
     # TODO Python 2.7 does not support named arguments after using *args
-    #  we can define yes=False, branch=None, tag=None, update_cache=False, pip_options=None
+    #  we can define yes=False, branch=None, ...
     #  in the function signature when we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'branch', 'tag', 'update_cache', 'pip_options', 'include_non_msl'})
+    utils._check_kwargs(kwargs, {'yes', 'branch', 'commit', 'tag', 'update_cache', 'pip_options', 'include_non_msl'})
 
     yes = kwargs.get('yes', False)
     branch = kwargs.get('branch', None)
+    commit = kwargs.get('commit', None)
     tag = kwargs.get('tag', None)
     update_cache = kwargs.get('update_cache', False)
     pip_options = kwargs.get('pip_options', [])
     include_non_msl = kwargs.get('include_non_msl', False)
 
-    zip_name = utils._get_github_zip_name(branch, tag)
-    if zip_name is None:
+    if commit and not utils.has_git:
+        utils.log.error('Cannot update from a commit because git is not installed')
+        return
+
+    github_suffix = utils._get_github_url_suffix(branch=branch, commit=commit, tag=tag)
+    if github_suffix is None:
         return
 
     # keep the order of the log messages consistent: pypi -> github -> local
@@ -124,7 +126,7 @@ def update(*names, **kwargs):
         installed_version = pkgs_installed[name]['version']
 
         # use PyPI to update the package (only if the package is available on PyPI)
-        using_pypi = name in pkgs_pypi and tag is None and branch is None
+        using_pypi = name in pkgs_pypi and not (tag or branch or commit)
         repo_name = pkgs_installed[name]['repo_name']
 
         # an MSL package could have been installed in "editable" mode, i.e., pip install -e .
@@ -134,14 +136,26 @@ def update(*names, **kwargs):
 
         extras_require = values['extras_require'] if values.get('extras_require') is not None else ''
 
-        if tag is not None:
+        if commit is not None:
+            if not repo:
+                utils.log.error(no_repo_err_msg)
+                continue
+            # just assume that the commit value is okay
+            msl_pkgs_to_update[name] = {
+                'installed_version': installed_version,
+                'using_pypi': False,
+                'extras_require': extras_require,
+                'version': '[commit:{}]'.format(commit[:7]),
+                'repo_name': repo_name,
+            }
+        elif tag is not None:
             if not repo:
                 utils.log.error(no_repo_err_msg)
                 continue
             if tag in repo['tags']:
                 msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
-                    'using_pypi': using_pypi,
+                    'using_pypi': False,
                     'extras_require': extras_require,
                     'version': '[tag:{}]'.format(tag),
                     'repo_name': repo_name,
@@ -156,7 +170,7 @@ def update(*names, **kwargs):
             if branch in repo['branches']:
                 msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
-                    'using_pypi': using_pypi,
+                    'using_pypi': False,
                     'extras_require': extras_require,
                     'version': '[branch:{}]'.format(branch),
                     'repo_name': repo_name,
@@ -175,8 +189,9 @@ def update(*names, **kwargs):
 
             if not version:
                 # a version number must exist on PyPI, so if this occurs it must be for a github repo
-                utils.log.error(err_msg + 'The GitHub repository does not contain a release. Specify a branch or a tag')
-                continue
+                utils.log.error(
+                    err_msg + 'The GitHub repository does not contain a release. Specify a branch, commit or tag'
+                )
             elif values.get('version_requested'):
                 # this elif must come before the parse_version check
                 msl_pkgs_to_update[name] = {
@@ -196,7 +211,6 @@ def update(*names, **kwargs):
                 }
             else:
                 utils.log.warning('The {!r} package is already the latest [{}]'.format(name, installed_version))
-                continue
 
         w = [max(w[0], len(name+extras_require)), max(w[1], len(installed_version))]
 
@@ -254,11 +268,11 @@ def update(*names, **kwargs):
             package = [pkg + info['extras_require'] + info['version']]
             pip_github_options = []
         else:
-            utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, zip_name))
-            if utils.has_git:
-                repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], zip_name)
+            utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, github_suffix))
+            if commit or utils.has_git:
+                repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], github_suffix)
             else:
-                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], zip_name, zip_extn)
+                repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(info['repo_name'], github_suffix, zip_extn)
             repo += '#egg={}'.format(pkg)
             pip_github_options = ['--force-reinstall']
             if info['extras_require']:
