@@ -18,7 +18,7 @@ def test_invalid_kwarg_types():
         pm.create('abc', author='a', email=['a'])
 
 
-def test_create_msl_package():
+def test_msl_package():
     root_dir = os.path.join(temp_dir, 'msl-package')
     if os.path.isdir(root_dir):
         shutil.rmtree(root_dir)
@@ -112,7 +112,7 @@ def test_create_msl_package():
     shutil.rmtree(root_dir)
 
 
-def test_create_pr_single_photons():
+def test_pr_single_photons():
     root_dir = os.path.join(temp_dir, 'pr-Single-Photons')
     if os.path.isdir(root_dir):
         shutil.rmtree(root_dir)
@@ -207,7 +207,7 @@ def test_create_pr_single_photons():
         shutil.rmtree(root_dir)
 
 
-def test_create_no_namespace():
+def test_no_namespace():
     root_dir = os.path.join(temp_dir, 'time-tagger')
     if os.path.isdir(root_dir):
         shutil.rmtree(root_dir)

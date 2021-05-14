@@ -32,7 +32,7 @@ def teardown_module():
     sys.version_info[:2] == (2, 7) and sys.platform == 'darwin',
     reason='hyphen gets appended to msl-loadlib version (0.7.0-)'
 )
-def test_update_msl_and_non_msl():
+def test_msl_and_non_msl():
     cleanup()
 
     # msl-io has xlrd<2.0 as a dependency
