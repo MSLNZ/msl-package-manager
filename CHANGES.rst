@@ -7,6 +7,7 @@ Version 2.5.0 (in development)
 
 - Added
 
+  * ability to install or update a package from the hash value of a commit
   * a ``docs`` key to ``extras_require`` in setup.py
   * ability to update all outdated, non-MSL packages from PyPI
 
