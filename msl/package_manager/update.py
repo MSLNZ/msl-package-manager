@@ -33,7 +33,7 @@ def update(*names, **kwargs):
         Added the `pip_options` keyword argument.
 
     .. versionchanged:: 2.5.0
-        Added the `include_non_msl` keyword argument and the default
+        Added the `include_non_msl` and `commit` keyword arguments. The default
         name of a repository branch changed to ``main``.
 
     Parameters
@@ -45,11 +45,11 @@ def update(*names, **kwargs):
         shell-style wildcards (e.g., ``'pr-*'``).
     **kwargs
         * branch -- :class:`str`
-            The name of a git branch to update the package(s) to.
+            The name of a git branch to use to update the package(s) to.
         * commit -- :class:`str`
-            The hash value of a git commit to update a package to.
+            The hash value of a git commit to use to update a package.
         * tag -- :class:`str`
-            The name of a git tag to update a package to.
+            The name of a git tag to use to update a package.
         * update_cache -- :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent

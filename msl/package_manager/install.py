@@ -15,20 +15,20 @@ def install(*names, **kwargs):
 
     .. note::
        If the MSL packages_ are available on PyPI then PyPI is used as the default
-       URI_ to install the package. If you want to force the installation to occur
-       from the ``main`` branch of the GitHub `repository <https://github.com/MSLNZ>`_
+       location to install the package. If you want to force the installation to occur
+       from the ``main`` branch from GitHub (even though the package is available on PyPI)
        then set ``branch='main'``. If the package is not available on PyPI
-       then the ``main`` branch is used as the default installation URI_.
+       then the ``main`` branch is used as the default installation location.
 
     .. _repositories: https://github.com/MSLNZ
     .. _packages: https://pypi.org/search/?q=%22Measurement+Standards+Laboratory+of+New+Zealand%22
-    .. _URI: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 
     .. versionchanged:: 2.4.0
         Added the `pip_options` keyword argument.
 
     .. versionchanged:: 2.5.0
-        The default name of a repository branch changed to ``main``.
+        Added the `commit` keyword argument. The default name of a
+        repository branch changed to ``main``.
 
     Parameters
     ----------
@@ -43,9 +43,9 @@ def install(*names, **kwargs):
             `tag` nor `commit` was specified then the ``main`` branch is used to
             install a package if it is not available on PyPI.
         * commit -- :class:`str`
-            The hash value of a git commit to install a package.
+            The hash value of a git commit to use to install a package.
         * tag -- :class:`str`
-            The name of a git tag to install a package.
+            The name of a git tag to use to install a package.
         * update_cache -- :class:`bool`
             The information about the MSL packages_ that are available on PyPI and about
             the repositories_ that are available on GitHub are cached to use for subsequent
