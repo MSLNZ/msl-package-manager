@@ -17,6 +17,7 @@ def test_install_update_args():
         assert not args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -28,6 +29,7 @@ def test_install_update_args():
         assert not args.all
         assert args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -39,6 +41,7 @@ def test_install_update_args():
         assert not args.all
         assert args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -50,6 +53,7 @@ def test_install_update_args():
         assert not args.all
         assert not args.update_cache
         assert args.branch == 'thebranch'
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -61,6 +65,7 @@ def test_install_update_args():
         assert not args.all
         assert not args.update_cache
         assert args.branch == 'thebranch'
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert args.yes
@@ -72,6 +77,7 @@ def test_install_update_args():
         assert not args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag == 'thetag'
         assert args.quiet == 0
         assert not args.yes
@@ -83,17 +89,43 @@ def test_install_update_args():
         assert not args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag == 'thetag'
         assert args.quiet == 1
         assert args.yes
         assert not args.disable_mslpm_version_check
         assert len(args.pip_options) == 0
 
-        args = get_args(cmd + '-t thetag --branch thebranch')
+        args = get_args(cmd + '-c 123456789')
+        assert not args.names
+        assert not args.all
+        assert not args.update_cache
+        assert args.branch is None
+        assert args.commit == '123456789'
+        assert args.tag is None
+        assert args.quiet == 0
+        assert not args.yes
+        assert not args.disable_mslpm_version_check
+        assert len(args.pip_options) == 0
+
+        args = get_args(cmd + '--commit 123456789')
+        assert not args.names
+        assert not args.all
+        assert not args.update_cache
+        assert args.branch is None
+        assert args.commit == '123456789'
+        assert args.tag is None
+        assert args.quiet == 0
+        assert not args.yes
+        assert not args.disable_mslpm_version_check
+        assert len(args.pip_options) == 0
+
+        args = get_args(cmd + '-t thetag --branch thebranch -c abcd')
         assert not args.names
         assert not args.all
         assert not args.update_cache
         assert args.branch == 'thebranch'
+        assert args.commit == 'abcd'
         assert args.tag == 'thetag'
         assert args.quiet == 0
         assert not args.yes
@@ -105,6 +137,7 @@ def test_install_update_args():
         assert args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -116,6 +149,7 @@ def test_install_update_args():
         assert args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -127,6 +161,7 @@ def test_install_update_args():
         assert not args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert not args.yes
@@ -142,6 +177,7 @@ def test_install_update_args():
         assert args.all
         assert args.update_cache
         assert args.branch == 'thebranch'
+        assert args.commit is None
         assert args.tag == 'thetag'
         assert args.quiet == 0
         assert not args.yes
@@ -149,11 +185,12 @@ def test_install_update_args():
         assert len(args.pip_options) == 0
 
         args = get_args(cmd + '--log here.txt -t thetag --no-color --branch thebranch '
-                              '--index-url https://my.index.org/simple --user')
+                              '--index-url https://my.index.org/simple -c abc --user')
         assert not args.names
         assert not args.all
         assert not args.update_cache
         assert args.branch == 'thebranch'
+        assert args.commit == 'abc'
         assert args.tag == 'thetag'
         assert args.quiet == 0
         assert not args.yes
@@ -166,29 +203,33 @@ def test_install_update_args():
         assert args.pip_options[4] == 'https://my.index.org/simple'
         assert args.pip_options[5] == '--user'
 
-        args = get_args(cmd + 'io --log here.txt equipment -t thetag --no-color network '
-                              '--branch thebranch -i https://my.index.org/simple --user loadlib')
+        args = get_args(cmd + 'io --log here.txt equipment -t thetag --no-color network --constraint file.txt '
+                              '--branch thebranch -i https://my.index.org/simple --user loadlib --commit qt')
         assert args.names == ['io', 'equipment', 'network', 'loadlib']
         assert not args.all
         assert not args.update_cache
         assert args.branch == 'thebranch'
+        assert args.commit == 'qt'
         assert args.tag == 'thetag'
         assert args.quiet == 0
         assert not args.yes
         assert not args.disable_mslpm_version_check
-        assert len(args.pip_options) == 6
+        assert len(args.pip_options) == 8
         assert args.pip_options[0] == '--log'
         assert args.pip_options[1] == 'here.txt'
         assert args.pip_options[2] == '--no-color'
-        assert args.pip_options[3] == '-i'
-        assert args.pip_options[4] == 'https://my.index.org/simple'
-        assert args.pip_options[5] == '--user'
+        assert args.pip_options[3] == '--constraint'
+        assert args.pip_options[4] == 'file.txt'
+        assert args.pip_options[5] == '-i'
+        assert args.pip_options[6] == 'https://my.index.org/simple'
+        assert args.pip_options[7] == '--user'
 
         args = get_args(cmd + 'io network --compile -qq --upgrade-strategy eager')
         assert args.names == ['io', 'network']
         assert not args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 2
         assert not args.yes
@@ -200,6 +241,7 @@ def test_install_update_args():
         assert args.all
         assert not args.update_cache
         assert args.branch is None
+        assert args.commit is None
         assert args.tag is None
         assert args.quiet == 0
         assert args.yes
