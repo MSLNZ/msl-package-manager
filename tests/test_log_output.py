@@ -186,29 +186,36 @@ def test_log_output(caplog):
 
 
 def test_branch_commit_tag(caplog):
+    caplog.set_level(logging.DEBUG, logger=_PKG_NAME)
+
+    options = [
+        (False, True, True),
+        (True, False, True),
+        (True, True, False),
+        (True, True, True),
+    ]
+
     caplog.clear()
-    with caplog.at_level(logging.DEBUG, logger=_PKG_NAME):
-        options = [
-            (False, True, True),
-            (True, False, True),
-            (True, True, False),
-            (True, True, True),
-        ]
-        for b, c, t in options:
-            install('does-not-matter', branch=b, commit=c, tag=t)
-            update('does-not-matter', branch=b, commit=c, tag=t)
-        for m in caplog.messages:
-            assert m == 'Can only specify a branch, a commit or a tag (not multiple options simultaneously)'
+    for b, c, t in options:
+        install('does-not-matter', branch=b, commit=c, tag=t)
+        update('does-not-matter', branch=b, commit=c, tag=t)
+    for r in caplog.records:
+        assert r.levelname == 'ERROR'
+        assert r.message == 'Can only specify a branch, a commit or a tag (not multiple options simultaneously)'
 
     cached_has_git = bool(utils.has_git)
     utils.has_git = False
 
     caplog.clear()
     install('does-not-matter', commit='does-not-matter')
-    assert caplog.messages[0] == 'Cannot install from a commit because git is not installed'
+    r = caplog.records[0]
+    assert r.levelname == 'ERROR'
+    assert r.message == 'Cannot install from a commit because git is not installed'
 
     caplog.clear()
     update('does-not-matter', commit='does-not-matter')
-    assert caplog.messages[0] == 'Cannot update from a commit because git is not installed'
+    r = caplog.records[0]
+    assert r.levelname == 'ERROR'
+    assert r.message == 'Cannot update from a commit because git is not installed'
 
     utils.has_git = cached_has_git
