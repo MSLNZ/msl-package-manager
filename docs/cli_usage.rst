@@ -55,18 +55,24 @@ Install a specific MSL package, for example **msl-loadlib** (you can ignore the 
 
    msl install loadlib
 
-Install a package from a specific GitHub branch (by default the **main** branch is used if the package
+Install a package from a git branch (by default the **main** branch is used if the package
 is not available on PyPI)
 
 .. code-block:: console
 
    msl install loadlib --branch develop
 
-Install a package from a specific GitHub tag
+Install a package from a git tag
 
 .. code-block:: console
 
    msl install loadlib --tag v0.3.0
+
+Install a package from the hash value of a commit
+
+.. code-block:: console
+
+   msl install loadlib --commit 12591bade80321c3a165f7a7364ef13f568d622b
 
 Install multiple MSL packages
 
@@ -184,18 +190,24 @@ Update to a package that was released :ref:`\<24 hours ago <cache-note>`
 
    msl update loadlib --update-cache
 
-Update a package from a specific GitHub branch (by default the **main** branch is used if the package
+Update a package to a git branch (by default the **main** branch is used if the package
 is not available on PyPI)
 
 .. code-block:: console
 
    msl update loadlib --branch develop
 
-Update a package from a specific GitHub tag
+Update a package to a git tag
 
 .. code-block:: console
 
    msl update loadlib --tag v0.3.0
+
+Update a package using the hash value of a commit
+
+.. code-block:: console
+
+   msl update loadlib --commit 12591bade80321c3a165f7a7364ef13f568d622b
 
 Update multiple MSL packages
 
