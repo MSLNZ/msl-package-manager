@@ -183,7 +183,7 @@ def _main(*args):
     latest = pkgs[_PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
         utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
-                          'You should consider upgrading via the \'msl update package-manager\''
+                          'You should consider updating via the \'msl update package-manager\''
                           ' command.'.format(_PKG_NAME, __version__, latest))
 
 
