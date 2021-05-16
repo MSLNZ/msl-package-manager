@@ -56,10 +56,17 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade setuptools wheel
           python -m pip install --upgrade --editable .[tests]
-      - name: Download PyPI and GitHub caches
+      - name: Download PyPI and GitHub caches (non Windows)
         uses: actions/download-artifact@v2
+        if: ${{ matrix.os != 'windows-latest' }}
         with:
           name: pypi-github-caches
           path: ~/.msl/package-manager/*.json
+      - name: Download PyPI and GitHub caches (Windows)
+        uses: actions/download-artifact@v2
+        if: ${{ matrix.os == 'windows-latest' }}
+        with:
+          name: pypi-github-caches
+          path: %USERPROFILE%\.msl\package-manager\*.json
       - name: Run tests
         run: python -m pytest
