@@ -36,6 +36,7 @@ jobs:
   test:
     name: Test
     runs-on: ${{ matrix.os }}
+    needs: cache
 
     strategy:
       fail-fast: false

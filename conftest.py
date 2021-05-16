@@ -8,8 +8,6 @@ from msl.package_manager import (
     utils,
 )
 
-print('HOME_DIR: {}'.format(utils._HOME_DIR))
-
 stream = io.BytesIO()
 handler = logging.StreamHandler(stream=stream)
 
