@@ -174,11 +174,11 @@ def github(update_cache=False):
             return cached_pgks
         return dict()
 
-    # check if the user specified their github authorization credentials
+    # check if the user specified their github authorisation credentials
     #
-    # the os.environ option is used for testing on travis and appveyor
-    # and it is not the recommended way for a user to store the credentials
-    auth = os.environ.get('GITHUB_AUTHORIZATION')
+    # the os.environ option is used for CI testing and it is not the
+    # recommended way for a user to store their credentials
+    auth = os.environ.get('MSL_PM_GITHUB_AUTHORISATION')
     if not auth and os.path.isfile(_GITHUB_AUTH_PATH):
         with open(_GITHUB_AUTH_PATH, 'rb') as fp:
             line = fp.readline().strip()
