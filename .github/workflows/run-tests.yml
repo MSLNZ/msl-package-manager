@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     # limit the number of concurrent jobs that run
-    concurrency: py-${{ matrix.python-version }}
+    concurrency: os-${{ matrix.os }}
 
     strategy:
       fail-fast: false
