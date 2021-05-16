@@ -12,9 +12,6 @@ jobs:
     name: Test
     runs-on: ${{ matrix.os }}
 
-    # limit the number of concurrent jobs that run
-    concurrency: github-rate-limit-${{ github.sha }}
-
     strategy:
       fail-fast: false
       matrix:
