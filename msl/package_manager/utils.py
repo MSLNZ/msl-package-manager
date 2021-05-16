@@ -36,7 +36,7 @@ from colorama import Fore, Style, Back, init
 from . import _PKG_NAME
 
 _pip_quiet = 0
-_IS_WINDOWS = sys.platform in {'win32', 'cygwin'}
+_IS_WINDOWS = sys.platform == 'win32'
 
 _HOME_DIR = os.path.join(os.path.expanduser('~'), '.msl', 'package-manager')
 if not os.path.isdir(_HOME_DIR):
