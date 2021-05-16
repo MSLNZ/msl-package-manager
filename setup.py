@@ -146,7 +146,10 @@ def get_version():
 
 
 install_requires = ['setuptools', 'colorama']
-tests_require = ['pytest', 'pytest-cov']
+tests_require = [
+    'pytest>=4.4',  # >=4.4 to support the "-p conftest" option
+    'pytest-cov',
+]
 docs_require = ['sphinx', 'sphinx_rtd_theme']
 
 testing = {'test', 'tests'}.intersection(sys.argv)
