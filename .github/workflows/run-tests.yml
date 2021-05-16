@@ -5,7 +5,6 @@ on: [push, pull_request]
 env:
   # enable coloured output
   PY_COLORS: 1
-  MSL_PM_GITHUB_AUTH: ${{ secrets.MSL_PM_GITHUB_AUTH }}
 
 jobs:
   test:
@@ -32,5 +31,7 @@ jobs:
           python -m pip install --upgrade setuptools wheel
           python -m pip install --upgrade --editable .[tests]
       - name: Run tests
+        env:
+          MSL_PM_GITHUB_AUTH: ${{ secrets.MSL_PM_GITHUB_AUTH }}
         run: |
           python -m pytest
