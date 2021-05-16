@@ -3,10 +3,36 @@ name: Tests
 on: [push, pull_request]
 
 env:
-  # enable coloured output
   PY_COLORS: 1
 
 jobs:
+
+  cache:
+    name: Create PyPI and GitHub caches
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install MSL-Package-Manager
+        run: python -m pip install .
+      - name: Update PyPI and GitHub caches
+        env:
+          MSL_PM_GITHUB_AUTH: ${{ secrets.MSL_PM_GITHUB_AUTH }}
+        run: |
+          msl list --pypi --update-cache
+          msl list --github --update-cache
+      - name: Upload cached artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: cached-artifacts
+          path: ~/.msl/package-manager/*.json
+          if-no-files-found: error
+
   test:
     name: Test
     runs-on: ${{ matrix.os }}
@@ -16,22 +42,24 @@ jobs:
       matrix:
         python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
         os: [windows-latest, ubuntu-latest, macos-latest]
-        platform: [x64]
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Install dependencies and package
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade setuptools wheel
           python -m pip install --upgrade --editable .[tests]
+      - name: Download PyPI and GitHub caches
+        uses: actions/download-artifact@v2
+        with:
+          name: cached-artifacts
+          path: ~/.msl/package-manager/*.json
+          if-no-files-found: error
       - name: Run tests
-        env:
-          MSL_PM_GITHUB_AUTH: ${{ secrets.MSL_PM_GITHUB_AUTH }}
-        run: |
-          python -m pytest
+        run: python -m pytest
