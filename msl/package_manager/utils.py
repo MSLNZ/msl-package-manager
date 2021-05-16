@@ -20,7 +20,6 @@ import logging
 import textwrap
 import platform
 import datetime
-import tempfile
 import threading
 import subprocess
 import collections
@@ -39,11 +38,17 @@ from . import _PKG_NAME
 _pip_quiet = 0
 _IS_WINDOWS = sys.platform in {'win32', 'cygwin'}
 
-_HOME_DIR = os.path.join(os.path.expanduser('~'), '.msl')
+_HOME_DIR = os.path.join(os.path.expanduser('~'), '.msl', 'package-manager')
 if not os.path.isdir(_HOME_DIR):
-    os.mkdir(_HOME_DIR)
+    os.makedirs(_HOME_DIR)
 
-_GITHUB_AUTH_PATH = os.path.join(_HOME_DIR, '.mslpm-github-auth')
+_GITHUB_AUTH_PATH = os.path.join(_HOME_DIR, 'github-auth')
+
+# the HOME_DIR changed from ~/.msl to ~/.msl/package-manager
+# move a previously-created github-auth file to the new HOME_DIR
+_old_auth_path = os.path.join(os.path.expanduser('~'), '.msl', '.mslpm-github-auth')
+if os.path.isfile(_old_auth_path):
+    os.rename(_old_auth_path, _GITHUB_AUTH_PATH)
 
 _package_name_regex = re.compile(
     r'(?P<package_name>[*]?[\w-]*[*]?[\w-]*)(?P<extras_require>\[.*\])?(?P<version_requested>[<!=>~].*)?'
@@ -213,7 +218,7 @@ def github(update_cache=False):
         t.join()
 
     with open(path, 'w') as fp:
-        json.dump(pkgs, fp)
+        json.dump(pkgs, fp, indent=2)
 
     return _sort_packages(pkgs)
 
@@ -498,7 +503,7 @@ def pypi(update_cache=False):
         return _inspect_github_pypi('pypi', False)[0]
 
     with open(path, mode='wt') as fp:
-        json.dump(pkgs, fp)
+        json.dump(pkgs, fp, indent=2)
 
     return _sort_packages(pkgs)
 
@@ -733,32 +738,30 @@ def _get_github_url_suffix(branch=None, commit=None, tag=None):
 
 
 def _inspect_github_pypi(where, update_cache):
-    """Inspects the temp directory for the cached json file.
+    """Inspects the HOME directory for the cached json file.
 
     Parameters
     ----------
     where : :class:`str`
-        Either 'github' or 'pypi'
+        Either 'github' or 'pypi'.
     update_cache : :class:`bool`
         Whether to update the cache.
 
     Returns
     -------
     :class:`dict`
-        The packages
+        The packages.
     :class:`str`
-        The path to the cached files.
+        The path to the cached file.
     """
     if where == 'github':
-        filename = 'msl-github-repo-cache.json'
         suffix = 'GitHub repositories'
     elif where == 'pypi':
-        filename = 'msl-pypi-pkgs-cache.json'
         suffix = 'PyPI packages'
     else:
-        assert False, 'Inspecting GitHub or PyPI has been configured. Got {}'.format(where)
+        assert False, '{!r} != github or pypi'.format(where)
 
-    path = os.path.join(tempfile.gettempdir(), filename)
+    path = os.path.join(_HOME_DIR, where+'.json')
 
     cached_pgks = None
     if os.path.isfile(path):

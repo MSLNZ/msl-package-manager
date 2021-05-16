@@ -13,6 +13,8 @@ Version 2.5.0 (in development)
 
 - Changed
 
+  * use ``~/.msl/package-manager`` as the HOME directory to save the
+    GitHub token and the PyPI/GitHub caches.
   * use 4x additive ``--quiet`` flag (for silencing ``DEBUG``,
     ``INFO``, ``WARNING`` and ``ERROR`` logging levels)
   * direct logging messages less than ``WARNING`` to ``sys.stdout`` and
