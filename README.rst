@@ -1,7 +1,7 @@
 MSL-Package-Manager
 ===================
 
-|docs| |pypi| |travis| |appveyor|
+|docs| |github tests| |pypi|
 
 The **MSL Package Manager** allows you to install, uninstall, update, list and create packages
 that are used at the `Measurement Standards Laboratory of New Zealand`_.
@@ -35,14 +35,11 @@ The documentation for **MSL Package Manager** can be found here_.
    :alt: Documentation Status
    :scale: 100%
 
+.. |github tests| image:: https://github.com/MSLNZ/msl-package-manager/actions/workflows/run-tests.yml/badge.svg
+   :target: https://github.com/MSLNZ/msl-package-manager/actions/workflows/run-tests.yml
+
 .. |pypi| image:: https://badge.fury.io/py/msl-package-manager.svg
    :target: https://badge.fury.io/py/msl-package-manager
-
-.. |travis| image:: https://img.shields.io/travis/MSLNZ/msl-package-manager/main.svg?label=Travis-CI
-   :target: https://travis-ci.org/MSLNZ/msl-package-manager
-
-.. |appveyor| image:: https://img.shields.io/appveyor/ci/jborbely/msl-package-manager/main.svg?label=AppVeyor
-   :target: https://ci.appveyor.com/project/jborbely/msl-package-manager/branch/main
 
 .. _setuptools: https://pypi.org/project/setuptools/
 .. _colorama: https://pypi.org/project/colorama/
