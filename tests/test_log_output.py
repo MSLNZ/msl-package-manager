@@ -21,7 +21,7 @@ def test_log_output(caplog):
     caplog.set_level(logging.DEBUG, logger=_PKG_NAME)
 
     # install MSL-LoadLib version 0.5.0
-    install('loadlib==0.5.0', yes=True, update_cache=False)
+    install('loadlib==0.5.0', yes=True, update_cache=True)
 
     # make sure that MSL-LoadLib is installed
     assert 'msl-loadlib' in installed()
@@ -84,8 +84,8 @@ def test_log_output(caplog):
     u = 'u' if sys.version_info.major == 2 else ''
     expected = [
         # msl install loadlib==0.5.0
-        'Loaded the cached information about the PyPI packages',
-        'Loaded the cached information about the GitHub repositories',
+        'Getting the packages from PyPI',
+        'Getting the repositories from GitHub',
         'Getting the packages from {}'.format(exec_path),
         '\n\x1b[39mThe following MSL packages will be \x1b[36mINSTALLED\x1b[39m:\n\n  msl-loadlib  0.5.0    [PyPI]',
         '',
