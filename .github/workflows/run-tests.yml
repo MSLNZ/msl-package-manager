@@ -29,7 +29,7 @@ jobs:
       - name: Upload cached artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: cached-artifacts
+          name: pypi-github-caches
           path: ~/.msl/package-manager/*.json
           if-no-files-found: error
 
@@ -58,8 +58,7 @@ jobs:
       - name: Download PyPI and GitHub caches
         uses: actions/download-artifact@v2
         with:
-          name: cached-artifacts
+          name: pypi-github-caches
           path: ~/.msl/package-manager/*.json
-          if-no-files-found: error
       - name: Run tests
         run: python -m pytest
