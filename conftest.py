@@ -18,14 +18,16 @@ utils.log.addHandler(handler)
 if not pypi():
     pypi(update_cache=True)
 
-if stream.getbuffer():
-    sys.exit('Cannot update PyPI cache')
+value = stream.getvalue()
+if value:
+    sys.exit('Cannot update PyPI cache\n{}'.format(value))
 
 if not github():
     github(update_cache=True)
 
-if stream.getbuffer():
-    sys.exit('Cannot update GitHub cache')
+value = stream.getvalue()
+if value:
+    sys.exit('Cannot update GitHub cache\n{}'.format(value))
 
 utils.log.removeHandler(handler)
 utils.set_log_level(orig_level)
