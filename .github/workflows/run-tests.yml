@@ -7,13 +7,13 @@ env:
   PY_COLORS: 1
   MSL_PM_GITHUB_AUTH: ${{ secrets.MSL_PM_GITHUB_AUTH }}
 
+# limit the number of concurrent jobs that run
+concurrency: github-rate-limit-${{ github.sha }}
+
 jobs:
   test:
     name: Test
     runs-on: ${{ matrix.os }}
-
-    # limit the number of concurrent jobs that run
-    concurrency: os-${{ matrix.os }}
 
     strategy:
       fail-fast: false
