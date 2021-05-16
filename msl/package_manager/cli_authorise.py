@@ -61,6 +61,6 @@ def execute(args, parser):
     print('  7. Copy the token to your clipboard and paste it in the terminal when asked')
     print()
     print('For more detailed instructions see')
-    print('https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line')
+    print('https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token')
     print()
     authorise()
