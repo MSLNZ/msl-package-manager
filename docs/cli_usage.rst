@@ -324,9 +324,9 @@ To import this package you would use
 
    >>> import mypackage
 
-.. _authorize-cli:
+.. _authorise-cli:
 
-authorize
+authorise
 ---------
 
 When requesting information about the MSL repositories_ that are available on GitHub there is a limit_ to
@@ -336,14 +336,14 @@ request then this limit_ is increased. If you do not have a GitHub account then 
 `sign up <github_signup_>`_ to create an account.
 
 By running this command you will be asked for your GitHub username and `personal access token`_ so that you send
-authorized requests to the GitHub API.
+authorised requests to the GitHub API.
 
 .. code-block:: console
 
-   msl authorize
+   msl authorise
 
 .. tip::
-   You can also use ``authorise`` as an alias for ``authorize``, e.g., ``msl authorise``
+   You can also use ``authorize`` as an alias for ``authorise``, e.g., ``msl authorize``
 
 .. important::
    Your GitHub username and `personal access token`_ are saved in plain text in the file that is created.

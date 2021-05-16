@@ -1,7 +1,7 @@
-msl.package\_manager.cli\_authorize module
+msl.package\_manager.cli\_authorise module
 ==========================================
 
-.. automodule:: msl.package_manager.cli_authorize
+.. automodule:: msl.package_manager.cli_authorise
     :members:
     :undoc-members:
     :show-inheritance:

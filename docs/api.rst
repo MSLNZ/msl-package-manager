@@ -13,7 +13,7 @@ which has the following functions
 
 .. autosummary::
 
-   ~msl.package_manager.authorize.authorize
+   ~msl.package_manager.authorise.authorise
    ~msl.package_manager.create.create
    ~msl.package_manager.utils.github
    ~msl.package_manager.utils.info
@@ -30,10 +30,10 @@ Package Structure
 .. toctree::
 
    msl.package_manager <_api/msl.package_manager>
-   msl.package_manager.authorize <_api/msl.package_manager.authorize>
+   msl.package_manager.authorise <_api/msl.package_manager.authorise>
    msl.package_manager.cli <_api/msl.package_manager.cli>
    msl.package_manager.cli_argparse <_api/msl.package_manager.cli_argparse>
-   msl.package_manager.cli_authorize <_api/msl.package_manager.cli_authorize>
+   msl.package_manager.cli_authorise <_api/msl.package_manager.cli_authorise>
    msl.package_manager.cli_create <_api/msl.package_manager.cli_create>
    msl.package_manager.cli_install <_api/msl.package_manager.cli_install>
    msl.package_manager.cli_list <_api/msl.package_manager.cli_list>

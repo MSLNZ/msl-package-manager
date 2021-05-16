@@ -126,7 +126,7 @@ def github(update_cache=False):
             response = urlopen(Request(url, headers=headers))
         except HTTPError as err:
             if err.code == 401:
-                msg = 'You have provided invalid Authorization information'
+                msg = 'You have provided invalid authorisation information'
             elif err.code == 404:
                 # Could get this error if the URL does not exist.
                 # For example, getting .../releases/latest might not exist
@@ -139,8 +139,8 @@ def github(update_cache=False):
                     reset = int(reply['resources']['core']['reset'])
                     hms = datetime.datetime.fromtimestamp(reset).strftime('%H:%M:%S')
                     msg = 'The GitHub API rate limit was exceeded. Retry again at {} or create a file\n' \
-                          'with your GitHub authorization credentials to increase your rate limit. Run\n' \
-                          '"msl authorize --help" for more details.'.format(hms)
+                          'with your GitHub authorisation credentials to increase your rate limit. Run\n' \
+                          '"msl authorise --help" for more details.'.format(hms)
                 else:
                     msg = 'Unhandled HTTP error 403. The rate_limit was not reached...'
             else:

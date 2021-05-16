@@ -594,7 +594,7 @@ def test_quiet():
     assert utils._pip_quiet == 3  # 3 is the maximum
 
 
-def test_authorize():
+def test_authorise():
     for command in ['authorise', 'authorize']:
         args = get_args(command + ' --invalid-pip-option notused --does-not-get-parsed-by-pip')
         assert args.quiet == 0

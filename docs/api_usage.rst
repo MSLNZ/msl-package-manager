@@ -144,16 +144,16 @@ create
    >>> pm.create('MyPackage', author='my name', email='my@email.com', directory='D:/create/here')
    Created msl-MyPackage in 'D:/create/here\\msl-MyPackage'
 
-.. _authorize-api:
+.. _authorise-api:
 
-authorize
+authorise
 ---------
 
-Create an authorization file for the GitHub API, see :func:`~msl.package_manager.authorize.authorize`
+Create an authorisation file for the GitHub API, see :func:`~msl.package_manager.authorise.authorise`
 
 .. code-block:: pycon
 
-   >>> pm.authorize()
+   >>> pm.authorise()
    Enter your GitHub username [default: ...]: >?
    Enter your GitHub personal access token: >?
 

@@ -1,16 +1,16 @@
 """
-Command line interface for the :ref:`authorize <authorize-cli>` command.
+Command line interface for the :ref:`authorise <authorise-cli>` command.
 """
 from .cli_argparse import (
     add_argument_quiet,
     add_argument_disable_mslpm_version_check,
 )
-from .authorize import (
+from .authorise import (
     WARNING_MESSAGE,
-    authorize,
+    authorise,
 )
 
-HELP = 'Enable authorization to the GitHub API.'
+HELP = 'Enable authorisation to the GitHub API.'
 
 DESCRIPTION = HELP + """
 
@@ -22,7 +22,7 @@ request then this limit is increased.
 
 Running this command will create a file that contains your GitHub
 username and a personal access token so that requests to the GitHub
-API are authorized.
+API are authorised.
 
 ***************************** IMPORTANT ******************************
 {}
@@ -32,17 +32,17 @@ API are authorized.
 EXAMPLE = """
 Example:
 
-  $ msl authorize
+  $ msl {}
 """
 
 
-def add_parser_authorize(parser, name='authorize'):
-    """Add the :ref:`authorize <authorize-cli>` command to the parser."""
+def add_parser_authorise(parser, name='authorise'):
+    """Add the :ref:`authorise <authorise-cli>` command to the parser."""
     p = parser.add_parser(
         name,
-        help=HELP if name == 'authorize' else 'Alias for {}.'.format(name),
+        help=HELP if name == 'authorise' else 'Alias for authorise.',
         description=DESCRIPTION,
-        epilog=EXAMPLE,
+        epilog=EXAMPLE.format(name),
     )
     add_argument_quiet(p)
     add_argument_disable_mslpm_version_check(p)
@@ -50,7 +50,7 @@ def add_parser_authorize(parser, name='authorize'):
 
 
 def execute(args, parser):
-    """Executes the :ref:`authorize <authorize-cli>` command."""
+    """Executes the :ref:`authorise <authorise-cli>` command."""
     print('To generate a personal access token do the following:')
     print('  1. Login to your GitHub account')
     print('  2. Go to Settings -> Developer settings -> Personal access tokens')
@@ -63,4 +63,4 @@ def execute(args, parser):
     print('For more detailed instructions see')
     print('https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line')
     print()
-    authorize()
+    authorise()

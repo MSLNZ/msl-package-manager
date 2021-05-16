@@ -29,4 +29,4 @@ from .update import update
 from .create import create
 from .install import install
 from .uninstall import uninstall
-from .authorize import authorize
+from .authorise import authorise

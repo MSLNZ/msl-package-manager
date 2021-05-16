@@ -32,7 +32,7 @@ def configure_parser():
     from .cli_update import add_parser_update
     from .cli_list import add_parser_list
     from .cli_create import add_parser_create
-    from .cli_authorize import add_parser_authorize
+    from .cli_authorise import add_parser_authorise
 
     PARSER = ArgumentParser(description='Install, uninstall, update, list or create MSL packages.')
 
@@ -58,8 +58,8 @@ def configure_parser():
     add_parser_update(command_parser, name='upgrade')
     add_parser_list(command_parser)
     add_parser_create(command_parser)
-    add_parser_authorize(command_parser)
-    add_parser_authorize(command_parser, name='authorise')
+    add_parser_authorise(command_parser)
+    add_parser_authorise(command_parser, name='authorize')
 
     return PARSER
 
