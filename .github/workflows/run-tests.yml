@@ -61,7 +61,7 @@ jobs:
         if: ${{ matrix.os != 'windows-latest' }}
         with:
           name: pypi-github-caches
-          path: ~/.msl/package-manager/*.json
+          path: ~/.msl/package-manager
       - name: Download PyPI and GitHub caches (Windows)
         uses: actions/download-artifact@v2
         if: ${{ matrix.os == 'windows-latest' }}

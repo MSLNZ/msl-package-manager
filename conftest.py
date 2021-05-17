@@ -16,10 +16,17 @@ print('HOME_DIR: {}'.format(utils._HOME_DIR))
 
 one_day = 60 * 60 * 24
 github_cache = os.path.join(utils._HOME_DIR, 'github.json')
-print('github_cache:\n{}\n{}'.format(time.time(), os.path.getmtime(github_cache) + one_day))
+if os.path.isfile(github_cache):
+    print('github_cache:\n{}\n{}'.format(time.time(), os.path.getmtime(github_cache) + one_day))
+else:
+    print('{!r} does not exist'.format(github_cache))
 
 pypi_cache = os.path.join(utils._HOME_DIR, 'pypi.json')
-print('pypi_cache:\n{}\n{}'.format(time.time(), os.path.getmtime(pypi_cache) + one_day))
+if os.path.isfile(pypi_cache):
+    print('pypi_cache:\n{}\n{}'.format(time.time(), os.path.getmtime(pypi_cache) + one_day))
+else:
+    print('{!r} does not exist'.format(pypi_cache))
+
 
 pypi()
 github()
