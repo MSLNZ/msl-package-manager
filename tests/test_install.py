@@ -52,8 +52,10 @@ def test_version_suffix():
     # msl-package-manager gets installed in editable mode (pip install -e)
     # in cloud-based testing platforms
     if 'msl-package-manager' in packages:
-        assert packages['msl-package-manager']['version'].endswith('+editable')
-        assert packages['msl-package-manager']['version'].count('+') == 1
+        version = packages['msl-package-manager']['version']
+        if 'dev' in version:
+            assert version.endswith('+editable')
+            assert version.count('+') == 1
 
     uninstall('loadlib', yes=True)
     assert 'msl-loadlib' not in installed()
