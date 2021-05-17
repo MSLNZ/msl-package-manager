@@ -2,9 +2,6 @@ name: Tests
 
 on: [push, pull_request]
 
-env:
-  PYTEST_ADDOPTS: "--color=yes"
-
 jobs:
 
   cache:
@@ -69,4 +66,7 @@ jobs:
           name: pypi-github-caches
           path: C:\\Users\\runneradmin\\.msl\\package-manager
       - name: Run tests
+        env:
+          PY_COLOR: 1
+          PYTEST_ADDOPTS: "--color=yes"
         run: python -m pytest
