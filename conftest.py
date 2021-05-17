@@ -8,8 +8,12 @@ from msl.package_manager import (
     utils,
 )
 
+logging.basicConfig(level=logging.DEBUG)
+
 print('HOME_DIR: {}'.format(utils._HOME_DIR))
-print('AUTH_PATH: {}'.format(utils._GITHUB_AUTH_PATH))
+
+pypi()
+github()
 
 # stream = io.BytesIO()
 # handler = logging.StreamHandler(stream=stream)
