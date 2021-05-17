@@ -67,6 +67,6 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         with:
           name: pypi-github-caches
-          # path: "%USERPROFILE%/.msl/package-manager/*.json"
+          path: C:\\Users\\runneradmin\\.msl\\package-manager
       - name: Run tests
         run: python -m pytest

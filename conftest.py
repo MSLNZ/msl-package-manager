@@ -1,5 +1,7 @@
 import io
+import os
 import sys
+import time
 import logging
 
 from msl.package_manager import (
@@ -11,6 +13,13 @@ from msl.package_manager import (
 logging.basicConfig(level=logging.DEBUG)
 
 print('HOME_DIR: {}'.format(utils._HOME_DIR))
+
+one_day = 60 * 60 * 24
+github_cache = os.path.join(utils._HOME_DIR, 'github.json')
+print('github_cache:\n{}\n{}'.format(time.time(), os.path.getmtime(github_cache) + one_day))
+
+pypi_cache = os.path.join(utils._HOME_DIR, 'pypi.json')
+print('pypi_cache:\n{}\n{}'.format(time.time(), os.path.getmtime(pypi_cache) + one_day))
 
 pypi()
 github()
