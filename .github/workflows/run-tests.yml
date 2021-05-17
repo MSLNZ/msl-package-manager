@@ -46,8 +46,8 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
         architecture: [x64]
         include:
-          - os: windows-latest
-            python-version: 3.x
+          - python-version: 3.x
+            os: windows-latest
             architecture: x86
 
     steps:
@@ -57,6 +57,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
       - name: Install dependencies and package
         run: |
           python -m pip install --upgrade pip
