@@ -2,17 +2,18 @@
 Release Notes
 =============
 
-Version 2.5.0 (in development)
-==============================
+Version 2.5.0 (2021.05.17)
+==========================
 
 - Added
 
-  * ability to install or update a package from the hash value of a commit
+  * install or update a package from the hash value of a commit
   * a ``docs`` key to ``extras_require`` in setup.py
-  * ability to update all outdated, non-MSL packages from PyPI
+  * update all outdated, non-MSL packages from PyPI
 
 - Changed
 
+  * renamed the ``authorize`` function to ``authorise``
   * use ``~/.msl/package-manager`` as the HOME directory to save the
     GitHub token and the PyPI/GitHub caches.
   * use 4x additive ``--quiet`` flag (for silencing ``DEBUG``,
