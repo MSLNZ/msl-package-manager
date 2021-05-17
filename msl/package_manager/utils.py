@@ -767,8 +767,6 @@ def _inspect_github_pypi(where, update_cache):
     if os.path.isfile(path):
         with open(path, 'r') as f:
             cached_pgks = _sort_packages(json.load(f))
-    else:
-        log.error('{!r} does not exist'.format(path))
 
     one_day = 60 * 60 * 24
     if (not update_cache) and (cached_pgks is not None) and (time.time() < os.path.getmtime(path) + one_day):
