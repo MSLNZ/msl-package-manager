@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   PY_COLOR: 1
-  PYTEST_ADDOPTS: "--color=yes"
+  COLUMNS: 130
 
 jobs:
 
@@ -36,18 +36,18 @@ jobs:
 
   test:
     name: Test
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     needs: cache
 
     strategy:
       fail-fast: false
       matrix:
         python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows, ubuntu, macos]
         architecture: [x64]
         include:
           - python-version: 3.x
-            os: windows-latest
+            os: windows
             architecture: x86
 
     steps:
@@ -65,13 +65,13 @@ jobs:
           python -m pip install --upgrade --editable .[tests]
       - name: Download PyPI and GitHub caches (non Windows)
         uses: actions/download-artifact@v2
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ matrix.os != 'windows' }}
         with:
           name: pypi-github-caches
           path: ~/.msl/package-manager
       - name: Download PyPI and GitHub caches (Windows)
         uses: actions/download-artifact@v2
-        if: ${{ matrix.os == 'windows-latest' }}
+        if: ${{ matrix.os == 'windows' }}
         with:
           name: pypi-github-caches
           path: C:\\Users\\runneradmin\\.msl\\package-manager
