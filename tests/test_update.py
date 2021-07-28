@@ -58,7 +58,7 @@ def test_msl_and_non_msl():
     # strange, this assert fails in Python 3.5 and does not
     # depend on the version of pip (checked back to pip 10.0)
     if sys.version_info[:2] != (3, 5):
-        assert 'xlrd' in outdated
+        assert outdated['xlrd']['version'] == '<2.0'
 
     msl_loadlib = importlib.import_module('msl.loadlib')
     assert installed()['msl-loadlib']['version'] == '0.7.0'

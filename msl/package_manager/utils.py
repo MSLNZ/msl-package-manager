@@ -408,7 +408,14 @@ def outdated_pypi_packages(msl_installed=None):
                         if package in pkgs_to_update:
                             if specifier not in pkgs_to_update[package]['version']:
                                 # multiple version constraints
-                                pkgs_to_update[package]['version'] += ','+specifier
+                                constraints = pkgs_to_update[package]['version']
+                                if constraints[0] not in '<!=>~':
+                                    # then `constraints` corresponds to an exact version
+                                    # and is missing the leading "=="
+                                    new_version = specifier
+                                else:
+                                    new_version = specifier + ',' + constraints
+                                pkgs_to_update[package]['version'] = new_version
                         else:
                             pkgs_to_update[package] = {
                                 'installed_version': outdated['version'],
