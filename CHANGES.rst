@@ -2,8 +2,13 @@
 Release Notes
 =============
 
-Version 2.5.1 (in development)
-==============================
+Version 2.5.1 (2021.08.24)
+==========================
+
+- Fixed
+
+  * issue `#7 <https://github.com/MSLNZ/msl-package-manager/issues/7>`_ -
+    Updating non-MSL packages can install the wrong version
 
 Version 2.5.0 (2021.05.17)
 ==========================
