@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   PY_COLOR: 1
-  COLUMNS: 130
+  COLUMNS: 120
 
 jobs:
 
