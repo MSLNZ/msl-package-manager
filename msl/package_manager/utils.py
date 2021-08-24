@@ -375,7 +375,7 @@ def outdated_pypi_packages(msl_installed=None):
     try:
         output = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated'])
     except subprocess.CalledProcessError as e:
-        log.error('ERROR: "pip list --outdated" invalid -> {}'.format(e))
+        log.error('ERROR: processing "pip list --outdated" raised -> {}'.format(e))
         return pkgs_to_update
 
     lines = output.decode().splitlines()
