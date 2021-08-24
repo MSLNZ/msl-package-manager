@@ -74,5 +74,6 @@ def execute(args, parser):
             tag=args.tag,
             update_cache=args.update_cache,
             pip_options=args.pip_options,
-            include_non_msl=args.non_msl
+            include_non_msl=args.non_msl,
+            all_msl=args.all,
         )

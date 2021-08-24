@@ -73,7 +73,8 @@ def update(*names, **kwargs):
     # TODO Python 2.7 does not support named arguments after using *args
     #  we can define yes=False, branch=None, ...
     #  in the function signature when we choose to drop support for Python 2.7
-    utils._check_kwargs(kwargs, {'yes', 'branch', 'commit', 'tag', 'update_cache', 'pip_options', 'include_non_msl'})
+    utils._check_kwargs(kwargs, {'yes', 'branch', 'commit', 'tag',
+                                 'update_cache', 'pip_options', 'include_non_msl', 'all_msl'})
 
     yes = kwargs.get('yes', False)
     branch = kwargs.get('branch', None)
@@ -82,6 +83,8 @@ def update(*names, **kwargs):
     update_cache = kwargs.get('update_cache', False)
     pip_options = kwargs.get('pip_options', [])
     include_non_msl = kwargs.get('include_non_msl', False)
+    # do not include 'all_msl' in docstring, it is only used internally by the CLI
+    all_msl = kwargs.get('all_msl', False)
 
     if commit and not utils.has_git:
         utils.log.error('Cannot update from a commit because git is not installed')
@@ -99,9 +102,9 @@ def update(*names, **kwargs):
     if not pkgs_github and not pkgs_pypi and not pkgs_non_msl:
         return
 
-    if not names:
+    if not names or all_msl:
         # update all installed MSL packages only if not updating non-MSL packages
-        packages = pkgs_installed if not pkgs_non_msl else {}
+        packages = pkgs_installed if (all_msl or not include_non_msl) else {}
     else:
         packages = utils._check_wildcards_and_prefix(names, pkgs_installed)
 
