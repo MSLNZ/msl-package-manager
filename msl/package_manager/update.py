@@ -195,6 +195,7 @@ def update(*names, **kwargs):
                 utils.log.error(
                     err_msg + 'The GitHub repository does not contain a release. Specify a branch, commit or tag'
                 )
+                continue
             elif values.get('version_requested'):
                 # this elif must come before the parse_version check
                 msl_pkgs_to_update[name] = {
@@ -214,6 +215,7 @@ def update(*names, **kwargs):
                 }
             else:
                 utils.log.warning('The {!r} package is already the latest [{}]'.format(name, installed_version))
+                continue
 
         w = [max(w[0], len(name+extras_require)), max(w[1], len(installed_version))]
 
