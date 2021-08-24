@@ -371,6 +371,7 @@ def outdated_pypi_packages(msl_installed=None):
         The information about the PyPI packages that are outdated.
     """
     pkgs_to_update = dict()
+    log.debug('Checking PyPI for all non-MSL packages that are outdated')
     try:
         output = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated'])
     except subprocess.CalledProcessError as e:
