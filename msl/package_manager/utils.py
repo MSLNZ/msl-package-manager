@@ -194,7 +194,9 @@ def github(update_cache=False):
         headers['Authorization'] = 'Basic ' + auth
 
     log.debug('Getting the repositories from GitHub')
-    repos = fetch('/orgs/MSLNZ/repos')
+
+    # when more than 100 repos exist we'll need to use ?per_page=100&page=2
+    repos = fetch('/orgs/MSLNZ/repos?per_page=100')
     if not repos:
         # even though updating the cache was requested just reload the cached data
         # because github cannot be connected to right now
