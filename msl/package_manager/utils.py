@@ -189,7 +189,10 @@ def github(update_cache=False):
             line = fp.readline().strip()
             auth = base64.b64encode(line).decode('utf-8')
 
-    headers = {'User-Agent': _PKG_NAME + '/Python'}
+    headers = {
+        'User-Agent': _PKG_NAME + '/Python',
+        'Accept': 'application/vnd.github.v3+json',
+    }
     if auth:
         headers['Authorization'] = 'Basic ' + auth
 
