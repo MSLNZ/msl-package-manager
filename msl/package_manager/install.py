@@ -6,6 +6,21 @@ import subprocess
 
 from . import utils
 
+# Fixes issue #8 (repository name != package name)
+# Not sure how to generalize a universal solution since one is free to choose
+# any repository name and package name, therefore this mapping will need to be
+# updated on a case-by-case basis in future releases of msl-package-manager
+#
+# key: repo name, value: package (egg) name
+_egg_name_map = {
+    'pr-omega-logger': 'omega-logger',
+    'pr-single-photons': 'photons',
+    'pr-superk-mono': 'superk-mono',
+    'pr-webpage-text': 'webpage-text',
+    'rpi-ocr': 'ocr',
+    'rpi-smartgadget': 'smartgadget',
+}
+
 
 def install(*names, **kwargs):
     """Install MSL packages.
@@ -118,7 +133,9 @@ def install(*names, **kwargs):
                 repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(name, github_suffix)
             else:
                 repo = 'https://github.com/MSLNZ/{}/archive/{}.{}'.format(name, github_suffix, zip_extn)
-            repo += '#egg={}'.format(name)
+
+            egg_name = _egg_name_map.get(name, name)
+            repo += '#egg={}'.format(egg_name)
             if values['extras_require']:
                 repo += values['extras_require']
             subprocess.call(exe + pip_options + [repo])
