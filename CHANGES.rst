@@ -5,6 +5,15 @@ Release Notes
 Version 2.5.2 (in development)
 ==============================
 
+- Added
+
+  * support for Python 3.10
+
+- Fixed
+
+  * increased the GitHub API pagination to 100 repositories per page
+  * issue `#8 <https://github.com/MSLNZ/msl-package-manager/issues/8>`_ -
+    Invalid URL fragment with pip dependency resolver
 
 Version 2.5.1 (2021.08.24)
 ==========================
