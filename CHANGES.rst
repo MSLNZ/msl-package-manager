@@ -15,7 +15,7 @@ Version 2.5.2 (in development)
   * issue `#8 <https://github.com/MSLNZ/msl-package-manager/issues/8>`_ -
     Invalid URL fragment with pip dependency resolver
 
-Version 2.5.1 (2021.08.24)
+Version 2.5.1 (2021-08-24)
 ==========================
 
 - Fixed
@@ -23,7 +23,7 @@ Version 2.5.1 (2021.08.24)
   * issue `#7 <https://github.com/MSLNZ/msl-package-manager/issues/7>`_ -
     Updating non-MSL packages can install the wrong version
 
-Version 2.5.0 (2021.05.17)
+Version 2.5.0 (2021-05-17)
 ==========================
 
 - Added
@@ -46,7 +46,7 @@ Version 2.5.0 (2021.05.17)
   * use the conda-forge channel (instead of the anaconda channel) when
     installing packages in condatests.py
 
-Version 2.4.1 (2021.02.20)
+Version 2.4.1 (2021-02-20)
 ==========================
 
 - Added
@@ -62,7 +62,7 @@ Version 2.4.1 (2021.02.20)
   * no longer use the XMLRPC API to get the information about
     the MSL packages that are available on PyPI
 
-Version 2.4.0 (2020.04.20)
+Version 2.4.0 (2020-04-20)
 ==========================
 
 - Added
@@ -101,7 +101,7 @@ Version 2.4.0 (2020.04.20)
 
   * support for Python 3.4
 
-Version 2.3.0 (2019.06.10)
+Version 2.3.0 (2019-06-10)
 ==========================
 
 - Added
@@ -124,7 +124,7 @@ Version 2.3.0 (2019.06.10)
   * removed the ``--process-dependency-links`` flag when installing packages
     (for compatibility with pip v19.0)
 
-Version 2.2.0 (2019.01.06)
+Version 2.2.0 (2019-01-06)
 ==========================
 
 - Added
@@ -148,7 +148,7 @@ Version 2.2.0 (2019.01.06)
     since using ``ThreadPool`` would cause some Python versions to hang (see https://bugs.python.org/issue34172)
   * colorama was not resetting properly
 
-Version 2.1.0 (2018.08.24)
+Version 2.1.0 (2018-08-24)
 ==========================
 
 - Added
@@ -164,7 +164,7 @@ Version 2.1.0 (2018.08.24)
   * support for Python 3.3
 
 
-Version 2.0.0 (2018.07.02)
+Version 2.0.0 (2018-07-02)
 ==========================
 
 - Added
@@ -196,7 +196,7 @@ Version 2.0.0 (2018.07.02)
 
   * the constants ``IS_PYTHON2``, ``IS_PYTHON3`` and ``PKG_NAME``
 
-Version 1.5.1 (2018.02.23)
+Version 1.5.1 (2018-02-23)
 ==========================
 
 - Fixed
@@ -204,7 +204,7 @@ Version 1.5.1 (2018.02.23)
   * the ``setup.py`` file is now compatible with Sphinx 1.7.0
 
 
-Version 1.5.0 (2018.02.15)
+Version 1.5.0 (2018-02-15)
 ==========================
 
 - Added
@@ -218,7 +218,7 @@ Version 1.5.0 (2018.02.15)
   * ``test_envs.py`` has been updated to properly color the output text from pytest (v3.3.1) using colorama
 
 
-Version 1.4.1 (2017.10.19)
+Version 1.4.1 (2017-10-19)
 ==========================
 
 - Added
@@ -236,7 +236,7 @@ Version 1.4.1 (2017.10.19)
   * print the help message if no command-line argument was passed in
   * updated the documentation and the docstrings
 
-Version 1.4.0 (2017.09.19)
+Version 1.4.0 (2017-09-19)
 ==========================
 
 - Added
@@ -260,7 +260,7 @@ Version 1.4.0 (2017.09.19)
   * the ``print_list`` function was renamed to ``print_packages``
   * updated the documentation and the docstrings
 
-Version 1.3.0 (2017.08.31)
+Version 1.3.0 (2017-08-31)
 ==========================
 
 - Added
@@ -280,36 +280,36 @@ Version 1.3.0 (2017.08.31)
 
   * the ``--release-info`` flag for the CLI is no longer supported
 
-Version 1.2.0 (2017.08.10)
+Version 1.2.0 (2017-08-10)
 ==========================
 - add the ``--all`` flag for the CLI
 - include ``--process-dependency-links`` argument for ``pip install``
 - create **upgrade** alias for **update**
 - bug fixes and edits for the print messages
 
-Version 1.1.0 (2017.05.09)
+Version 1.1.0 (2017-05-09)
 ==========================
 - update email address to "measurement"
 - previous release date (in CHANGES.rst) was yyyy.dd.mm should have been yyyy.mm.dd
 - previous release should have incremented the minor number (new **update** feature)
 
-Version 1.0.3 (2017.05.09)
+Version 1.0.3 (2017-05-09)
 ==========================
 - add **update** command
 - run pip commands using sys.executable
 
-Version 1.0.2 (2017.03.27)
+Version 1.0.2 (2017-03-27)
 ==========================
 - split requirements.txt using ``\n`` instead of by any white space
 - remove unnecessary "import time"
 
-Version 1.0.1 (2017.03.03)
+Version 1.0.1 (2017-03-03)
 ==========================
 - show help message if no package name was specified for "create" command
 - remove unused 'timeout' argument from test_envs.py
 - reorganize if-statement in "list" command to display "Invalid request" when appropriate
 
-Version 1.0.0 (2017.03.02)
+Version 1.0.0 (2017-03-02)
 ==========================
 - separate **install**, **uninstall**, **create** and **list** functions into different modules
 - fix MSL namespace
@@ -318,6 +318,6 @@ Version 1.0.0 (2017.03.02)
 - create documentation and unit tests
 - many bug fixes
 
-Version 0.1.0 (2017.02.19)
+Version 0.1.0 (2017-02-19)
 ==========================
 - initial release
