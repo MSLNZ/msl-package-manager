@@ -28,12 +28,6 @@ Contents
    Authors <authors>
    Release Notes <changelog>
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
 .. _Measurement Standards Laboratory of New Zealand: https://measurement.govt.nz/
 .. _repositories: https://github.com/MSLNZ
