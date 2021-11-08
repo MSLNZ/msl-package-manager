@@ -30,8 +30,8 @@ Documentation
 
 The documentation for **MSL Package Manager** can be found here_.
 
-.. |docs| image:: https://readthedocs.org/projects/msl-package-manager/badge/?version=latest
-   :target: https://msl-package-manager.readthedocs.io/en/latest/
+.. |docs| image:: https://readthedocs.org/projects/msl-package-manager/badge/?version=stable
+   :target: https://msl-package-manager.readthedocs.io/en/stable/
    :alt: Documentation Status
    :scale: 100%
 
