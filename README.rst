@@ -44,5 +44,5 @@ The documentation for **MSL Package Manager** can be found here_.
 .. _setuptools: https://pypi.org/project/setuptools/
 .. _colorama: https://pypi.org/project/colorama/
 .. _namespace: https://packaging.python.org/guides/packaging-namespace-packages/
-.. _here: https://msl-package-manager.readthedocs.io/en/latest/
+.. _here: https://msl-package-manager.readthedocs.io/en/stable/
 .. _Measurement Standards Laboratory of New Zealand: https://measurement.govt.nz/
