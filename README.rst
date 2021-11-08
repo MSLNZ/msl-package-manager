@@ -3,7 +3,7 @@ MSL-Package-Manager
 
 |docs| |github tests| |pypi|
 
-The **MSL Package Manager** allows you to install, uninstall, update, list and create packages
+The **MSL Package Manager** allows one to install, uninstall, update, list and create packages
 that are used at the `Measurement Standards Laboratory of New Zealand`_.
 
 All MSL packages that start with ``msl-`` are part of the **msl** namespace_. This allows one to
