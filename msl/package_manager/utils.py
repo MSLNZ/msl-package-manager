@@ -496,18 +496,18 @@ def pypi(update_cache=False):
         items = re.findall(
             r'<span class="package-snippet__name">(?P<name>.+)</span>\s+'
             r'<span class="package-snippet__version">(?P<version>.+)</span>\s+'
-            r'<span class="package-snippet__released">.+\s+(?P<released>.+)\s+.+\s+.+\s+'
+            r'<span class="package-snippet__created">.+\s+(?P<created>.+)\s+.+\s+.+\s+'
             r'<p class="package-snippet__description">(?P<description>.+)</p>',
             reply,
         )
         for item in items:
-            name, version, released, description = item
+            name, version, created, description = item
             pkgs[name] = {
                 'version': version,
                 'description': description,
             }
         if not pkgs:
-            log.critical('PyPI regex pattern is invalid for the /search endpoint')
+            log.warning('PyPI regex pattern is invalid for the /search endpoint')
             use_json_api()
     else:
         use_json_api()
