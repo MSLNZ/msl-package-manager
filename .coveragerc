@@ -4,6 +4,7 @@
 branch = True
 omit =
     msl/examples/*
+disable_warnings = couldnt-parse
 
 [report]
 # Regexes for lines to exclude from consideration
