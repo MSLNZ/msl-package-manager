@@ -130,29 +130,38 @@ def github(update_cache=False):
         try:
             response = urlopen(Request(url, headers=headers))
         except HTTPError as err:
-            if err.code == 401:
-                msg = 'You have provided invalid authorisation information'
+            if err.code == 401 or (err.code == 403 and 'Forbidden' in err.msg):
+                msg = ('You have provided invalid authorisation credentials',)
             elif err.code == 404:
-                # Could get this error if the URL does not exist.
-                # For example, getting .../releases/latest might not exist
-                # if no releases for the repo are available yet.
-                # This not an error type that we care about.
+                # Page not found error.
+                # For example, fetching .../releases/latest might not exist
+                # if no releases for the repo are available yet. This is not
+                # (necessarily) an error; however, if the API routes change
+                # then this error would silently occur but must be fixed.
                 return dict()
             elif err.code == 403:
                 reply = fetch('/rate_limit')
-                if reply['resources']['core']['remaining'] == 0:
-                    reset = int(reply['resources']['core']['reset'])
-                    hms = datetime.datetime.fromtimestamp(reset).strftime('%H:%M:%S')
-                    msg = 'The GitHub API rate limit was exceeded. Retry again at {} or create a file\n' \
-                          'with your GitHub authorisation credentials to increase your rate limit. Run\n' \
-                          '"msl authorise --help" for more details.'.format(hms)
+                core = reply.get('resources', {}).get('core', {})
+                if core.get('remaining') == 0:
+                    reset = core.get('reset', -1)
+                    if reset > 0:
+                        hm = datetime.datetime.fromtimestamp(reset+60).strftime('%I:%M%p')
+                        msg = ('GitHub rate limit exceeded. Not all of the information could be retrieved.\n'
+                               'Retry after %s or create a file with your GitHub authorisation credentials to\n'
+                               'increase your rate limit. Run "msl authorise --help" for more details.', hm)
+                    else:
+                        msg = ("%s (no 'reset' key)", err)
                 else:
-                    msg = 'Unhandled HTTP error 403. The rate_limit was not reached...'
+                    msg = ("%s (no 'remaining' key)", err)
             else:
-                msg = 'Unhandled HTTP error...'
-            log.error('Error requesting {} from GitHub -- {}\n{}'.format(url, err, msg))
-        except URLError as err:
-            log.error('Error requesting {} from GitHub -- {}'.format(url, err))
+                msg = ('Unhandled %s', err)
+            fetch_errors[err.code] = msg
+        except URLError:
+            # Possible reasons for this error are:
+            # 1. Computer has no internet access
+            # 2. GitHub server is offline
+            # 3. The hostname for the GitHub API has changed
+            fetch_errors[0] = ('Cannot access %s', url)
         else:
             return json.loads(response.read().decode('utf-8'))
 
@@ -173,37 +182,35 @@ def github(update_cache=False):
         reply = fetch('/repos/MSLNZ/{}/branches'.format(repo_name))
         pkgs[repo_name]['branches'] = [branch['name'] for branch in reply] if reply else []
 
-    def reload_cache():
-        cached_pgks = _inspect_github_pypi('github', False)[0]
-        if cached_pgks:
-            return cached_pgks
-        return dict()
-
-    # check if the user specified their github authorisation credentials
-    #
-    # the os.environ option is used for CI testing and it is not the
-    # recommended way for a user to store their credentials
+    # Check if the user specified their GitHub authorisation credentials.
+    # The os.environ option is used for CI testing, it is not the
+    # recommended way for a user to store their credentials.
     auth = os.environ.get('MSL_PM_GITHUB_AUTH')
     if not auth and os.path.isfile(_GITHUB_AUTH_PATH):
-        with open(_GITHUB_AUTH_PATH, 'rb') as fp:
+        with open(_GITHUB_AUTH_PATH, mode='rb') as fp:
             line = fp.readline().strip()
             auth = base64.b64encode(line).decode('utf-8')
 
     headers = {
         'User-Agent': _PKG_NAME + '/Python',
-        'Accept': 'application/vnd.github.v3+json',
+        'Accept': 'application/vnd.github+json',
     }
     if auth:
         headers['Authorization'] = 'Basic ' + auth
 
     log.debug('Getting the repositories from GitHub')
 
-    # when more than 100 repos exist we'll need to use ?per_page=100&page=2
-    repos = fetch('/orgs/MSLNZ/repos?per_page=100')
+    fetch_errors = {}
+
+    # when more than 100 repos exist we'll need to also fetch "?per_page=100&page=2"
+    repos = fetch('/orgs/MSLNZ/repos?per_page=100&page=1')
     if not repos:
         # even though updating the cache was requested just reload the cached data
-        # because github cannot be connected to right now
-        return reload_cache()
+        # because GitHub cannot be connected to right now
+        for error in fetch_errors.values():
+            log.warning(*error)
+        cache, _ = _inspect_github_pypi('github', False)
+        return cache
 
     pkgs = dict()
     for repo in repos:
@@ -221,8 +228,19 @@ def github(update_cache=False):
         t.start()
     for t in threads:
         t.join()
+    for error in fetch_errors.values():
+        log.warning(*error)
 
-    with open(path, 'w') as fp:
+    # replace the failed requests with the cached information
+    if fetch_errors and os.path.isfile(path):
+        with open(path, mode='rt') as fp:
+            cached = json.load(fp)
+        for name, value in pkgs.items():
+            for item in ('version', 'tags', 'branches'):
+                if not value[item] and name in cached:
+                    pkgs[name][item] = cached[name][item]
+
+    with open(path, mode='wt') as fp:
         json.dump(pkgs, fp, indent=2)
 
     return _sort_packages(pkgs)
