@@ -24,6 +24,7 @@ import threading
 import subprocess
 import collections
 import pkg_resources
+from pkg_resources import packaging
 try:
     from importlib import reload
     from urllib.request import urlopen, Request, HTTPError, URLError
@@ -168,11 +169,18 @@ def github(update_cache=False):
     def fetch_latest_release(repo_name):
         reply = fetch('/repos/MSLNZ/{}/releases/latest'.format(repo_name))
         if reply:
-            val = reply['name'] if reply['name'] else reply['tag_name']
-            val = val.replace('v', '')
+            def verify(ver):
+                # ensure that the version is valid according to PEP 440
+                try:
+                    ver = ver.lstrip('v')
+                    packaging.version.Version(ver)
+                    return ver
+                except packaging.version.InvalidVersion:
+                    return ''
+            version = verify(reply['tag_name']) or verify(reply['name'])
         else:
-            val = ''
-        pkgs[repo_name]['version'] = val
+            version = ''
+        pkgs[repo_name]['version'] = version
 
     def fetch_tags(repo_name):
         reply = fetch('/repos/MSLNZ/{}/tags'.format(repo_name))
