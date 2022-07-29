@@ -482,25 +482,25 @@ def pypi(update_cache=False):
         return packages
 
     def request(endpoint):
-        # send a request to the PyPI endpoint
+        url = 'https://pypi.org' + endpoint
         try:
-            reply = urlopen(Request('https://pypi.org' + endpoint, headers=headers))
-        except URLError as err:
-            log.error('Error requesting {!r} -- {}'.format(endpoint, err))
+            response = urlopen(Request(url, headers=headers))
+        except URLError:
+            log.error('Cannot access %s', url)
         else:
-            return reply.read().decode('utf-8')
+            return response.read().decode('utf-8')
 
     def use_json_api():
         # use the JSON API as a backup way to get the package information from PyPI
         projects = ('msl-package-manager', 'msl-network', 'msl-loadlib', 'GTC', 'Quantity-Value')
         for project in projects:
-            reply = request('/pypi/{}/json'.format(project))
-            if reply:
-                info = json.loads(reply).get('info')
-                if info:
+            response = request('/pypi/{}/json'.format(project))
+            if response:
+                _info = json.loads(response).get('info')
+                if _info:
                     pkgs[project] = {
-                        'version': info.get('version', 'UNKNOWN'),
-                        'description': info.get('summary', 'UNKNOWN')
+                        'version': _info.get('version', 'UNKNOWN'),
+                        'description': _info.get('summary', 'UNKNOWN')
                     }
 
     pkgs = dict()
@@ -525,7 +525,7 @@ def pypi(update_cache=False):
                 'description': description,
             }
         if not pkgs:
-            log.warning('PyPI regex pattern is invalid for the /search endpoint')
+            log.warning('The regex pattern is invalid for the /search route, using /json instead')
             use_json_api()
     else:
         use_json_api()
