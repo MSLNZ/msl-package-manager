@@ -293,7 +293,10 @@ def info(from_github=False, from_pypi=False, update_cache=False, as_json=False):
         typ, pkgs = 'Package', installed()
 
     if as_json:
-        log.info(Fore.RESET)
+        if not (from_github or from_pypi):
+            for name, value in pkgs.items():
+                pkgs[name]['requires'] = [str(r) for r in value['requires']]
+        log.debug(Fore.RESET)
         log.info(json.dumps(pkgs, indent=2))
         return
 

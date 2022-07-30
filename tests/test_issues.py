@@ -1,12 +1,16 @@
 import sys
+import json
 
 import pytest
+import colorama
 
 from msl.package_manager import (
     install,
     update,
     uninstall,
     installed,
+    utils,
+    _PKG_NAME,
 )
 
 
@@ -43,3 +47,60 @@ def test_issue8_b():
     assert pkg in installed()
     uninstall(pkg, yes=True)
     assert pkg not in installed()
+
+
+def test_issue_11(caplog):
+    # installed packages
+    utils.info(as_json=True)
+    assert len(caplog.messages) == 3
+    record = caplog.records[0]
+    assert record.levelname == 'DEBUG'
+    assert record.message.startswith('Getting the packages from ')
+    record = caplog.records[1]
+    assert record.levelname == 'DEBUG'
+    assert record.message == colorama.Fore.RESET
+    record = caplog.records[2]
+    assert record.levelname == 'INFO'
+    pkgs = json.loads(record.message)
+    requires = sorted(pkgs[_PKG_NAME]['requires'])
+    assert requires == ['colorama', 'setuptools']
+
+    caplog.clear()
+
+    # from PyPI
+    utils.info(as_json=True, from_pypi=True)
+    assert len(caplog.messages) == 3
+    record = caplog.records[0]
+    assert record.levelname == 'DEBUG'
+    assert record.message == 'Loaded the cached information about the PyPI packages'
+    record = caplog.records[1]
+    assert record.levelname == 'DEBUG'
+    assert record.message == colorama.Fore.RESET
+    record = caplog.records[2]
+    assert record.levelname == 'INFO'
+    pkgs = json.loads(record.message)
+    assert _PKG_NAME in pkgs
+    assert 'requires' not in pkgs[_PKG_NAME]
+    assert 'version' in pkgs[_PKG_NAME]
+    assert 'description' in pkgs[_PKG_NAME]
+
+    caplog.clear()
+
+    # from GitHub
+    utils.info(as_json=True, from_github=True)
+    assert len(caplog.messages) == 3
+    record = caplog.records[0]
+    assert record.levelname == 'DEBUG'
+    assert record.message == 'Loaded the cached information about the GitHub repositories'
+    record = caplog.records[1]
+    assert record.levelname == 'DEBUG'
+    assert record.message == colorama.Fore.RESET
+    record = caplog.records[2]
+    assert record.levelname == 'INFO'
+    pkgs = json.loads(record.message)
+    assert _PKG_NAME in pkgs
+    assert 'requires' not in pkgs[_PKG_NAME]
+    assert 'version' in pkgs[_PKG_NAME]
+    assert 'description' in pkgs[_PKG_NAME]
+    assert 'branches' in pkgs[_PKG_NAME]
+    assert 'tags' in pkgs[_PKG_NAME]
