@@ -173,15 +173,15 @@ def _main(*args):
         return
 
     # check if there is an update for the MSL Package Manager
-    if utils.log.level < logging.WARNING:  # do not log DEBUG messages when checking for the update
-        utils.set_log_level(logging.WARNING)
-
+    # do not log any messages when checking for the update
+    utils.set_log_level(logging.CRITICAL+1)
     pkgs = utils.pypi()
     if not pkgs:
         return
 
     latest = pkgs[_PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
+        utils.set_log_level(logging.WARNING)
         utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
                           'You should consider updating via the \'msl update package-manager\''
                           ' command.'.format(_PKG_NAME, __version__, latest))
