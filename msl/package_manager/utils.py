@@ -941,8 +941,9 @@ def _get_terminal_size():
     getTerminalSize()
      - get width and height of console
      - works on linux,os x,windows,cygwin(windows)
+
      originally retrieved from:
-     http://stackoverflow.com/questions/566746/how-to-get-console-window-width-in-python
+     https://stackoverflow.com/questions/566746/how-to-get-console-window-width-in-python
     """
     current_os = platform.system()
     tuple_xy = None
@@ -977,8 +978,7 @@ def _get_terminal_size_windows():
 
 
 def _get_terminal_size_tput():
-    # get terminal width
-    # src: http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
+    # https://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
     try:
         cols = int(subprocess.check_call(shlex.split('tput cols')))
         rows = int(subprocess.check_call(shlex.split('tput lines')))
