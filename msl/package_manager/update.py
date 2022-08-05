@@ -208,7 +208,8 @@ def update(*names, **kwargs):
                     'version': values['version_requested'],
                     'repo_name': repo_name,
                 }
-            elif parse_version(version) > parse_version(installed_version):
+            elif '--force-reinstall' in pip_options or \
+                    parse_version(version) > parse_version(installed_version):
                 msl_pkgs_to_update[name] = {
                     'installed_version': installed_version,
                     'using_pypi': using_pypi,
