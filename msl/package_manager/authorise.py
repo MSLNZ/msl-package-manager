@@ -83,4 +83,4 @@ def authorise(username=None, token=None):
         fp.write(username + ':' + token)
 
     log.warning(WARNING_MESSAGE)
-    log.info('GitHub credentials were saved to ' + _GITHUB_AUTH_PATH)
+    log.info('GitHub credentials were saved to %s', _GITHUB_AUTH_PATH)

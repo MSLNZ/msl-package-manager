@@ -120,10 +120,10 @@ def update(*names, **kwargs):
     msl_pkgs_to_update = dict()
     for name, values in packages.items():
 
-        err_msg = 'Cannot update {!r} -- '.format(name)
+        err_msg = 'Cannot update {!r} --'.format(name)
 
         if name not in pkgs_installed:
-            utils.log.error(err_msg + 'The package is not installed')
+            utils.log.error('%s the package is not installed', err_msg)
             continue
 
         installed_version = pkgs_installed[name]['version']
@@ -135,7 +135,7 @@ def update(*names, **kwargs):
         # an MSL package could have been installed in "editable" mode, i.e., pip install -e .
         # and therefore it might only exist locally until it is pushed to the repository
         repo = pkgs_github.get(repo_name)
-        no_repo_err_msg = err_msg + 'The {!r} repository does not exist'.format(repo_name)
+        no_repo_err_msg = '{} the {!r} repository does not exist'.format(err_msg, repo_name)
 
         extras_require = values['extras_require'] if values.get('extras_require') is not None else ''
 
@@ -164,7 +164,7 @@ def update(*names, **kwargs):
                     'repo_name': repo_name,
                 }
             else:
-                utils.log.error(err_msg + 'The {!r} tag does not exist'.format(tag))
+                utils.log.error('%s the %r tag does not exist', err_msg, tag)
                 continue
         elif branch is not None:
             if not repo:
@@ -179,7 +179,7 @@ def update(*names, **kwargs):
                     'repo_name': repo_name,
                 }
             else:
-                utils.log.error(err_msg + 'The {!r} branch does not exist'.format(branch))
+                utils.log.error('%s the %r branch does not exist', err_msg, branch)
                 continue
         else:
             if using_pypi:
@@ -191,9 +191,12 @@ def update(*names, **kwargs):
                 version = repo['version']
 
             if not version:
-                # a version number must exist on PyPI, so if this occurs it must be for a github repo
+                # a version number must exist on PyPI,
+                # so if this occurs it must be for a GitHub repo
                 utils.log.error(
-                    err_msg + 'The GitHub repository does not contain a release. Specify a branch, commit or tag'
+                    '%s the GitHub repository does not contain a release '
+                    '(specify a branch, commit or tag)',
+                    err_msg
                 )
                 continue
             elif values.get('version_requested'):
@@ -214,7 +217,7 @@ def update(*names, **kwargs):
                     'repo_name': repo_name,
                 }
             else:
-                utils.log.warning('The {!r} package is already the latest [{}]'.format(name, installed_version))
+                utils.log.warning('The %r package is already the latest [%s]', name, installed_version)
                 continue
 
         w = [max(w[0], len(name+extras_require)), max(w[1], len(installed_version))]
@@ -222,7 +225,7 @@ def update(*names, **kwargs):
     msl_pkgs_to_update = utils._sort_packages(msl_pkgs_to_update)
 
     if not msl_pkgs_to_update and not pkgs_non_msl:
-        utils.log.info('{0}No packages to update{0}'.format(Fore.RESET))
+        utils.log.info('%sNo packages to update%s', Fore.RESET, Fore.RESET)
         return
 
     msg = ''
@@ -267,13 +270,13 @@ def update(*names, **kwargs):
     # install MSL packages
     for pkg, info in msl_pkgs_to_update.items():
         if info['using_pypi']:
-            utils.log.debug('Updating {!r} from PyPI'.format(pkg))
+            utils.log.debug('Updating %r from PyPI', pkg)
             if info['version'] and info['version'][0] not in '<!=>~':
                 info['version'] = '==' + info['version']
             package = [pkg + info['extras_require'] + info['version']]
             pip_github_options = []
         else:
-            utils.log.debug('Updating {!r} from GitHub[{}]'.format(pkg, github_suffix))
+            utils.log.debug('Updating %r from GitHub[%s]', pkg, github_suffix)
             if commit or utils.has_git:
                 repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(info['repo_name'], github_suffix)
             else:
@@ -311,7 +314,7 @@ def update(*names, **kwargs):
             utils.log.error(message)
             pattern = r'requires (\S+), but you have'
             for requires in re.findall(pattern, message):
-                utils.log.warning('Rolling back to {!r}'.format(requires))
+                utils.log.warning('Rolling back to %r', requires)
                 subprocess.call(exe + pip_options + [requires])
 
     if updating_msl_package_manager:

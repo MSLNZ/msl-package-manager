@@ -96,7 +96,7 @@ def parse_args(args):
                     parsed_args.names.append(name)
 
             elif option not in valid_options:
-                utils.log.error('No such option for "pip {}": {}'.format(command, option))
+                utils.log.error('No such option for "pip %s": %s', command, option)
                 return False
 
             # if the pip option requires a value then make sure the value did
@@ -142,7 +142,8 @@ def parse_args(args):
             if not pip_options_valid('uninstall'):
                 return
         else:
-            utils.log.warning('The following options are ignored: ' + ', '.join(p for p in pip_options))
+            utils.log.warning('The following options are ignored: %s',
+                              ' '.join(p for p in pip_options))
 
     parsed_args.pip_options = pip_options
     return parsed_args
@@ -182,9 +183,9 @@ def _main(*args):
     latest = pkgs[_PKG_NAME]['version']
     if parse_version(latest) > parse_version(__version__):
         utils.set_log_level(logging.WARNING)
-        utils.log.warning('You are using {0} version {1}, however, version {2} is available.\n'
+        utils.log.warning('You are using %s version %s, however, version %s is available.\n'
                           'You should consider updating via the \'msl update package-manager\''
-                          ' command.'.format(_PKG_NAME, __version__, latest))
+                          ' command.', _PKG_NAME, __version__, latest)
 
 
 def main(*args):

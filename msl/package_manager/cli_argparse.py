@@ -48,8 +48,8 @@ class ArgumentParser(argparse.ArgumentParser):
                 non_msl_flag = ''
                 if args.cmd in ['update', 'upgrade']:
                     non_msl_flag = ' and/or the --non-msl flag'
-                log.error('You must specify the MSL package name(s) to {} or use '
-                          'the --all flag{}'.format(args.cmd, non_msl_flag))
+                log.error('You must specify the MSL package name(s) to %s or use '
+                          'the --all flag%s', args.cmd, non_msl_flag)
             return False
         return True
 

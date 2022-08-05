@@ -121,14 +121,14 @@ def install(*names, **kwargs):
 
     for name, values in packages.items():
         if name in pkgs_pypi and not (branch or commit or tag):
-            utils.log.debug('Installing {!r} from PyPI'.format(name))
+            utils.log.debug('Installing %r from PyPI', name)
             if values['extras_require']:
                 name += values['extras_require']
             if values['version_requested']:
                 name += values['version_requested']
             subprocess.call(exe + pip_options + [name])
         else:
-            utils.log.debug('Installing {!r} from GitHub[{}]'.format(name, github_suffix))
+            utils.log.debug('Installing %r from GitHub[%s]', name, github_suffix)
             if commit or utils.has_git:
                 repo = 'git+https://github.com/MSLNZ/{}.git@{}'.format(name, github_suffix)
             else:

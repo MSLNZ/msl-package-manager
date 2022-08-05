@@ -69,14 +69,14 @@ def create(*names, **kwargs):
             name = name[len(namespace)+1:]
 
         if name[0].isdigit():
-            utils.log.warning('A package name cannot start with a number: ignored {!r}'.format(name))
+            utils.log.warning('A package name cannot start with a number: ignored %r', name)
             continue
 
         keep = True
         for c in name:
             if not (c.isalnum() or c == '_' or c == '-'):
                 utils.log.warning('A package name can only contain letters, numbers and underscores: '
-                                  'ignored {!r}'.format(name))
+                                  'ignored %r', name)
                 keep = False
                 break
 
@@ -87,7 +87,7 @@ def create(*names, **kwargs):
                 basename = name
             root = os.path.join(directory, basename)
             if os.path.isdir(root):
-                utils.log.warning('A {!r} folder already exists: ignored "{}"'.format(root, name))
+                utils.log.warning('A %r folder already exists: ignored %r', root, name)
             else:
                 roots.append(root)
                 pkg_names.append(name)
@@ -195,6 +195,6 @@ def create(*names, **kwargs):
 
         fullname = '{}-{}'.format(namespace, package) if namespace else package
         if os.path.isdir(msl_root):
-            utils.log.info('Created {} in {!r}'.format(fullname, msl_root))
+            utils.log.info('Created %s in %r', fullname, msl_root)
         else:
-            utils.log.error('Error creating {!r}'.format(fullname))
+            utils.log.error('Error creating %r', fullname)

@@ -143,14 +143,14 @@ def test_log_output(caplog):
         'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
         'Getting the packages from {}'.format(exec_path),
-        "Cannot update {}'GTC' -- The 'invalid' branch does not exist".format(u),
+        "Cannot update {}'GTC' -- the 'invalid' branch does not exist".format(u),
         '\x1b[39mNo packages to update\x1b[39m',
 
         # update GTC -> invalid tag
         'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
         'Getting the packages from {}'.format(exec_path),
-        "Cannot update {}'GTC' -- The 'invalid' tag does not exist".format(u),
+        "Cannot update {}'GTC' -- the 'invalid' tag does not exist".format(u),
         '\x1b[39mNo packages to update\x1b[39m',
 
         # update GTC -> tag=v1.3.1

@@ -346,7 +346,7 @@ def installed():
     :class:`dict`
         The information about the MSL packages that are installed.
     """
-    log.debug('Getting the packages from {}'.format(os.path.dirname(sys.executable)))
+    log.debug('Getting the packages from %s', os.path.dirname(sys.executable))
 
     gh = github(update_cache=False)
 
@@ -409,7 +409,7 @@ def outdated_pypi_packages(msl_installed=None):
     try:
         output = subprocess.check_output([sys.executable, '-m', 'pip', 'list', '--outdated'])
     except subprocess.CalledProcessError as e:
-        log.error('ERROR: processing "pip list --outdated" raised -> {}'.format(e))
+        log.error('ERROR: processing "pip list --outdated" raised -> %s', e)
         return pkgs_to_update
 
     lines = output.decode().splitlines()
@@ -595,7 +595,7 @@ def _ask_proceed():
 def _check_kwargs(kwargs, allowed):
     for item in kwargs:
         if item not in allowed:
-            log.warning('Invalid kwarg {!r}'.format(item))
+            log.warning('Invalid kwarg %r', item)
 
 
 def _check_wildcards_and_prefix(names, pkgs):
@@ -622,7 +622,7 @@ def _check_wildcards_and_prefix(names, pkgs):
             continue
         result = found.groupdict()
         if not result['package_name']:
-            log.error('Invalid package name {!r}'.format(name))
+            log.error('Invalid package name %r', name)
             continue
         found_it = False
         for prefix in ['', 'msl-']:
@@ -633,7 +633,7 @@ def _check_wildcards_and_prefix(names, pkgs):
                     'version_requested': result['version_requested']
                 }
         if not found_it:
-            log.warning('No MSL packages match {!r}'.format(name))
+            log.warning('No MSL packages match %r', name)
     return _packages
 
 
@@ -678,13 +678,13 @@ def _create_install_list(names, branch, commit, tag, update_cache):
     pkgs = {}
     for name, value in packages.items():
         if name in pkgs_installed or name in repo_names:
-            log.warning('The {!r} package is already installed -- use the update command'.format(name))
+            log.warning('The %r package is already installed -- use the update command', name)
         elif name not in pkgs_github:
-            log.error('Cannot install {!r} -- the package does not exist'.format(name))
+            log.error('Cannot install %r -- the package does not exist', name)
         elif branch is not None and branch not in pkgs_github[name]['branches']:
-            log.error('Cannot install {!r} -- a {!r} branch does not exist'.format(name, branch))
+            log.error('Cannot install %r -- a %r branch does not exist', name, branch)
         elif tag is not None and tag not in pkgs_github[name]['tags']:
-            log.error('Cannot install {!r} -- a {!r} tag does not exist'.format(name, tag))
+            log.error('Cannot install %r -- a %r tag does not exist', name, tag)
         else:
             pkgs[name] = pkgs_github[name]
             pkgs[name]['version_requested'] = value['version_requested']
@@ -716,10 +716,10 @@ def _create_uninstall_list(names):
     pkgs = {}
     for name in names:
         if name == _PKG_NAME:
-            log.warning('The MSL Package Manager cannot uninstall itself. '
-                        'Use "pip uninstall {}"'.format(_PKG_NAME))
+            log.warning('The MSL Package Manager cannot uninstall itself, '
+                        'run "pip uninstall %s"', _PKG_NAME)
         elif name not in pkgs_installed:
-            log.error('Cannot uninstall {!r}: The package is not installed.'.format(name))
+            log.error('Cannot uninstall %r -- the package is not installed.', name)
         else:
             pkgs[name] = pkgs_installed[name]
     return pkgs
@@ -815,7 +815,7 @@ def _inspect_github_pypi(where, update_cache):
         # The installed() function also calls github() so this log message could be displayed twice.
         # Avoid seeing the following log message when the installed() function was previously called.
         if where == 'pypi' or not _ColourStreamHandler.previous_message.endswith(os.path.dirname(sys.executable)):
-            log.debug('Loaded the cached information about the ' + suffix)
+            log.debug('Loaded the cached information about the %s', suffix)
         return _sort_packages(cached_pgks), path
 
     return dict(), path
