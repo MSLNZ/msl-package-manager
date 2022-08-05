@@ -807,7 +807,7 @@ def _inspect_github_pypi(where, update_cache):
 
     cached_pgks = None
     if os.path.isfile(path):
-        with open(path, 'r') as f:
+        with open(path, mode='rt') as f:
             cached_pgks = _sort_packages(json.load(f))
 
     one_day = 60 * 60 * 24

@@ -74,14 +74,14 @@ def uninstall(*names, **kwargs):
                 if not os.path.isfile(examples_init_file):
                     break
 
-                with open(examples_init_file, 'rt') as fp:
+                with open(examples_init_file, mode='rt') as fp:
                     examples_init = fp.readlines()
 
                 init_file = os.path.join(dist.module_path, split[0], '__init__.py')
                 if not os.path.isfile(init_file):
                     break
 
-                with open(init_file, 'rt') as fp:
+                with open(init_file, mode='rt') as fp:
                     init = fp.readlines()
 
                 for line in init:
@@ -105,7 +105,7 @@ def uninstall(*names, **kwargs):
         is_namespace, path, init, examples_init = check_if_namespace_package(pkg)
         subprocess.call(exe + pip_options + [pkg])
         if is_namespace and os.path.isdir(path):
-            with open(os.path.join(path, '__init__.py'), 'wt') as fp:
+            with open(os.path.join(path, '__init__.py'), mode='wt') as fp:
                 fp.writelines(init)
-            with open(os.path.join(path, 'examples', '__init__.py'), 'wt') as fp:
+            with open(os.path.join(path, 'examples', '__init__.py'), mode='wt') as fp:
                 fp.writelines(examples_init)

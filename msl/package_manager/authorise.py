@@ -79,7 +79,7 @@ def authorise(username=None, token=None):
         log.warning('You must enter a personal access token. Did not create the GitHub authorisation file')
         return
 
-    with open(_GITHUB_AUTH_PATH, 'w') as fp:
+    with open(_GITHUB_AUTH_PATH, mode='wt') as fp:
         fp.write(username + ':' + token)
 
     log.warning(WARNING_MESSAGE)

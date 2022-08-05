@@ -162,7 +162,7 @@ def create(*names, **kwargs):
                 os.makedirs(new_dir)
 
             for filename in files:
-                with open(os.path.join(root, filename), 'r') as fp:
+                with open(os.path.join(root, filename), mode='rt') as fp:
                     lines = fp.read()
 
                 if not namespace:
@@ -178,7 +178,7 @@ def create(*names, **kwargs):
                 for alias in aliases:
                     lines = lines.replace(alias, aliases[alias])
 
-                with open(os.path.join(new_dir, filename.replace('.template', '')), 'w') as fp:
+                with open(os.path.join(new_dir, filename.replace('.template', '')), mode='wt') as fp:
                     fp.write(lines)
 
         if not namespace:
@@ -186,11 +186,11 @@ def create(*names, **kwargs):
             src_dir = os.path.join(msl_root, package.replace('-', '_'))
             os.makedirs(src_dir)
             init = os.path.join(template_dir, '${namespace}', '${package}', '__init__.py.template')
-            with open(init, 'r') as fp:
+            with open(init, mode='rt') as fp:
                 lines = fp.read()
             for alias in aliases:
                 lines = lines.replace(alias, aliases[alias])
-            with open(os.path.join(src_dir, '__init__.py'), 'w') as fp:
+            with open(os.path.join(src_dir, '__init__.py'), mode='wt') as fp:
                 fp.write(lines)
 
         fullname = '{}-{}'.format(namespace, package) if namespace else package
