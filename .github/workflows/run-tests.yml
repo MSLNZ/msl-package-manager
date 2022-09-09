@@ -14,9 +14,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
       - name: Install MSL-Package-Manager
@@ -28,7 +28,7 @@ jobs:
           msl list --pypi --update-cache
           msl list --github --update-cache
       - name: Upload cached artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pypi-github-caches
           path: ~/.msl/package-manager/*.json
@@ -52,9 +52,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -64,13 +64,13 @@ jobs:
           python -m pip install --upgrade setuptools wheel
           python -m pip install --upgrade --editable .[tests]
       - name: Download PyPI and GitHub caches (non Windows)
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         if: ${{ matrix.os != 'windows' }}
         with:
           name: pypi-github-caches
           path: ~/.msl/package-manager
       - name: Download PyPI and GitHub caches (Windows)
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         if: ${{ matrix.os == 'windows' }}
         with:
           name: pypi-github-caches
