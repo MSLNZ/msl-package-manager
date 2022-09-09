@@ -4,7 +4,6 @@ import sys
 import colorama
 import pytest
 
-from msl.package_manager import _PKG_NAME
 from msl.package_manager import install
 from msl.package_manager import installed
 from msl.package_manager import uninstall
@@ -60,7 +59,7 @@ def test_issue_11(caplog):
     record = caplog.records[2]
     assert record.levelname == 'INFO'
     pkgs = json.loads(record.message)
-    requires = sorted(pkgs[_PKG_NAME]['requires'])
+    requires = sorted(pkgs[utils._PKG_NAME]['requires'])
     assert requires == ['colorama', 'setuptools']
 
     caplog.clear()
@@ -77,10 +76,10 @@ def test_issue_11(caplog):
     record = caplog.records[2]
     assert record.levelname == 'INFO'
     pkgs = json.loads(record.message)
-    assert _PKG_NAME in pkgs
-    assert 'requires' not in pkgs[_PKG_NAME]
-    assert 'version' in pkgs[_PKG_NAME]
-    assert 'description' in pkgs[_PKG_NAME]
+    assert utils._PKG_NAME in pkgs
+    assert 'requires' not in pkgs[utils._PKG_NAME]
+    assert 'version' in pkgs[utils._PKG_NAME]
+    assert 'description' in pkgs[utils._PKG_NAME]
 
     caplog.clear()
 
@@ -96,9 +95,9 @@ def test_issue_11(caplog):
     record = caplog.records[2]
     assert record.levelname == 'INFO'
     pkgs = json.loads(record.message)
-    assert _PKG_NAME in pkgs
-    assert 'requires' not in pkgs[_PKG_NAME]
-    assert 'version' in pkgs[_PKG_NAME]
-    assert 'description' in pkgs[_PKG_NAME]
-    assert 'branches' in pkgs[_PKG_NAME]
-    assert 'tags' in pkgs[_PKG_NAME]
+    assert utils._PKG_NAME in pkgs
+    assert 'requires' not in pkgs[utils._PKG_NAME]
+    assert 'version' in pkgs[utils._PKG_NAME]
+    assert 'description' in pkgs[utils._PKG_NAME]
+    assert 'branches' in pkgs[utils._PKG_NAME]
+    assert 'tags' in pkgs[utils._PKG_NAME]

@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 
-from msl.package_manager import _PKG_NAME
 from msl.package_manager import utils
 
 
@@ -10,7 +9,7 @@ from msl.package_manager import utils
 # https://docs.pytest.org/en/latest/logging.html#caplog-fixture
 def test_info_log(caplog):
     # checks that the logging messages have the expected output
-    caplog.set_level(logging.DEBUG, logger=_PKG_NAME)
+    caplog.set_level(logging.DEBUG, logger=utils._PKG_NAME)
     exec_path = os.path.dirname(sys.executable)
 
     utils.info()
@@ -45,7 +44,7 @@ def test_create_install_list():
     pkgs = utils._create_install_list((), None, None, None, False)
     for p in pkgs:
         assert p.startswith('msl-')
-    assert _PKG_NAME not in pkgs
+    assert utils._PKG_NAME not in pkgs
 
     # "msl-" prefix gets added
     pkgs = utils._create_install_list(('loadlib', 'network'), None, None, None, False)

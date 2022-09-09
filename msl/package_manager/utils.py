@@ -38,8 +38,7 @@ from colorama import Style
 from colorama import init
 from pkg_resources import packaging
 
-from . import _PKG_NAME
-
+_PKG_NAME = 'msl-package-manager'
 _pip_quiet = 0
 _IS_WINDOWS = sys.platform == 'win32'
 

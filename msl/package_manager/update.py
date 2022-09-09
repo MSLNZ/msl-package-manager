@@ -9,8 +9,8 @@ import sys
 from colorama import Fore
 from pkg_resources import parse_version
 
-from . import _PKG_NAME
 from . import utils
+from .utils import _PKG_NAME
 
 
 def update(*names, **kwargs):

@@ -4,7 +4,6 @@ import sys
 
 import pytest
 
-from msl.package_manager import _PKG_NAME
 from msl.package_manager import install
 from msl.package_manager import installed
 from msl.package_manager import uninstall
@@ -16,7 +15,7 @@ from msl.package_manager import utils
 # https://docs.pytest.org/en/latest/logging.html#caplog-fixture
 def test_log_output(caplog):
     # checks that the logging messages have the expected output
-    caplog.set_level(logging.DEBUG, logger=_PKG_NAME)
+    caplog.set_level(logging.DEBUG, logger=utils._PKG_NAME)
 
     # install MSL-LoadLib version 0.5.0
     install('loadlib==0.5.0', yes=True)
@@ -182,7 +181,7 @@ def test_log_output(caplog):
 
 
 def test_branch_commit_tag(caplog):
-    caplog.set_level(logging.DEBUG, logger=_PKG_NAME)
+    caplog.set_level(logging.DEBUG, logger=utils._PKG_NAME)
 
     options = [
         (False, True, True),

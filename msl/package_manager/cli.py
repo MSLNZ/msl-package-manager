@@ -11,9 +11,9 @@ import sys
 
 from pkg_resources import parse_version
 
-from . import _PKG_NAME
 from . import __version__
 from . import utils
+from .utils import _PKG_NAME
 
 PARSER = None
 
