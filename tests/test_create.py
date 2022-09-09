@@ -91,7 +91,7 @@ def test_msl_package():
         assert "    name='msl-package'," == lines[167]
         assert "    url='https://github.com/MSLNZ/msl-package'," == lines[171]
         assert "    description='Write a short description about msl-package here'," == lines[172]
-        assert "    packages=find_packages(include=('msl*',))," == lines[182]
+        assert "    packages=find_packages(include=('msl*',))," == lines[186]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
@@ -186,7 +186,7 @@ def test_pr_single_photons():
             assert "    name='pr-Single-Photons'," == lines[167]
             assert "    url='https://github.com/MSLNZ/pr-Single-Photons'," == lines[171]
             assert "    description='Write a short description about pr-Single-Photons here'," == lines[172]
-            assert "    packages=find_packages(include=('pr*',))," == lines[182]
+            assert "    packages=find_packages(include=('pr*',))," == lines[186]
 
         with open(os.path.join(root_dir, 'docs', 'conf.py'), mode='rt') as fp:
             lines = [line.rstrip() for line in fp.readlines()]
@@ -266,7 +266,7 @@ def test_no_namespace():
         assert "    name='time-tagger'," == lines[167]
         assert "    url='https://github.com/MSLNZ/time-tagger'," == lines[171]
         assert "    description='Write a short description about time-tagger here'," == lines[172]
-        assert "    packages=find_packages(include=('time_tagger',))," == lines[182]
+        assert "    packages=find_packages(include=('time_tagger',))," == lines[186]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
