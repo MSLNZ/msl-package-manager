@@ -150,7 +150,7 @@ tests_require = [
     'pytest>=4.4',  # >=4.4 to support the "-p conftest" option
     'pytest-cov',
 ]
-docs_require = ['sphinx', 'sphinx_rtd_theme']
+docs_require = ['sphinx', 'sphinx-rtd-theme']
 
 testing = {'test', 'tests'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if testing else []
