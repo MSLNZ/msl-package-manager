@@ -93,7 +93,7 @@ def parse_args(args):
             if not option.startswith('-'):
                 # make sure the previous item in pip_options accepts a value
                 # if it doesn't then append the option to parsed_args.names
-                # because the name of an msl package got mistakenly added to pip_options
+                # because the name of an MSL package got mistakenly added to pip_options
                 if not valid_options.get(pip_options_copy[i-1]):
                     name = pip_options.pop(pip_options.index(option))
                     parsed_args.names.append(name)

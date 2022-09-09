@@ -359,7 +359,7 @@ def installed():
     pkgs = {}
     for dist in pkg_resources.working_set:
         repo_name = None
-        if dist.project_name in gh:  # the installed name might be different than the repo name
+        if dist.project_name in gh:  # the installed name might be different from the repo name
             repo_name = dist.project_name
 
         description = ''
@@ -675,7 +675,7 @@ def _create_install_list(names, branch, commit, tag, update_cache):
     else:
         packages = _check_wildcards_and_prefix(names, pkgs_github)
 
-    # the name of an installed package can be different than the repo name
+    # the name of an installed package can be different from the repo name
     repo_names = [p['repo_name'] for p in pkgs_installed.values()]
 
     pkgs = {}
