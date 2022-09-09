@@ -35,7 +35,7 @@ install
    msl-network  0.5.0  [PyPI]
    msl-qt              [GitHub]
 
-   Proceed ([y]/n)?
+   Proceed (Y/n)?
 
 .. _uninstall-api:
 
@@ -51,7 +51,7 @@ uninstall
 
      msl-loadlib  0.6.0
 
-   Proceed ([y]/n)?
+   Proceed (Y/n)?
 
 .. _update-api:
 
@@ -67,7 +67,7 @@ update
 
      msl-loadlib  0.6.0 --> 0.7.0  [PyPI]
 
-   Proceed ([y]/n)?
+   Proceed (Y/n)?
 
 .. _list-api:
 

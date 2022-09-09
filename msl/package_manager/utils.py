@@ -580,7 +580,7 @@ def _ask_proceed():
     :class:`bool`
         Whether to proceed.
     """
-    ask = '\nProceed ([y]/n)? '
+    ask = '\nProceed (Y/n)? '
     response = _get_input(ask).lower()
     while True:
         if response.startswith('y') or not response:
