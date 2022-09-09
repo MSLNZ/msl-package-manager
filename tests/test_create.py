@@ -85,13 +85,13 @@ def test_msl_package():
 
     with open(os.path.join(root_dir, 'setup.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
-        assert "'msl',  # the path to" in lines[32]
-        assert "# specify the packages that msl-package depends on" == lines[147]
-        assert "init_original = 'msl/package/__init__.py'" == lines[162]
-        assert "    name='msl-package'," == lines[167]
-        assert "    url='https://github.com/MSLNZ/msl-package'," == lines[171]
-        assert "    description='Write a short description about msl-package here'," == lines[172]
-        assert "    packages=find_packages(include=('msl*',))," == lines[186]
+        assert "'msl',  # the path to" in lines[31]
+        assert "# specify the packages that msl-package depends on" == lines[146]
+        assert "init_original = 'msl/package/__init__.py'" == lines[161]
+        assert "    name='msl-package'," == lines[166]
+        assert "    url='https://github.com/MSLNZ/msl-package'," == lines[170]
+        assert "    description='Write a short description about msl-package here'," == lines[171]
+        assert "    packages=find_packages(include=('msl*',))," == lines[185]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
@@ -180,13 +180,13 @@ def test_pr_single_photons():
 
         with open(os.path.join(root_dir, 'setup.py'), mode='rt') as fp:
             lines = [line.rstrip() for line in fp.readlines()]
-            assert "'pr',  # the path to" in lines[32]
-            assert "# specify the packages that pr-Single-Photons depends on" == lines[147]
-            assert "init_original = 'pr/Single_Photons/__init__.py'" == lines[162]
-            assert "    name='pr-Single-Photons'," == lines[167]
-            assert "    url='https://github.com/MSLNZ/pr-Single-Photons'," == lines[171]
-            assert "    description='Write a short description about pr-Single-Photons here'," == lines[172]
-            assert "    packages=find_packages(include=('pr*',))," == lines[186]
+            assert "'pr',  # the path to" in lines[31]
+            assert "# specify the packages that pr-Single-Photons depends on" == lines[146]
+            assert "init_original = 'pr/Single_Photons/__init__.py'" == lines[161]
+            assert "    name='pr-Single-Photons'," == lines[166]
+            assert "    url='https://github.com/MSLNZ/pr-Single-Photons'," == lines[170]
+            assert "    description='Write a short description about pr-Single-Photons here'," == lines[171]
+            assert "    packages=find_packages(include=('pr*',))," == lines[185]
 
         with open(os.path.join(root_dir, 'docs', 'conf.py'), mode='rt') as fp:
             lines = [line.rstrip() for line in fp.readlines()]
@@ -260,13 +260,13 @@ def test_no_namespace():
 
     with open(os.path.join(root_dir, 'setup.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
-        assert "'time_tagger',  # the path to" in lines[32]
-        assert "# specify the packages that time-tagger depends on" == lines[147]
-        assert "init_original = 'time_tagger/__init__.py'" == lines[162]
-        assert "    name='time-tagger'," == lines[167]
-        assert "    url='https://github.com/MSLNZ/time-tagger'," == lines[171]
-        assert "    description='Write a short description about time-tagger here'," == lines[172]
-        assert "    packages=find_packages(include=('time_tagger',))," == lines[186]
+        assert "'time_tagger',  # the path to" in lines[31]
+        assert "# specify the packages that time-tagger depends on" == lines[146]
+        assert "init_original = 'time_tagger/__init__.py'" == lines[161]
+        assert "    name='time-tagger'," == lines[166]
+        assert "    url='https://github.com/MSLNZ/time-tagger'," == lines[170]
+        assert "    description='Write a short description about time-tagger here'," == lines[171]
+        assert "    packages=find_packages(include=('time_tagger',))," == lines[185]
 
     with open(os.path.join(root_dir, 'docs', 'conf.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]

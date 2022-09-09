@@ -1,17 +1,15 @@
+import logging
 import os
 import sys
-import logging
 
 import pytest
 
-from msl.package_manager import (
-    install,
-    update,
-    uninstall,
-    installed,
-    _PKG_NAME,
-    utils,
-)
+from msl.package_manager import _PKG_NAME
+from msl.package_manager import install
+from msl.package_manager import installed
+from msl.package_manager import uninstall
+from msl.package_manager import update
+from msl.package_manager import utils
 
 
 # see the docs for the caplog fixture
@@ -34,20 +32,18 @@ def test_log_output(caplog):
 
     # check that py4j is not installed
     with pytest.raises(ImportError):
-        import py4j
+        pass
 
     # update MSL-LoadLib
     update('loadlib[java]==0.6.0', yes=True)
 
     # py4j should now be installed
-    import py4j
 
     # update a package that is not an MSL package
     update('colorama', yes=True)
 
     # uninstall a package that is not an MSL package
     uninstall('colorama', yes=True)
-    import colorama  # still installed
 
     # install a package that is not part of the msl namespace
     install('GTC<1.3', yes=True, pip_options=['--no-deps'])

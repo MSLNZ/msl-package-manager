@@ -1,6 +1,7 @@
 import logging
 
-from msl.package_manager import utils, cli
+from msl.package_manager import cli
+from msl.package_manager import utils
 
 
 def get_args(command):

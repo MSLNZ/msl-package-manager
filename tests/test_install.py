@@ -1,6 +1,6 @@
+import importlib
 import re
 import sys
-import importlib
 try:
     from importlib import reload
 except ImportError:  # then Python 2
@@ -8,11 +8,9 @@ except ImportError:  # then Python 2
 
 import pytest
 
-from msl.package_manager import (
-    install,
-    installed,
-    uninstall,
-)
+from msl.package_manager import install
+from msl.package_manager import installed
+from msl.package_manager import uninstall
 
 
 def cleanup():

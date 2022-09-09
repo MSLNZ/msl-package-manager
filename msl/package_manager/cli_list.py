@@ -1,12 +1,10 @@
 """
 Command line interface for the :ref:`list <list-cli>` command.
 """
+from .cli_argparse import add_argument_disable_mslpm_version_check
+from .cli_argparse import add_argument_quiet
+from .cli_argparse import add_argument_update_cache
 from .utils import info
-from .cli_argparse import (
-    add_argument_update_cache,
-    add_argument_quiet,
-    add_argument_disable_mslpm_version_check,
-)
 
 HELP = 'Show the information about MSL packages.'
 

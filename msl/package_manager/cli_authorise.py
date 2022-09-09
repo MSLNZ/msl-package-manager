@@ -1,14 +1,10 @@
 """
 Command line interface for the :ref:`authorise <authorise-cli>` command.
 """
-from .cli_argparse import (
-    add_argument_quiet,
-    add_argument_disable_mslpm_version_check,
-)
-from .authorise import (
-    WARNING_MESSAGE,
-    authorise,
-)
+from .authorise import WARNING_MESSAGE
+from .authorise import authorise
+from .cli_argparse import add_argument_disable_mslpm_version_check
+from .cli_argparse import add_argument_quiet
 
 HELP = 'Enable authorisation to the GitHub API.'
 

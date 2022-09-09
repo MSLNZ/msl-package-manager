@@ -6,25 +6,24 @@ Functions for the API.
 .. _repositories: https://github.com/MSLNZ
 .. _JSON: https://www.json.org/
 """
-import re
-import os
-import sys
-import json
-import time
-import shlex
 import base64
-import struct
+import collections
+import datetime
 import fnmatch
 import getpass
+import json
 import logging
-import textwrap
+import os
 import platform
-import datetime
-import threading
+import re
+import shlex
+import struct
 import subprocess
-import collections
-import pkg_resources
-from pkg_resources import packaging
+import sys
+import textwrap
+import threading
+import time
+
 try:
     from importlib import reload
     from urllib.request import urlopen, Request, HTTPError, URLError
@@ -32,7 +31,12 @@ except ImportError:  # then Python 2
     from imp import reload
     from urllib2 import urlopen, Request, HTTPError, URLError
 
-from colorama import Fore, Style, Back, init
+import pkg_resources
+from colorama import Back
+from colorama import Fore
+from colorama import Style
+from colorama import init
+from pkg_resources import packaging
 
 from . import _PKG_NAME
 

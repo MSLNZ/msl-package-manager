@@ -1,8 +1,8 @@
 """
 Install MSL packages.
 """
-import sys
 import subprocess
+import sys
 
 from . import utils
 

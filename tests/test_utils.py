@@ -1,8 +1,9 @@
+import logging
 import os
 import sys
-import logging
 
-from msl.package_manager import utils, _PKG_NAME
+from msl.package_manager import _PKG_NAME
+from msl.package_manager import utils
 
 
 # see the docs for the caplog fixture

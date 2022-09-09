@@ -1,14 +1,12 @@
 """
 Command line interface for the :ref:`uninstall <uninstall-cli>` command.
 """
+from .cli_argparse import add_argument_all
+from .cli_argparse import add_argument_disable_mslpm_version_check
+from .cli_argparse import add_argument_package_names
+from .cli_argparse import add_argument_quiet
+from .cli_argparse import add_argument_yes
 from .uninstall import uninstall
-from .cli_argparse import (
-    add_argument_all,
-    add_argument_package_names,
-    add_argument_yes,
-    add_argument_quiet,
-    add_argument_disable_mslpm_version_check,
-)
 
 DESCRIPTION = '{} MSL packages.'
 

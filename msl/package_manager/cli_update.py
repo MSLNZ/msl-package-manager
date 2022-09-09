@@ -1,18 +1,16 @@
 """
 Command line interface for the :ref:`update <update-cli>` command.
 """
+from .cli_argparse import add_argument_all
+from .cli_argparse import add_argument_branch
+from .cli_argparse import add_argument_commit
+from .cli_argparse import add_argument_disable_mslpm_version_check
+from .cli_argparse import add_argument_package_names
+from .cli_argparse import add_argument_quiet
+from .cli_argparse import add_argument_tag
+from .cli_argparse import add_argument_update_cache
+from .cli_argparse import add_argument_yes
 from .update import update
-from .cli_argparse import (
-    add_argument_all,
-    add_argument_branch,
-    add_argument_package_names,
-    add_argument_tag,
-    add_argument_update_cache,
-    add_argument_yes,
-    add_argument_quiet,
-    add_argument_disable_mslpm_version_check,
-    add_argument_commit,
-)
 
 DESCRIPTION = """{} MSL packages.
 

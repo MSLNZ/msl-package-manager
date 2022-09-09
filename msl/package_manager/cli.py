@@ -3,14 +3,17 @@ Main entry point to either :ref:`install <install-cli>`, :ref:`uninstall <uninst
 :ref:`update <update-cli>`, :ref:`list <list-cli>` or :ref:`create <create-cli>`
 MSL packages using the command-line interface (CLI).
 """
+import logging
 import os
 import re
-import sys
-import logging
 import subprocess
+import sys
+
 from pkg_resources import parse_version
 
-from . import utils, __version__, _PKG_NAME
+from . import _PKG_NAME
+from . import __version__
+from . import utils
 
 PARSER = None
 

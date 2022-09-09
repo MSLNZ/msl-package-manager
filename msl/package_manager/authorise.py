@@ -1,12 +1,10 @@
 """
 Create an authorisation file for the GitHub API.
 """
-from .utils import (
-    log,
-    get_username,
-    _get_input,
-    _GITHUB_AUTH_PATH,
-)
+from .utils import _GITHUB_AUTH_PATH
+from .utils import _get_input
+from .utils import get_username
+from .utils import log
 
 WARNING_MESSAGE = """
 Your username and personal access token are saved in plain text in the

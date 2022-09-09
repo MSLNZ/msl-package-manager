@@ -3,13 +3,14 @@ Update MSL packages.
 """
 import os
 import re
-import sys
 import subprocess
-from pkg_resources import parse_version
+import sys
 
 from colorama import Fore
+from pkg_resources import parse_version
 
-from . import utils, _PKG_NAME
+from . import _PKG_NAME
+from . import utils
 
 
 def update(*names, **kwargs):

@@ -1,17 +1,15 @@
-import sys
 import json
+import sys
 
-import pytest
 import colorama
+import pytest
 
-from msl.package_manager import (
-    install,
-    update,
-    uninstall,
-    installed,
-    utils,
-    _PKG_NAME,
-)
+from msl.package_manager import _PKG_NAME
+from msl.package_manager import install
+from msl.package_manager import installed
+from msl.package_manager import uninstall
+from msl.package_manager import update
+from msl.package_manager import utils
 
 
 @pytest.mark.skipif(sys.version_info[:2] < (3, 6), reason='only test in Python 3.6+')

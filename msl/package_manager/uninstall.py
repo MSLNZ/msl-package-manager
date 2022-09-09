@@ -2,8 +2,9 @@
 Uninstall MSL packages.
 """
 import os
-import sys
 import subprocess
+import sys
+
 import pkg_resources
 
 from . import utils
