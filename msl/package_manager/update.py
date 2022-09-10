@@ -109,15 +109,16 @@ def update(*names, **kwargs):
     else:
         packages = utils._check_wildcards_and_prefix(names, pkgs_installed)
 
-    w_non_msl = [0, 0]
+    w_non_msl = [0, 0, 0]
     if pkgs_non_msl:
         for name, values in pkgs_non_msl.items():
             w_non_msl = [
                 max(w_non_msl[0], len(name)),
-                max(w_non_msl[1], len(values['installed_version']))
+                max(w_non_msl[1], len(values['installed_version'])),
+                max(w_non_msl[2], len(values['version'])),
             ]
 
-    w = [0, 0]
+    w = [0, 0, 0]
     msl_pkgs_to_update = dict()
     for name, values in packages.items():
 
@@ -222,7 +223,11 @@ def update(*names, **kwargs):
                 utils.log.warning('The %r package is already the latest [%s]', name, installed_version)
                 continue
 
-        w = [max(w[0], len(name+extras_require)), max(w[1], len(installed_version))]
+        w = [
+            max(w[0], len(name+extras_require)),
+            max(w[1], len(installed_version)),
+            max(w[2], len(msl_pkgs_to_update[name]['version']))
+        ]
 
     msl_pkgs_to_update = utils._sort_packages(msl_pkgs_to_update)
 
@@ -236,7 +241,7 @@ def update(*names, **kwargs):
         for pkg, info in msl_pkgs_to_update.items():
             pkg += info['extras_require'] + '  '
             msg += '\n  ' + pkg.ljust(w[0]+2) + info['installed_version'].ljust(w[1]) + \
-                   ' --> ' + info['version'].replace('==', '') + \
+                   ' --> ' + info['version'].replace('==', '').ljust(w[2]) + \
                    '  [{}]'.format('PyPI' if info['using_pypi'] else 'GitHub')
 
     if pkgs_non_msl:
@@ -244,8 +249,8 @@ def update(*names, **kwargs):
             msg += '\n'
         msg += '\n{}The following non-MSL packages will be {}UPDATED{}:\n'.format(Fore.RESET, Fore.CYAN, Fore.RESET)
         for pkg, info in pkgs_non_msl.items():
-            msg += '\n    ' + pkg.ljust(w_non_msl[0]+2) + info['installed_version'].ljust(w_non_msl[1]) + \
-                   ' --> ' + info['version'] + '  [PyPI]'
+            msg += '\n  ' + pkg.ljust(w_non_msl[0]+2) + info['installed_version'].ljust(w_non_msl[1]) + \
+                   ' --> ' + info['version'].ljust(w_non_msl[2]) + '  [PyPI]'
 
     utils.log.info(msg)
     if not (yes or utils._ask_proceed()):
