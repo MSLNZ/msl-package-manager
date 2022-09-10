@@ -109,7 +109,7 @@ def test_log_output(caplog):
         'Loaded the cached information about the PyPI packages',
         'Loaded the cached information about the GitHub repositories',
         'Getting the packages from {}'.format(exec_path),
-        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  msl-loadlib[java]  0.5.0 --> 0.6.0  [PyPI]',
+        '\n\x1b[39mThe following MSL packages will be \x1b[36mUPDATED\x1b[39m:\n\n  msl-loadlib[java]  0.5.0 --> 0.6.0    [PyPI]',
         '',
         "Updating {}'msl-loadlib' from PyPI".format(u),
 
