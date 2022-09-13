@@ -129,6 +129,9 @@ def update(*names, **kwargs):
             continue
 
         installed_version = pkgs_installed[name]['version']
+        if installed_version.endswith('+editable'):
+            utils.log.warning('Skipping %r since it is installed in editable mode', name)
+            continue
 
         # use PyPI to update the package (only if the package is available on PyPI)
         using_pypi = name in pkgs_pypi and not (tag or branch or commit)
