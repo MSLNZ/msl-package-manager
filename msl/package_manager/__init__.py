@@ -19,7 +19,7 @@ from .utils import pypi
 from .utils import set_log_level
 
 __author__ = 'Measurement Standards Laboratory of New Zealand'
-__copyright__ = '\xa9 2017 - 2022, ' + __author__
+__copyright__ = '\xa9 2017 - 2023, ' + __author__
 __version__ = '2.5.3.dev0'
 
 _v = re.search(r'(\d+)\.(\d+)\.(\d+)[.-]?(.*)', __version__).groups()
