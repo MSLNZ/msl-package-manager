@@ -47,7 +47,7 @@ jobs:
         architecture: [x64]
         include:
           - python-version: '3.x'
-            os: windows
+            os: windows-latest
             architecture: x86
 
     steps:
