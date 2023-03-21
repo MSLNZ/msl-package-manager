@@ -33,10 +33,11 @@ def teardown_module():
 def test_msl_and_non_msl():
     cleanup()
 
-    # msl-io has xlrd<2.0 as a dependency
+    # msl-io has xlrd<2.0 as a dependency in commit 29d48bb (afterwards it is bundled)
     # make sure that xlrd is not >2.0 after updating
 
-    install('loadlib==0.7.0', 'io', yes=True)
+    install('loadlib==0.7.0', yes=True)
+    install('io', commit='29d48bb40ad12b6d2270ac2a69a73293728c089e', yes=True)
 
     # reload all msl modules
     for name, module in sys.modules.copy().items():
