@@ -506,7 +506,7 @@ def pypi(update_cache=False):
 
     def use_json_api():
         # use the JSON API as a backup way to get the package information from PyPI
-        projects = ('msl-package-manager', 'msl-network', 'msl-loadlib', 'msl-io' 
+        projects = ('msl-package-manager', 'msl-network', 'msl-loadlib', 'msl-io',
                     'GTC', 'Quantity-Value')
         for project in projects:
             response = request('/pypi/{}/json'.format(project))
