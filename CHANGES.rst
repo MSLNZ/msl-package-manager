@@ -4,7 +4,21 @@ Release Notes
 
 Version 2.5.3 (in development)
 ==============================
+This release will be the last to support Python 2.7, 3.5, 3.6 and 3.7
 
+- Added
+
+  * support for Python 3.11
+
+- Fixed
+
+  * do not update MSL packages that are installed in editable mode
+  * issue `#11 <https://github.com/MSLNZ/msl-package-manager/issues/11>`_ -
+    TypeError: Object of type Requirement is not JSON serializable
+  * issue `#10 <https://github.com/MSLNZ/msl-package-manager/issues/10>`_ -
+    GitHub rate-limit error message repeats
+  * issue `#9 <https://github.com/MSLNZ/msl-package-manager/issues/9>`_ -
+    PyPI regex pattern is invalid for the /search endpoint
 
 Version 2.5.2 (2021-11-08)
 ==========================
