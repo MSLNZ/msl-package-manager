@@ -2,11 +2,7 @@
 Release Notes
 =============
 
-Version 2.6.0 (in development)
-==============================
-
-
-Version 2.5.3 (2023-06-16)
+Version 2.5.4 (2023-06-16)
 ==========================
 This release will be the last to support Python 2.7, 3.5, 3.6 and 3.7
 
