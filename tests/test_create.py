@@ -80,8 +80,8 @@ def test_msl_package():
 
     with open(os.path.join(root_dir, 'setup.cfg'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
-        assert '    --cov msl' == lines[11]
-        assert '    --ignore msl/examples' == lines[19]
+        assert '    --cov msl' == lines[8]
+        assert '    --ignore msl/examples' == lines[16]
 
     with open(os.path.join(root_dir, 'setup.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
@@ -175,8 +175,8 @@ def test_pr_single_photons():
 
         with open(os.path.join(root_dir, 'setup.cfg'), mode='rt') as fp:
             lines = [line.rstrip() for line in fp.readlines()]
-            assert '    --cov pr' == lines[11]
-            assert '    --ignore pr/examples' == lines[19]
+            assert '    --cov pr' == lines[8]
+            assert '    --ignore pr/examples' == lines[16]
 
         with open(os.path.join(root_dir, 'setup.py'), mode='rt') as fp:
             lines = [line.rstrip() for line in fp.readlines()]
@@ -255,8 +255,8 @@ def test_no_namespace():
 
     with open(os.path.join(root_dir, 'setup.cfg'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
-        assert '    --cov time_tagger' == lines[11]
-        assert '    --ignore time_tagger/examples' != lines[19]
+        assert '    --cov time_tagger' == lines[8]
+        assert '    --ignore time_tagger/examples' != lines[16]
 
     with open(os.path.join(root_dir, 'setup.py'), mode='rt') as fp:
         lines = [line.rstrip() for line in fp.readlines()]
